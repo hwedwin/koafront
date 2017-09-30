@@ -1,0 +1,48 @@
+.m-searchtop-box,
+.m-searchtop-box .am-search{
+	background-color: #fff;
+}
+
+.m-searchtop-box{
+	padding-bottom: .2rem;
+}
+
+.m-searchtop-box .am-search-input{
+	background-color: #f1f1f1;
+}
+
+.m-searchtop-box .am-search-cancel{
+	color: #81838e;
+}
+
+.m-hotword-box{
+	height: .52rem;
+	padding-left: .2rem;
+	white-space: nowrap;
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
+.m-hotword-box .am-tag{
+	margin-right: .15rem;
+}
+
+/*历史搜索*/
+.m-history-box{
+	background-color: #fff;
+	margin-top: .2rem;
+}
+.m-history-list{
+	padding: 0 .2rem;
+}
+.u-history-item{
+	height: .75rem;
+	line-height: .75rem;
+	border-top: 1px solid #EBEBEB;
+	font-size: .32rem;
+}
+
+.u-history-item a{
+	color: #323232;
+	display: block;
+}

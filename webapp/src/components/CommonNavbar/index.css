@@ -1,0 +1,14 @@
+.m-common-navbar-fixed{
+	position: fixed;
+	width: 100%;
+	z-index: 99;
+	box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
+}
+
+.m-navbar-wrapper .t-fill-navbar{
+	height: .9rem;
+}
+
+.m-common-navbar .am-navbar-left-icon .am-icon{
+	color: #000;
+}

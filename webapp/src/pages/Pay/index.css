@@ -1,0 +1,30 @@
+.page-pay{
+}
+.page-pay .m-pay-money{
+	height: .85rem;
+	line-height: .85rem;
+	text-align: right;
+	background-color: #fff;
+	border-top: 1px solid #f1f1f1;
+}
+.page-pay .m-pay-money .u-text{
+	font-size: .28rem;
+	margin-right: .28rem;
+}
+.page-pay .m-pay-money .u-text .red{
+	font-style: normal;
+	color: #f13030;
+}
+
+.page-pay .u-button-pay{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	height: .85rem;
+	line-height: .85rem;
+	background-color: #f13030;
+	color: #fff;
+	font-size: .29rem;
+	border: none;
+	width: 100%;
+}

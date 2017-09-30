@@ -1,0 +1,125 @@
+.m-portrait-box{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 4rem;
+	background: #ca4b4b;
+	text-align: center;
+}
+.m-portrait-box .m-setting{
+	width: 100%;
+	position: relative;
+}
+.m-portrait-box .m-setting .u-setting{
+	position: absolute;
+	top: -.2rem;
+	right: .4rem
+}
+.m-portrait-box .u-portrait{
+	width: 1.7rem;
+	height: 1.7rem;
+	border-radius: 100%;
+}
+.m-portrait-box .u-name{
+	color: #fff;
+	margin-top: .15rem;
+	font-size: .3rem;
+}
+.m-portrait-box .u-level{
+	color: #fff;
+	margin-top: .15rem;
+	font-size: .26rem;
+}
+
+/*收益*/
+.m-banlance-box{
+	padding: .3rem 0;
+	border-bottom: 1px solid #DBDBDB;
+	background-color: #fff;
+}
+.m-banlance-box .u-banlance{
+	color: #f13030;
+	font-size: .4rem;
+	/*font-weight: bold;*/
+	text-align: center;
+}
+.m-banlance-box .u-title{
+	text-align: center;
+	color: #b2b2b2;
+	font-size: .22rem;
+	margin-top: .02rem;
+}
+
+/**/
+.m-earning-box{
+	height: 1.2rem;
+	display: flex;
+	background-color: #fff;
+	align-items: center;
+}
+.m-earning-box .m-earning-item{
+	flex-grow: 1;
+	text-align: center;
+}
+.m-earning-box .m-earning-item .u-num{
+	font-size: .35rem;
+}
+.m-earning-box .m-earning-item .u-title{
+	margin-top: .05rem;
+	font-size: .24rem;
+	color: #949494;
+}
+
+/*我的订单*/
+.m-badge-grid{
+	display: flex;
+	background-color: #fff;
+}
+.m-badge-grid .m-item{
+	position: relative;
+	flex-grow: 1;
+	padding: .4rem 0;
+	text-align: center;
+}
+.m-badge-grid .m-item .u-text{
+	margin-top: .15rem;
+	font-size: .24rem;
+	color: #000;
+}
+
+.m-badge-grid .m-item .am-badge{
+	position: absolute;
+	top: .1rem;
+	right: .4rem;
+}
+.m-badge-grid .m-item .am-badge .am-badge-text{
+	background-color: #f13030;
+}
+
+/*我*/
+.mine-box{
+	margin-top: .2rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

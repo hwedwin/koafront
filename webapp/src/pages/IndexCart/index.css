@@ -1,0 +1,104 @@
+.m-cart-container{
+	margin-top: .15rem;
+}
+
+.m-cart-container .m-select-all-bar{
+	display: flex;
+	align-items: center;
+	height: .9rem;
+	line-height: .9rem;
+	padding-left: .2rem;
+	background-color: #F0F0F0;
+}
+
+.m-cart-container .m-select-all-bar .u-text{
+	margin-left: .11rem;
+}
+
+/*购物车项*/
+.m-shopcart-item{
+	display: flex;
+	align-items: center;
+	padding: .1rem .2rem;
+	background-color: #fff;
+}
+
+.m-shopcart-item svg{
+	flex-shrink: 0;
+}
+
+.m-shopcart-item .u-logo{
+	width: 1.8rem;
+	height: 1.8rem;
+	margin-left: .15rem;
+	border-radius: .03rem;
+	flex-shrink: 0;
+}
+.m-shopcart-item .m-right{
+	margin-left: .15rem;
+	flex-grow: 0;
+}
+.m-shopcart-item .m-right .u-name{
+	font-size: .28rem;
+	line-height: .34rem;
+	max-height: .68rem;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}
+.m-shopcart-item .m-right .u-bottom{
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	margin-top: .2rem;
+}
+.m-shopcart-item .m-right .u-bottom .u-price{
+	color: red;
+	font-size: .32rem;
+}
+
+.m-shopcart-item .m-right .u-bottom .m-num-operator{
+	
+}
+
+/*结算栏*/
+.m-account-bar{
+	width: 100%;
+	height: 1rem;
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #fff;
+	bottom: 1rem;
+	border-top: 1px solid #DBDBDB;
+}
+.m-account-bar .u-all{
+	margin-left: .2rem;
+	font-size: .35rem;
+}
+.m-account-bar .u-btn-account{
+	background-color: #f13030;
+	align-self: stretch;
+	border: none;
+	padding: 0 .3rem;
+	color: #FFF;
+	font-size: .37rem;
+}
+
+.m-nologin-box{
+	margin-top: 1rem;
+	text-align: center;
+}
+.m-nologin-box a {
+	color: #56aff5;
+	font-size: .3rem;
+	text-decoration: underline;
+}
+
+
+
+
+
+
+

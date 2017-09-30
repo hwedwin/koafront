@@ -1,0 +1,18 @@
+.m-index-grid{}
+/*Logo*/
+.m-index-grid .am-grid .am-flexbox .am-flexbox-item .am-grid-item-content .am-grid-item-inner-content .am-grid-icon{
+	width: 3rem;
+	height: 3rem;
+}
+
+.m-index-grid .am-grid.am-grid-line .am-flexbox{
+	height: 4.3rem;
+}
+
+.m-index-grid .am-grid .am-flexbox .am-flexbox-item .am-grid-item-content .am-grid-item-inner-content.column-num-2 .am-grid-text{
+	margin-top: .1rem;
+}
+
+.m-grid-goods{}
+.m-grid-goods .u-title{font-size: .3rem;}
+.m-grid-goods .u-price{color: #f13030;font-size: .29rem;}

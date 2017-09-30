@@ -1,0 +1,77 @@
+.m-order-item{
+	/*display: flex;*/
+	background-color: #fff;
+	margin-top: .15rem;
+}
+.m-order-item .m-top-box{
+	padding: 0 .2rem;
+	display: flex;
+	justify-content: space-between;
+	height: .8rem;
+	align-items: center;
+}
+.m-order-item .m-top-box .u-link-shop{
+	color: #000;
+	font-size: .3rem;
+}
+.m-order-item .m-top-box .u-order-status-tip{
+	margin-right: .2rem;
+	font-size: .3rem;
+}
+.m-order-item .m-top-box .u-btn-delete{
+	color: #f13030;
+	font-size: .3rem;
+}
+.m-order-item .m-center-item{
+	display: flex;
+	padding: .2rem;
+	background-color: #fafafa;
+}
+.m-order-item .m-center-item .u-logo-item{
+	width: 1.5rem;
+	height: 1.5rem;
+	flex-shrink: 0;
+	border: 1px solid #dadada;
+	border-radius: .02rem;
+	margin-right: .1rem;
+}
+.m-order-item .m-center-item .u-desc{
+	display: flex;
+	text-align: justify;
+	align-items: center;
+	margin-left: .2rem;
+	height: 1.5rem;
+	line-height: .34rem;
+	font-size: .29rem;
+}
+.m-order-item .m-order-num{
+	height: .8rem;
+	line-height: .8rem;
+	padding: 0 .2rem;
+	font-size: .3rem;
+	text-align: right;
+	border-bottom: 1px solid #dadada;
+}
+.m-order-item .m-order-num .u-big{
+	font-size: .37rem;
+}
+.m-order-item .m-opt-box{
+	height: .85rem;
+	line-height: .85rem;
+	text-align: right;
+}
+.m-order-item .u-btn-opt{
+	-webkit-appearance: none;
+	background: none;
+	border: 1px solid #bdbdbd;
+	appearance: none;
+	height: .57rem;
+	line-height: .57rem;
+	padding: 0 .07rem;
+	margin-right: .2rem;
+	border-radius: .05rem;
+}
+.m-order-item .u-btn-opt.red{
+	border-color: #f13030;
+	color: #f13030;
+}

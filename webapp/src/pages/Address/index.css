@@ -1,0 +1,66 @@
+.page-address .m-address-box{
+	display: block;
+	padding: 0;
+}
+.m-address-item{
+	display: flex;
+	padding: .2rem;
+}
+.m-address-item:not(:last-child){
+	border-bottom: 1px solid #f1f1f1;
+}
+.m-address-item .m-left-wrapper{
+	position: relative;
+	flex: 1;
+	padding-right: .2rem;
+}
+.m-address-item .m-left-wrapper:after{
+	content: "";
+	display: block;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 0;
+	background-color: #b0b0b0;
+	width: 1px;
+	height: .35rem;
+}
+.m-address-item .m-left-wrapper .m-name-mobile{
+
+}
+.m-address-item .m-left-wrapper .m-name-mobile .u-name{
+	margin-right: .25rem;
+}
+.m-address-item .m-left-wrapper .m-name-mobile .u-mobile{
+
+}
+.m-address-item .m-left-wrapper .u-address{
+	color: #8a8a8a;
+}
+
+.m-address-item .m-right-wrapper{
+	padding-left: .2rem;
+}
+
+/*新建地址*/
+.m-newaddress-box{
+	position: absolute;
+	width: 100%;
+	height: 1.1rem;
+	line-height: 1.1rem;
+	text-align: center;
+	bottom: 0;
+	left: 0;
+}
+.m-newaddress-box .u-button-new{
+	display: inline-block;
+	width: 85%;
+	height: .7rem;
+	line-height: .7rem;
+	border-radius: .05rem;
+	font-size: .28rem;
+	background-color: #f13030;
+	color: #FFF;
+	text-align: center;
+	border: none;
+}

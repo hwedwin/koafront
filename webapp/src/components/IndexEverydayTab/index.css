@@ -1,0 +1,8 @@
+.page-order .am-tabs-bar .am-tabs-tab-active,
+.m-everyday .am-tabs-bar .am-tabs-tab-active{
+	color: #f13030;
+}
+.page-order .am-tabs-ink-bar, 
+.m-everyday .am-tabs-ink-bar{
+	background-color: #f13030;
+}

@@ -1,0 +1,73 @@
+.m-address-detail{
+	background-color: #fff;
+	margin-top: .1rem;
+}
+.m-address-detail .m-receiver{
+	display: flex;
+	align-items: center;
+	height: .8rem;
+	padding: 0 .25rem;
+	font-size: .3rem;
+}
+.m-address-detail .m-receiver .u-name{
+	margin-left: .12rem;
+}
+.m-address-detail .m-receiver .u-phone{
+	margin-left: .3rem;
+}
+.m-address-detail .u-address{
+	padding-left: .7rem;
+	padding-right: .2rem;
+	font-size: .3rem;
+	line-height: .4rem;
+	color: #949494;
+	padding-bottom: .3rem;
+}
+
+.m-goods-item{
+	padding: .2rem;
+	margin-top: .1rem;
+	display: flex;
+	background-color: #fff;
+}
+.m-goods-item img{
+	width: 1.7rem;
+	height: 1.7rem;
+	flex-shrink: 0;
+}
+.m-goods-item .m-desc {
+	flex-grow: 0;
+	width: 5rem;
+	margin-left: .2rem;
+}
+.m-goods-item .m-desc .u-name{
+	font-size: .32rem;
+	white-space: nowrap;
+	overflow: hidden;
+	-ms-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	margin-top: .15rem;
+}
+.m-goods-item .m-desc .u-count{
+	font-size: .29rem;
+	margin-top: .13rem;
+	color: #909090;
+}
+.m-goods-item .m-desc .u-money{
+	font-size: .32rem;
+	margin-top: .2rem;
+}
+
+.u-order-list{
+	padding: 0 .2rem;
+	background-color: #fff;
+}
+.u-order-list .u-item{
+	height: .9rem;
+	line-height: .9rem;
+	font-size: .32rem;
+	border-bottom: 1px solid #dadada;
+	white-space: nowrap;
+	overflow: scroll;
+	color: #909090;
+}

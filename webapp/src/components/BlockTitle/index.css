@@ -1,0 +1,13 @@
+.m-block-title{padding: .2rem;font-size: .35rem}
+.m-block-title:before{
+	display: inline-block;
+	content: "";
+	width: 7px;
+	height: .35rem;
+	vertical-align: middle;
+	margin-right: .13rem;
+	position: relative;
+	top: -.04rem;
+	border-radius: .1rem;
+	background-color: #f13030;
+}

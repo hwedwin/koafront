@@ -1,0 +1,64 @@
+.m-page-result{
+
+}
+.m-page-result .m-goods-list{
+	/*margin-top: .1rem;*/
+}
+
+.m-sortbar{
+	display: flex;
+	height: .9rem;
+	line-height: .9rem;
+	align-items: stretch;
+	background-color: #fff;
+	border-top: 1px solid #CDCDCD;
+	border-bottom: 1px solid #CDCDCD;
+}
+
+.m-sortbar .u-sort-item{
+	line-height: inherit;
+	flex-grow: 1;
+	flex-basis: 25%;
+	text-align: center;
+}
+
+.m-sortbar .u-sort-item.is-active{
+	color: #f13030;
+}
+
+.m-sortbar .u-sort-price{
+	display: flex;
+	justify-content: center;
+}
+
+.m-sortbar .u-sort-price .m-pt-box{
+	display: inline-block;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-left: .1rem;
+}
+
+.m-sortbar .u-sort-price .m-pt-box .u-pt{
+	align-items: center;
+	content: "";
+	display: block;
+	border: .1rem solid transparent;
+}
+
+.m-sortbar .u-sort-price .m-pt-box .u-pt-up{
+	border-bottom-color: #cdcdcd;
+}
+
+.m-sortbar .u-sort-price .m-pt-box .u-pt-up.is-active{
+	border-bottom-color: #f13030;
+}
+
+.m-sortbar .u-sort-price .m-pt-box .u-pt-down{
+	border-top-color: #cdcdcd;
+	margin-top: .05rem;
+}
+.m-sortbar .u-sort-price .m-pt-box .u-pt-down.is-active{
+	border-top-color: #f13030;
+}
+

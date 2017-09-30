@@ -1,0 +1,64 @@
+.m-goods-itema{
+	height: 2.4rem;
+	/*padding: .2rem 0;*/
+	padding-right: .3rem;
+	background-color: #fff;
+	overflow: hidden;
+	font-size: 0;
+}
+.m-goods-itema .u-img-box{
+	margin-top: .2rem;
+	width: 2rem;
+	height: 2rem;
+	position: relative;
+	overflow: hidden;
+	float: left;
+}
+.m-goods-itema .u-img-box img{
+	width: 100%;
+	height: 100%;
+}
+.m-goods-itema .m-detail-wrapper{
+	margin-top: 0;
+	height: 100%;
+	box-sizing: border-box;
+	margin-left: 2.2rem;
+	padding: 0;
+	padding-top: .3rem;
+	border-bottom: 1px solid #dbdbdb;
+}
+.m-goods-itema .m-detail-wrapper .u-title{
+	font-size: .29rem;
+	line-height: .43rem;
+	height: .86rem;
+	overflow: hidden;
+	-webkit-line-clamp: 2;
+	color: #000;
+}
+.m-goods-itema .m-detail-wrapper .u-price{
+	margin-top: .15rem;
+	color: #f13030;
+	font-size: .29rem;
+}
+.m-goods-itema .m-detail-wrapper .u-price .u-origin-price{
+	font-size: .23rem;
+	color: #000;
+	margin-left: .15rem;
+	text-decoration: line-through;
+}
+.m-goods-itema .m-detail-wrapper .m-tag-box{
+	margin-top: .15rem;
+
+}
+.m-goods-itema .m-detail-wrapper .m-tag-box .u-tag{
+	color: #f13030;
+	font-size: .22rem;
+	border: 1px solid #f13030;
+	border-radius: .05rem;
+	padding: 0 .1rem;
+	margin-right: .1rem;
+}
+
+.m-goods-itema:last-child .m-detail-wrapper{
+	border-bottom: none;
+}

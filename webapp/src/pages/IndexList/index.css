@@ -1,0 +1,29 @@
+.m-cate-box{
+	overflow: hidden;
+	height: 100%;
+	padding-top: .1rem;
+}
+.m-cate-box .m-cate-left{
+	width: 2rem;
+	float: left;
+}
+.m-cate-box .m-cate-left .m-cate-list{
+	padding: 0;
+	margin: 0;
+}
+.m-cate-box .m-cate-left .m-cate-list .m-cate-item{
+	list-style: none;
+	text-align: center;
+	height: 1.1rem;
+	line-height: 1.1rem;
+	background-color: #fff;
+	font-size: .3rem;
+}
+.m-cate-box .m-cate-left .m-cate-list .m-cate-item.is-active{
+	color: #f13030;
+	background-color: rgb(245,245,249);
+}
+.m-cate-box .m-cate-right{
+	margin-left: 2.1rem;
+	margin-right: .1rem;
+}

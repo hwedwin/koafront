@@ -1,0 +1,5 @@
+.my-carousel{height: 3rem;}
+.my-carousel .m-carousel-itema{height: 3rem;display: block;position: relative;overflow: hidden;}
+.my-carousel .m-carousel-itema img{width: 100%;height: 100%;}
+.my-carousel .am-carousel-wrap-dot > span{background-color: rgba(255,255,255,.7);}
+.my-carousel .am-carousel-wrap-dot-active > span{background-color: #fff;}
