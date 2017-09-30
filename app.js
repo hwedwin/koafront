@@ -9,11 +9,16 @@ const SessionStore = require('./core/SessionStore');
 const Koa = require('koa');
 const app = new Koa();
 
+var port = 4000;
+var env = process.env.NODE_ENV;
+console.log(env);
+if (env === 'production') {
+	port = 80;
+}
+
 //连接数据库并设为全局常量
 const sequelize = require('./utils/dbConnection');
 global.sequelize = sequelize;
-
-// require('./testDB');
 
 //中间件
 //日志
@@ -29,7 +34,7 @@ app.use(cors({
 //添加公共属性或方法到ctx
 app.use(async function(ctx,next) {
 	ctx.kgCommon = {
-		host: 'http://localhost:4000/'
+		host: 'http://localhost:'+port+'/'
 	}
 	await next();
 });
@@ -61,6 +66,6 @@ app.use(require('./routes/consignee').routes());
 app.use(require('./routes/trans').routes());
 app.use(require('./routes/balance').routes());
 
-app.listen(4000)
+app.listen(port);
 
 module.exports = app
