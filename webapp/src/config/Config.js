@@ -1,6 +1,6 @@
 // var window.host = 'http://localwindow.host:4000/';
 if (typeof window.host === 'undefined') {
-	window.host = 'http://localhost:4000';
+	window.host = 'http://localhost:4000/';
 }
 var Config = {
 	API: {
@@ -28,6 +28,8 @@ var Config = {
 		MEMBER_DATA: window.host+'api/member/data',
 		MEMBER_EDIT: window.host+'api/member/edit',
 		MEMBER_CUSTOMER: window.host+'api/member/customer',
+		MEMBER_REG_AGENT: window.host+'api/member/regagent',
+		MEMBER_AGENT: window.host+'api/member/agent',
 
 		// 购物车
 		CART_ADD: window.host+'api/cart/add',
@@ -51,6 +53,9 @@ var Config = {
 		ORDER_DETAIL: window.host + 'api/order/detail',
 		ORDER_COUNT: window.host + 'api/order/count',
 		ORDER_SIGN: window.host + 'api/order/sign',
+
+		// 验证码
+		SMSCODE_REGISTER: window.host + 'api/sms/register',
 
 		// 交易
 		TRANS_EXPENSE: window.host + 'api/trans/expense',

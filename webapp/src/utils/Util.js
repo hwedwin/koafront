@@ -8,14 +8,18 @@ const Util = {
 
 	getSearch: function(searchStr,name) {
 		if (!searchStr) {
-			return '';
+			return null;
 		}
 		searchStr = searchStr.substr(1);
 		var reg = new RegExp(name+'=([^&]*)');
 		if (reg.exec(searchStr)) {
 			return reg.exec(searchStr)[1];
 		}
-		return '';
+		return null;
+	},
+
+	isMobile: function(mobile) {
+		return /^1[3|4|5|7|8][0-9]\d{4,8}$/.test(mobile);
 	},
 
 	getCateById: function(id) {

@@ -30,7 +30,7 @@ class AppWrapper extends Component {
   
   componentDidMount() {
     var self = this;
-    /*this.beatTimer = setInterval(function(){
+    // this.beatTimer = setInterval(function(){
       Ajax.post({url: Config.API.BEAT})
       .then(function(data) {
         if (data.status === 200 && data.data.code === 200) {
@@ -40,7 +40,7 @@ class AppWrapper extends Component {
       }).catch(function(error){
         console.log(error);
       });
-    },3000);*/
+    // },3000);
   }
 
   render() {
