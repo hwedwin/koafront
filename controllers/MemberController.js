@@ -65,7 +65,8 @@ const MemberController = {
             respond.json(ctx, false, '号码与已验证手机号码不匹配');
             return false;
         }
-        if (vCode !== verifyCode) {
+        console.log('vCode:'+vCode);
+        if (vCode != verifyCode) {
             respond.json(ctx, false, '短信验证码错误，请重试');
             return false;
         }
@@ -110,12 +111,9 @@ const MemberController = {
 
                 // 上级获取注册返利金额
                 // 交易记录,余额增量
-                if (agentId === 'top') {
-                    await MemberTransactionController.incomeByRegister(agentId,400,member.id,t);
-                    await MemberBalanceController.changeBanlance(agentId,400,t);
-                }else{
-                    await MemberTransactionController.incomeByRegister(agentId,400,member.id,t);
-                    await MemberBalanceController.changeBanlance(agentId,400,t);
+                await MemberTransactionController.incomeByRegister('top',400,member.id,t);
+                await MemberBalanceController.changeBanlance('top',400,t);
+                if (agentId !== 'top') {
                     await MemberTransactionController.incomeByRegister(agentId,98,member.id,t);
                     await MemberBalanceController.changeBanlance(agentId,98,t);
                 }

@@ -4,9 +4,9 @@ const IndexController = {
 	index: async function(ctx) {
 		await ctx.render('index')
 	},
-	register: async function(ctx) {
+	regagent: async function(ctx) {
 		console.log(ctx.params.id)
-		await ctx.render('register',{uid: ctx.params.id})
+		await ctx.render('index')
 	},
 	beat: async function(ctx) {
 		var memberId = ctx.session.memberId;
