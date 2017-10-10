@@ -35,7 +35,7 @@ const IndexController = {
     },
 
     wxOauth: async function(ctx) {
-        var { code } = ctx.request.body;
+        var { code } = ctx.request.query;
         console.log('code:'+code);
         var resBody = await IndexController.getWXToken(code);
         resBody = JSON.parse(resBody);
@@ -82,7 +82,7 @@ const IndexController = {
 
         let options = {
             method: 'get',
-            url: reqUrl + qs.stringify(params)
+            url: reqUrl + CommonUtil.json2RequestParam(params)
         };
 
         return new Promise((resolve, reject) => {
