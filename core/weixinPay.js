@@ -3,7 +3,7 @@ var wxConfig = require('../config/weixin');
 var WXPay = require('weixin-pay');
 
 module.exports = {
-	createUniOrder: function(openid,orderId,totalPrice,payInfo,url) {
+	createUniOrder: function(openid,orderId,totalPrice,payInfo,ip,url) {
 		// 创建微信支付接口
 		var wxpay = WXPay({
 			appid: wxConfig.appid,
@@ -16,10 +16,11 @@ module.exports = {
 				body: payInfo,
 			    detail: '公众号支付测试',
 				out_trade_no: orderId,//内部订单号
-				total_fee: 0.01,
-				spbill_create_ip: ctx.ip,
+				total_fee: totalPrice,
+				spbill_create_ip: ip,
 				notify_url: url
 			}, function(err, result){
+				console.log(err);
 				// in express
 			    // res.render('wxpay/jsapi', { payargs:result })
 			    resolve(result);

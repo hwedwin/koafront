@@ -199,7 +199,7 @@ const OrderController = {
 			var totalPrice = orderDetail.totalPrice;
 			var payInfo = orderDetail.payInfo;
 			//创建微信订单
-			var wxOrder = await weixinPay.createUniOrder(ctx.session.openid,id,totalPrice,payInfo,'http://baebae.cn/api/order/paynotify');
+			var wxOrder = await weixinPay.createUniOrder(ctx.session.openid,id,0.01,payInfo,ctx.ip,'http://baebae.cn/api/order/paynotify');
 			respond.json(ctx,true,'微信支付订单创建成功',result);
 		}catch(e){
 			respond.json(ctx,false,'微信支付订单创建失败',null,e);
