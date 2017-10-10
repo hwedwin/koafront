@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app",
-    "production": "NODE_ENV=production node app"
+    "production": "NODE_ENV=production forever start app"
   },
   "keywords": [
     "koa"
