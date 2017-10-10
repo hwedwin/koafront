@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app",
     "production": "NODE_ENV=production forever start app.js",
-    "prodev": "NODE_ENV=production node app.js",
+    "prodev": "NODE_ENV=production node app.js"
   },
   "keywords": [
     "koa"
