@@ -5,6 +5,7 @@ var WXPay = require('weixin-pay');
 module.exports = {
 	createUniOrder: function(openid,orderId,totalPrice,payInfo,ip,url) {
 		ip = ip.match(/\d+.\d+.\d+.\d+/)[0];
+		console.log('ip:'+ip)
 		// 创建微信支付接口
 		var wxpay = WXPay({
 			appid: wxConfig.appid,
