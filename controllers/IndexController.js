@@ -41,6 +41,7 @@ const IndexController = {
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
         // ctx.type = 'text/plain';
         // ctx.body = resUserInfo;
+        resUserInfo = JSON.parse(resUserInfo);
         console.log(typeof resUserInfo);
         ctx.cookies.set('openid',resUserInfo.openid);
         // resUserInfo = JSON.parse(resUserInfo);
