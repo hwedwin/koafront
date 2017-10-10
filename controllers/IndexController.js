@@ -36,9 +36,12 @@ const IndexController = {
 
     wxOauth: async function(ctx) {
         var { code } = ctx.request.body;
+        console.log('code:'+code);
         var resBody = await IndexController.getWXToken(code);
         resBody = JSON.parse(resBody);
+        console.log('resBody:'+resBody);
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
+        console.log('resUserInfo:'+resUserInfo);
         ctx.type = 'text/plain';
         ctx.body = resUserInfo;
     },
