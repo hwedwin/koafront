@@ -20,10 +20,13 @@ module.exports = {
 				spbill_create_ip: ip,
 				notify_url: url
 			}, function(err, result){
-				console.log(err);
+				if (err) {
+					reject(err);
+				}else{
+			    	resolve(result);
+				}
 				// in express
 			    // res.render('wxpay/jsapi', { payargs:result })
-			    resolve(result);
 			});
 		});
 	}

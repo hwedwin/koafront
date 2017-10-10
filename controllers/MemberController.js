@@ -136,7 +136,7 @@ const MemberController = {
         //创建微信订单
         try{
             var wxOrder = await weixinPay.createUniOrder(ctx.session.openid,CommonUtil.guid(),0.01,'用户注册代理商订单',ctx.ip,'http://baebae.cn/api/member/paynotify');
-            respond.json(ctx,true,'微信支付订单创建成功',result);
+            respond.json(ctx,true,'微信支付订单创建成功',wxOrder);
         }catch(e){
             respond.json(ctx,false,'微信支付订单创建失败',null,e);
         }
