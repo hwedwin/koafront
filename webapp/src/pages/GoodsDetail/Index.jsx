@@ -13,6 +13,7 @@ import {Icon,Badge,List,Toast} from 'antd-mobile'
 import svgCart from '../../assets/svg/cart.svg'
 import svgHeart from '../../assets/svg/heart.svg'
 import svgHeartRed from '../../assets/svg/heartRed.svg'
+import {connect} from 'react-redux';
 
 const BottomBar = props => (
 	<div className="m-bottom-bar">
@@ -101,6 +102,7 @@ class GoodsDetail extends Component {
 
 	constructor(props) {
 		super(props);
+		console.log(props);
 		this.handlePurchaseNumChange = this.handlePurchaseNumChange.bind(this)
 		this.handleOperateClick = this.handleOperateClick.bind(this)
 		this.state = {
@@ -120,7 +122,7 @@ class GoodsDetail extends Component {
 	componentDidMount() {
 		var self = this;
 		//获取商品
-		var a1 = Ajax.post({url: Config.API.DRINK_ONE,data: {id: this.props.match.params.id}})
+		var a1 = Ajax.post({url: Config.API.DRINK_ONE,data: {id: this.props.match.params.id}},this.props.member.level)
 			a1.then(function(data) {
 				if (data.status === 200) {
 					self.setState({
@@ -224,7 +226,7 @@ class GoodsDetail extends Component {
 	}
 
 	handleBrandClick(brandId) {
-		this.props.history.push('/brand/'+brandId+'?brand='+this.state.goodsInfo.brand.brandName);
+		this.props.history.push('/brand/'+brandId+'?brand='+window.escape(this.state.goodsInfo.brand.brandName));
 	}
 
 	handleButtonCartClick() {
@@ -238,6 +240,10 @@ class GoodsDetail extends Component {
 	}
 
 	handleButtonBuyClick() {
+		if (!this.props.loginStatus) {
+			Toast.info('用户尚未登录');
+			return;
+		}
 		var goods = JSON.stringify([{
 			"id": this.state.goodsInfo.id,
 			"num": this.state.purchaseNum
@@ -247,9 +253,10 @@ class GoodsDetail extends Component {
 	}
 
 	render() {
-		var goodsInfo = this.state.goodsInfo
+		var goodsInfo = this.state.goodsInfo;
+		var isAgent = this.props.member.level==1||this.props.member.level==2;
 		return (
-			<div className="m-block-goods-detail">
+			<div className="page-goods-detail">
 				<CommonNavbar 
 					centerText="商品详情"
 					fixed={true}
@@ -266,7 +273,7 @@ class GoodsDetail extends Component {
 						{goodsInfo.name}
 					</div>
 					<div className="m-price-box">
-						<span className="u-web-price">¥{goodsInfo.price}</span>
+						<span className="u-web-price">{goodsInfo.special?'特卖价：¥'+(isAgent?goodsInfo.special.specialPriceAgent:goodsInfo.special.specialPrice):'¥'+goodsInfo.price}</span>
 						<span className="u-origin-price">¥{goodsInfo.originPrice}</span>
 					</div>
 				</div>
@@ -280,10 +287,7 @@ class GoodsDetail extends Component {
 						/>
 					</div>
 					<div className="m-item-box">
-						<span className="u-tip">送至</span>
-					</div>
-					<div className="m-item-box">
-						<span className="u-tip">此商品正在特卖中</span>
+						<span className="u-tip">{goodsInfo.special&&'此商品正在特卖中'}</span>
 					</div>
 				</div>
 				<BrandBox 
@@ -306,4 +310,12 @@ class GoodsDetail extends Component {
 	}
 }
 
-export default GoodsDetail
+// export default GoodsDetail
+
+const mapStateToProps = (state) => {
+  return {
+  	loginStatus: state.loginStatus,
+    member: state.member
+  }
+};
+export default connect(mapStateToProps)(GoodsDetail);

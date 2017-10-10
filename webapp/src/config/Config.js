@@ -1,6 +1,8 @@
 // var window.host = 'http://localwindow.host:4000/';
-if (typeof window.host === 'undefined') {
+if (window.location.host.indexOf('localhost') > -1) {
 	window.host = 'http://localhost:4000/';
+}else{
+	window.host = '/';
 }
 var Config = {
 	API: {
@@ -53,6 +55,7 @@ var Config = {
 		ORDER_DETAIL: window.host + 'api/order/detail',
 		ORDER_COUNT: window.host + 'api/order/count',
 		ORDER_SIGN: window.host + 'api/order/sign',
+		ORDER_DELETE: window.host + 'api/order/delete',
 
 		// 验证码
 		SMSCODE_REGISTER: window.host + 'api/sms/register',

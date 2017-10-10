@@ -8,7 +8,7 @@ import svgLocation from '../../assets/svg/map-marker.svg';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
-
+import {connect} from 'react-redux';
 
 const GoodsItemB = (props) => (
 	<div className="m-goods-item-b">
@@ -87,10 +87,10 @@ class OrderCreate extends Component {
 		var promises = [],p,goods = this.state.goods;
 		for(let i = 0; i< goods.length; i++) {
 			//获取商品
-			p = Ajax.post({url: Config.API.DRINK_ONE,data: {id: goods[i].id}})
+			p = Ajax.post({url: Config.API.DRINK_ONE,data: {id: goods[i].id}},this.props.member.level)
 				p.then((data) => {
 					if (data.status === 200) {
-						var goodsItem = data.data;
+						var goodsItem = this._formatGoods(data.data);
 						for(let i = 0; i< goods.length; i++) {
 							if (goods[i].id === goodsItem.id) {
 								goods[i].info = goodsItem;
@@ -108,6 +108,13 @@ class OrderCreate extends Component {
 			promises.push(p);
 		}
 		return promises;
+	}
+
+	_formatGoods(gItem) {
+		if (gItem.special) {
+			gItem.price = this.props.isAgent?gItem.special.specialPrice:gItem.special.specialPriceAgent;
+		}
+		return gItem;
 	}
 
 	_computeTotal() {
@@ -147,12 +154,12 @@ class OrderCreate extends Component {
 			data.goods.push(gItem);
 		}
 		data.consignee = this.state.addressData;
-		console.log(data);
 		Ajax.post({url: Config.API.ORDER_CREATE,data: data})
-		.then((data) => {
-			Toast.info(data.message);
-			if (data.status === 200) {
+		.then((res) => {
+			Toast.info(res.message);
+			if (res.status === 200) {
 				this._deleteCartGoods();
+				this.props.history.push('/pay/'+res.data.orderId);
 			}else{
 			}
 		}).catch(function(error){
@@ -230,4 +237,12 @@ class OrderCreate extends Component {
 	}
 }
 
-export default OrderCreate;
+// export default OrderCreate;
+const mapStateToProps = (state) => {
+  return {
+  	agentId: state.agentId,
+    member: state.member
+  }
+}
+
+export default connect(mapStateToProps)(OrderCreate);

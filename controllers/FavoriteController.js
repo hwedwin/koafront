@@ -1,6 +1,7 @@
-const Favorite = require('../models/Favorite')
-const Drink = require('../models/Drink')
-const respond = require('../utils/respond')
+const Favorite = require('../models/Favorite');
+const Drink = require('../models/Drink');
+const respond = require('../utils/respond');
+const IndexTopSpecialController = require('./IndexTopSpecialController');
 
 const FavoriteController = {
 	create: async function(ctx) {
@@ -129,6 +130,12 @@ const FavoriteController = {
 					}
 				]
 			});
+			for (var i = 0; i < results.length; i++) {
+                await (async function(item){
+                    var special = await IndexTopSpecialController.getOneById(item.drink.id);
+                    item.dataValues.special = special;
+                })(results[i]);
+            }
 			respond.json(ctx,true,'获取收藏商品成功',{code: 200,data: results});
 		}catch(e){
 			respond.json(ctx,false,'获取收藏商品失败',null,e);

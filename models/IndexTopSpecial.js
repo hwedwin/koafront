@@ -26,6 +26,10 @@ const IndexTopSpecial = sequelize.define('indexTopSpecial',{
 		type: Sequelize.DECIMAL(12,2),
 		defaultValue: 0
 	},
+	specialPriceAgent: {
+		type: Sequelize.DECIMAL(12,2),
+		defaultValue: 0
+	},
 	startTime: {
 		type: Sequelize.INTEGER
 	},

@@ -35,6 +35,24 @@ const IndexTopSpecialController = {
         } catch (e) {
             respond.json(ctx, false, '获取失败', null, e);
         }
+    },
+
+    getOneById: async function(id) {
+        var date = new Date();
+        var fillZero = function(num){if (num < 10) {return '0'+num}return num;}
+        var today = date.getFullYear()+'-'+fillZero((date.getMonth()+1))+'-'+fillZero(date.getDate());
+        try{
+            return await IndexTopSpecial.findOne({
+                where: {
+                    drinkId: id,
+                    isshow: '1',
+                    isDelete: '0',
+                    timeChunk: today
+                }
+            });
+        }catch(e){
+            return e;
+        }
     }
 }
 

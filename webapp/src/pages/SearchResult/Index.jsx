@@ -8,6 +8,7 @@ import {Toast} from 'antd-mobile';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
+import {connect} from 'react-redux';
 
 class SearchResult extends Component {
 
@@ -46,12 +47,23 @@ class SearchResult extends Component {
 			Toast.hide();
 			if (res.status === 200) {
 				this.setState({
-					goods: res.data
+					goods: this._formatGoods(res.data)
 				});
 			}
 		}).catch(function(error){
 			console.log(error);
 		});
+	}
+
+	_formatGoods(goods) {
+		var isAgent = this.props.member.level==1||this.props.member.level==2;
+		for (var i = 0; i < goods.length; i++) {
+			var g = goods[i];
+			if (g.special) {
+				g.price = '特卖价:¥'+(isAgent?g.special.specialPriceAgent:g.specialPrice);
+			}
+		}
+		return goods;
 	}
 
 	handleSortItemClick(sortBy) {
@@ -120,6 +132,7 @@ class SearchResult extends Component {
 						this.state.goods.map(el => (
 							<GoodsItem 
 								key={el.id}
+								speText=""
 								data={GoodsItem.ormParams(el.id,el.name,el.imgPath,el.price,el.originPrice)}
 							/>
 						))
@@ -130,4 +143,12 @@ class SearchResult extends Component {
 	}
 }
 
-export default SearchResult
+// export default SearchResult;
+
+const mapStateToProps = (state) => {
+  return {
+    member: state.member
+  }
+}
+
+export default connect(mapStateToProps)(SearchResult);

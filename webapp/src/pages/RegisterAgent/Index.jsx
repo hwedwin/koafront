@@ -163,9 +163,10 @@ class RegisterAgent extends Component {
 			requestData.agentId = agentId;	
 		}
 		Ajax.post({url: Config.API.MEMBER_REG_AGENT,data: requestData})
-			.then(function(res) {
+			.then((res) => {
 				Toast.info(res.message);
 				if (res.status === 200) {
+					this.props.history.replace('/?aid='+res.id);
 				}else{
 				}
 			}).catch(function(error){

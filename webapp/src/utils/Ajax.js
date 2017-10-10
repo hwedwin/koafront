@@ -17,23 +17,33 @@ const Ajax = {
 	},
 
 	deepFind: function(data,level) {
+		var isAgent = false;
+		if (level == 1 || level == 2) {
+			isAgent = true;
+		}
 		if (this.getType(data) === 'Array') {
 			for (var i = 0; i < data.length; i++) {
 				if (this.getType(data[i]) === 'Object') {
-					this.deepFind(data[i]);
+					this.deepFind(data[i],level);
 				}
 			}
 		}else if(this.getType(data) === 'Object'){
 			if (data.retailPrice) {
-				if (true) {
+				if (isAgent) {
 					data.price = data.supplyPrice;
 				}else{
 					data.price = data.retailPrice;
 				}
+			}else if (data.specialPrice) {
+				if (isAgent) {
+					data.price = data.specialPriceAgent;
+				}else{
+					data.price = data.specialPrice;
+				}
 			}
 			for (var name in data) {
 				if (this.getType(data[name]) === 'Object' || this.getType(data[name]) === 'Array') {
-					this.deepFind(data[name]);
+					this.deepFind(data[name],level);
 				}
 			}
 		}else{
@@ -85,7 +95,7 @@ const Ajax = {
 				if (this.readyState === this.DONE) {
 					if (this.status === 200 || this.status === 304) {
 						var data = this.response.data;
-						data = self.deepFind(data);
+						data = self.deepFind(data,level);
 						var obj = Object.assign(this.response);
 						obj.data = data;
 						resolve(obj);

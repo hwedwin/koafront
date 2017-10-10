@@ -1,15 +1,19 @@
-.m-block-goods-detail .my-carousel{
+.page-goods-detail .my-carousel{
 	background-color: #fff;
 }
 
-.m-block-goods-detail .my-carousel .m-carousel-itema{
+.page-goods-detail .my-carousel .slider-frame{
+	height: 100% !important;
+}
+
+.page-goods-detail .my-carousel .m-carousel-itema{
 	text-align: center;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.m-block-goods-detail .my-carousel .m-carousel-itema img{
+.page-goods-detail .my-carousel .m-carousel-itema img{
 	height: 90%;
 }
 
@@ -166,6 +170,8 @@
 	display: block;
 	margin: 0 auto;
 }
+
+
 
 
 

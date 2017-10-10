@@ -5,6 +5,7 @@ import GoodsItem from '../../components/GoodsItem/Index.jsx';
 import {Toast} from 'antd-mobile';
 import Ajax from '../../utils/Ajax'
 import Config from '../../config/Config'
+import {connect} from 'react-redux';
 
 class Favorite extends Component {
 
@@ -21,15 +22,15 @@ class Favorite extends Component {
 
 	componentDidMount() {
 		// 获取收藏商品
-		 Ajax.post({url: Config.API.FAV_LIST})
-		.then((data) => {
+		 Ajax.post({url: Config.API.FAV_LIST},this.props.member.level)
+		.then((res) => {
 			Toast.hide();
-			if (data.status === 200) {
-				if (data.data.code === 203) {
-					Toast.info(data.data.message);
+			if (res.status === 200) {
+				if (res.data.code === 203) {
+					Toast.info(res.data.message);
 				}else{
 					this.setState({
-						goods: data.data.data
+						goods: this._formatGoods(res.data.data)
 					});
 				}
 			}
@@ -37,6 +38,16 @@ class Favorite extends Component {
 			console.log(error);
 		});
 
+	}
+
+	_formatGoods(goods) {
+		for (var i = 0; i < goods.length; i++) {
+			var g = goods[i];
+			if (g.special) {
+				g.drink.price = (this.props.member.level == 1 || this.props.member.level==2)?g.special.specialPriceAgent:g.special.specialPrice;
+			}
+		}
+		return goods;
 	}
 
 	render() {
@@ -62,4 +73,12 @@ class Favorite extends Component {
 	}
 }
 
-export default Favorite;
+// export default Favorite;
+const mapStateToProps = (state) => {
+  return {
+  	agentId: state.agentId,
+    member: state.member
+  }
+}
+
+export default connect(mapStateToProps)(Favorite);

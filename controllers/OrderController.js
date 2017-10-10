@@ -1,12 +1,16 @@
-const CommonUtil = require('../utils/CommonUtil')
-const respond = require('../utils/respond')
-const paramsVerify = require('../utils/paramsVerify')
-const Order = require('../models/Order')
-const Drink = require('../models/Drink')
-const MemberRelationController = require('./MemberRelationController')
-const DrinkForOrderController = require('./DrinkForOrderController')
-const ConsigneeForOrderController = require('./ConsigneeForOrderController')
-const ExpressForOrderController = require('./ExpressForOrderController')
+const CommonUtil = require('../utils/CommonUtil');
+const respond = require('../utils/respond');
+const paramsVerify = require('../utils/paramsVerify');
+const Order = require('../models/Order');
+const Drink = require('../models/Drink');
+const IndexTopSpecialController = require('./IndexTopSpecialController');
+const MemberRelationController = require('./MemberRelationController');
+const DrinkForOrderController = require('./DrinkForOrderController');
+const ConsigneeForOrderController = require('./ConsigneeForOrderController');
+const ExpressForOrderController = require('./ExpressForOrderController');
+//微信支付相关
+var wxConfig = require('../config/weixin');
+var WXPay = require('weixin-pay');
 
 const OrderController = {
 	// 用于创建注册为代理商的礼品订单
@@ -24,7 +28,8 @@ const OrderController = {
 				orderFrom: 'register',
 				remarks: '用户注册订单',
 				agentId: agentId,
-				createdTimestamp: Date.now()
+				createdTimestamp: Date.now(),
+				payInfo: '注册代理订单'
 			}, {transaction: t});
 
 			//创建订单收货人
@@ -85,6 +90,16 @@ const OrderController = {
 					}
 				}
 			});
+			// 处理特价商品
+			for (var i = 0; i < drinkResult.length; i++) {
+                await (async function(item){
+                    var special = await IndexTopSpecialController.getOneById(item.id);
+                    if (special) {
+                    	item.supplyPrice = special.specialPriceAgent;
+                    	item.retailPrice = special.specialPrice;
+                    }
+                })(drinkResult[i]);
+            }
 			//计算总价格
 			for (var i = 0; i < drinkResult.length; i++) {
 				var drink = drinkResult[i];
@@ -96,16 +111,15 @@ const OrderController = {
 					}
 				}
 			}
-			console.log(totalPriceSupply)
 			//
 			if (memberLevel == 1 || memberLevel == 2) {
 				if (totalPrice != totalPriceSupply) {
-					respond.json(ctx,false,'总价格计算有误',null,{memberLevel,totalPrice,totalPriceRetail,totalPriceSupply})
+					respond.json(ctx,false,'价格计算有误',null,{memberLevel,totalPrice,totalPriceRetail,totalPriceSupply});
 					return;
 				}
 			}else{
 				if (totalPrice != totalPriceRetail) {
-					respond.json(ctx,false,'总价格计算有误',null,{memberLevel,totalPrice,totalPriceRetail,totalPriceSupply})
+					respond.json(ctx,false,'价格计算有误',null,{memberLevel,totalPrice,totalPriceRetail,totalPriceSupply});
 					return;
 				}
 			}
@@ -164,7 +178,7 @@ const OrderController = {
 		}
 	},
 
-	//付款，
+	//支付
 	payOrder: async function(ctx) {
 		var memberId = ctx.session.memberId;
 		if (!memberId) {
@@ -173,11 +187,48 @@ const OrderController = {
 		}
 		var {id} = ctx.request.body;
 		try{
-			await OrderController.changeOrderState(2);
-			respond.json(ctx,true,'订单支付成功');
+			// 查询订单详情
+			var orderDetail = await Order.findOne({
+				where: {
+					id
+				}
+			});
+			if (!orderDetail || orderDetail.progressState != '1') {
+				respond.json(ctx,false,'订单不存在或已支付');
+				return;
+			}
+
+			var totalPrice = orderDetail.totalPrice;
+			var payInfo = orderDetail.payInfo;
+
+			// 创建微信支付接口
+			var wxpay = WXPay({
+				appid: wxConfig.appid,
+				mch_id: wxConfig.mch_id
+			});
+
+			wxpay.getBrandWCPayRequestParams({
+				openid: '微信用户 openid',
+				body: payInfo,
+			    detail: '公众号支付测试',
+				out_trade_no: id,//内部订单号
+				total_fee: 0.01,
+				spbill_create_ip: ctx.ip,
+				notify_url: 'http://baebae.cn/api/order/paynotify'
+			}, function(err, result){
+				// in express
+			    // res.render('wxpay/jsapi', { payargs:result })
+				respond.json(ctx,true,'微信支付订单创建成功',result);
+			});
+
 		}catch(e){
-			respond.json(ctx,false,'订单支付失败',null,e);
+			respond.json(ctx,false,'微信支付订单创建失败',null,e);
 		}
+	},
+
+	// 支付回调
+	payNotify: async function(ctx) {
+		// await OrderController.changeOrderState(memberId,2,id);
 	},
 
 	// 签收
@@ -189,7 +240,7 @@ const OrderController = {
 		}
 		var {id} = ctx.request.body;
 		try{
-			await OrderController.changeOrderState(6,id);
+			await OrderController.changeOrderState(memberId,6,id);
 			respond.json(ctx,true,'订单签收成功');
 		}catch(e){
 			respond.json(ctx,false,'订单签收失败',null,e);
@@ -205,7 +256,7 @@ const OrderController = {
 		}
 		var {id} = ctx.request.body;
 		try{
-			await OrderController.changeOrderState(5,id);
+			await OrderController.changeOrderState(memberId,5,id);
 			respond.json(ctx,true,'申请退款成功');
 		}catch(e){
 			respond.json(ctx,false,'申请退款失败',null,e);
@@ -221,7 +272,7 @@ const OrderController = {
 		}
 		var {id} = ctx.request.body;
 		try{
-			await OrderController.changeOrderState(7,id);
+			await OrderController.changeOrderState(memberId,7,id);
 			respond.json(ctx,true,'退款成功');
 		}catch(e){
 			respond.json(ctx,false,'退款失败',null,e);
@@ -237,7 +288,7 @@ const OrderController = {
 		}
 		var {id} = ctx.request.body;
 		try{
-			await OrderController.changeOrderState(8,id);
+			await OrderController.changeOrderState(memberId,8,id);
 			respond.json(ctx,true,'订单取消成功');
 		}catch(e){
 			respond.json(ctx,false,'退款取消失败',null,e);
@@ -251,7 +302,7 @@ const OrderController = {
 	 * @param    {Number}     stateIndex [订单状态]
 	 * @param    {String}     id         [订单id]
 	 */
-	changeOrderState: async function(stateIndex,id) {
+	changeOrderState: async function(memberId,stateIndex,id) {
 		var state = OrderController.getProgressState(stateIndex-1);
 		try{
 			var result = await Order.update({
@@ -259,12 +310,35 @@ const OrderController = {
 				progressInfo: state.info,	
 			},{
 				where: {
+					memberId,
 					id
 				}
 			});
 			return result;
 		}catch(e){
 			throw new Error(e);
+		}
+	},
+
+	deleteOrder: async function(ctx) {
+		var memberId = ctx.session.memberId;
+		if (!memberId) {
+			respond.json(ctx, false, '用户未登录或登录已过期，请重新登录',{code: 203});
+			return false;
+		}
+		var {id} = ctx.request.body;
+		try{
+			await Order.update({
+				isDeleted: 1	
+			},{
+				where: {
+					memberId,
+					id
+				}
+			});
+			respond.json(ctx,true,'订单删除成功');
+		}catch(e){
+			respond.json(ctx,false,'退款删除失败',null,e);
 		}
 	},
 
@@ -275,7 +349,7 @@ const OrderController = {
 			return false;
 		}
 		var {state} = ctx.request.body;
-		var query = {memberId};
+		var query = {memberId,isDeleted: 0};
 		if (state && ["1","2","3","4","5","9","19","99"].indexOf(state) > -1) {
 			query.progressState = state;
 		}
@@ -327,7 +401,8 @@ const OrderController = {
 		}
 		var {state} = ctx.request.body;
 		var query = {
-			memberId
+			memberId,
+			isDeleted: 0
 		};
 		if (state) {
 			query.progressState = state;

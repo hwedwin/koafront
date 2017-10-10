@@ -1,19 +1,21 @@
-import Ajax from '../../utils/Ajax'
-import Config from '../../config/Config'
-import React,{Component} from 'react'
-import {Toast} from 'antd-mobile'
-import Carousel from '../../components/IndexCarousel/Index.jsx'
-import Searchbar from '../../components/IndexSearchbar/Index.jsx'
-import CateBox from '../../components/IndexCateBox/Index.jsx'
-import BlockTitle from '../../components/BlockTitle/Index.jsx'
-import IndexEverydayTab from '../../components/IndexEverydayTab/Index.jsx'
-import IndexGridGoods from '../../components/IndexGridGoods/Index.jsx'
-import IndexFillBottom from '../../components/IndexFillBottom/Index.jsx'
+import Ajax from '../../utils/Ajax';
+import Config from '../../config/Config';
+import React,{Component} from 'react';
+import {Toast} from 'antd-mobile';
+import Carousel from '../../components/IndexCarousel/Index.jsx';
+import Searchbar from '../../components/IndexSearchbar/Index.jsx';
+import CateBox from '../../components/IndexCateBox/Index.jsx';
+import BlockTitle from '../../components/BlockTitle/Index.jsx';
+import IndexEverydayTab from '../../components/IndexEverydayTab/Index.jsx';
+import IndexGridGoods from '../../components/IndexGridGoods/Index.jsx';
+import IndexFillBottom from '../../components/IndexFillBottom/Index.jsx';
+import {connect} from 'react-redux';
 
 class IndexHome extends Component {
 
 	constructor(props) {
 		super(props);
+		console.log(props)
 		this.state = {
 			swipers: [],
 			specials: [],
@@ -32,7 +34,7 @@ class IndexHome extends Component {
 	_request() {
 		var self = this;
 		//获取轮播
-		var a1 = Ajax.post({url: Config.API.TOPADV_LIST})
+		var a1 = Ajax.post({url: Config.API.TOPADV_LIST},this.props.member.level)
 			a1.then(function(data) {
 				if (data.status === 200) {
 					self.setState({
@@ -44,7 +46,7 @@ class IndexHome extends Component {
 			});
 
 		// 获取每日特卖
-		var a2 = Ajax.post({url: Config.API.TOPSPE_LIST})
+		var a2 = Ajax.post({url: Config.API.TOPSPE_LIST},this.props.member.level)
 			a2.then(function(data) {
 				if (data.status === 200) {
 					self.setState({
@@ -56,7 +58,7 @@ class IndexHome extends Component {
 			});
 
 		// 获取每日推荐
-		var a3 = Ajax.post({url: Config.API.DRINK_LISTREC})
+		var a3 = Ajax.post({url: Config.API.DRINK_LISTREC},this.props.member.level)
 			a3.then(function(data) {
 				if (data.status === 200) {
 					self.setState({
@@ -107,5 +109,13 @@ class IndexHome extends Component {
 		)
 	}
 }
+// export default IndexHome
 
-export default IndexHome
+const mapStateToProps = (state) => {
+  return {
+  	agentId: state.agentId,
+    member: state.member
+  }
+}
+
+export default connect(mapStateToProps)(IndexHome);

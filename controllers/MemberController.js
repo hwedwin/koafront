@@ -287,7 +287,7 @@ const MemberController = {
             return false;
         }
         try{
-            var customers = MemberRelationController.getCustomerByMemberId(memberId);
+            var customers = await MemberRelationController.getCustomerByMemberId(memberId);
             respond.json(ctx,true,'获取客户成功',{code: 200,data: customers});
         }catch(e) {
             respond.json(ctx,false,'获取客户失败',null,e);

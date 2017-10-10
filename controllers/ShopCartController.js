@@ -4,6 +4,8 @@ const Drink = require('../models/Drink');
 const DrinkController = require('../controllers/DrinkController');
 const MemberController = require('../controllers/MemberController');
 const respond = require('../utils/respond');
+const IndexTopSpecialController = require('./IndexTopSpecialController');
+
 const ShopCartController = {
     /**
      * 通过用户memberId获取其购物车中的商品
@@ -20,7 +22,13 @@ const ShopCartController = {
             var queryStr = "select shopCart.id as `cartId`,shopCart.nums as `cartNum`,drink.* from "
             queryStr += "`shopCarts` AS shopCart,`drinks` AS drink "
             queryStr += "where shopCart.drinkId=drink.id and shopCart.memberId='" + memberId + "'";
-            var result = await sequelize.query(queryStr, { type: sequelize.QueryTypes.SELECT })
+            var result = await sequelize.query(queryStr, { type: sequelize.QueryTypes.SELECT });
+            for (var i = 0; i < result.length; i++) {
+                await (async function(item){
+                    var special = await IndexTopSpecialController.getOneById(item.id);
+                    item.special = special;
+                })(result[i]);
+            }
             respond.json(ctx, true, '查询成功', result);
         } catch (e) {
             respond.json(ctx, false, '查询失败', null, e);

@@ -7,6 +7,7 @@ import IndexFillBottom from '../../components/IndexFillBottom/Index.jsx'
 import PMOperatorButton from '../../components/PMOperatorButton/Index.jsx'
 import Ajax from '../../utils/Ajax'
 import Config from '../../config/Config'
+import {connect} from 'react-redux';
 
 const SelectAllBar = (props) => {
 	const type = props.selectAll ? "check-circle" : "check-circle-o";
@@ -88,15 +89,15 @@ class GoodsItem extends Component {
 
 	render() {
 		const type = this.state.select ? "check-circle" : "check-circle-o";
-		
+		var data = this.props.data;
 		return (
 			<div className="m-shopcart-item" onClick={this.handleClick.bind(this)}>
 				<Icon size="xs" type={type} color="red" onClick={this.handleCheckIconClick.bind(this)}/>
-				<img className="u-logo" src={this.props.data.imgPath}/>
+				<img className="u-logo" src={data.imgPath}/>
 				<div className="m-right">
-					<div className="u-name">{this.props.data.name}</div>
+					<div className="u-name">{data.name}</div>
 					<div className="u-bottom">
-						<span className="u-price">¥{this.props.data.price}</span>
+						<span className="u-price">{data.price}</span>
 						<PMOperatorButton
 							value={this.state.num}
 							onNumChange={this.handleNumChange}
@@ -137,7 +138,7 @@ class IndexCart extends Component {
 		Ajax.post({url: Config.API.CART_GET})
 			.then(function(data) {
 				if (data.status === 200) {
-					var goods = data.data;
+					var goods = self._formatGoods(data.data);
 					var cart={};
 					for (var i = 0; i < goods.length; i++) {
 						var gItem = goods[i];
@@ -161,6 +162,16 @@ class IndexCart extends Component {
 			}).catch(function(error){
 				console.log(error);
 			});
+	}
+
+	_formatGoods(goods) {
+		for (var i = 0; i < goods.length; i++) {
+			var gItem = goods[i];
+			if (gItem.special) {
+				gItem.price = this.props.isAgent?gItem.special.specialPrice:gItem.special.specialPriceAgent;
+			}
+		}
+		return goods;
 	}
 
 	_computedTotal() {
@@ -236,6 +247,10 @@ class IndexCart extends Component {
 				cartData.push(item);
 			}
 		}
+		if (cartData.length === 0) {
+			Toast.info('请选择要结算的商品');
+			return;
+		}
 		var goods = JSON.stringify(cartData);
 		this.props.history.push('/ordercreate/?goods='+goods);
 	}
@@ -255,6 +270,7 @@ class IndexCart extends Component {
 								pselect={this.state.selectAll} 
 								data={el}
 								key={el.cartId}
+								isAgent={this.props.member.level==1||this.props.member.level==2}
 								onNumChange={this.handleGameItemNumChange.bind(this)}
 								onItemClick={this.handleGameItemClick.bind(this)}
 								onCheckIconClick={this.handleCheckIconClick.bind(this)}
@@ -278,4 +294,12 @@ class IndexCart extends Component {
 	}
 }
 
-export default IndexCart
+// export default IndexCart
+const mapStateToProps = (state) => {
+  return {
+  	agentId: state.agentId,
+    member: state.member
+  }
+}
+
+export default connect(mapStateToProps)(IndexCart);

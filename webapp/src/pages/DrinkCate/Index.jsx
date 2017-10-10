@@ -9,6 +9,8 @@ import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
 
+import {connect} from 'react-redux';
+
 class SearchResult extends Component {
 
 	constructor(props) {
@@ -25,7 +27,6 @@ class SearchResult extends Component {
 			url = Config.API.DRINK_BRAND;
 			navTitle = Util.getSearch(this.props.location.search,'brand');
 		}
-
 		this.state = {
 			url: url,
 			navTitle: navTitle,
@@ -39,7 +40,6 @@ class SearchResult extends Component {
 	}
 
 	componentWillMount() {
-		console.log(this.props)
 		Toast.loading('加载中...',0);
 	}
 
@@ -49,7 +49,6 @@ class SearchResult extends Component {
 	}
 
 	_request() {
-		// 获取收藏商品
 		 Ajax.post({url: this.state.url,data: {
 		 	categoryId: this.state.query,
 		 	brandId: this.state.query,
@@ -57,17 +56,28 @@ class SearchResult extends Component {
 		 	orderRule: this.state.sortPriceTag === 1 ? 'DESC' : 'ASC',
 		 	pageIndex: this.state.pageIndex,
 		 	pageSize: this.state.pageSize
-		 }})
+		 }},this.props.member.level)
 		.then((res) => {
 			Toast.hide();
 			if (res.status === 200) {
 				this.setState({
-					goods: res.data
+					goods: this._formatGoods(res.data)
 				});
 			}
 		}).catch(function(error){
 			console.log(error);
 		});
+	}
+
+	_formatGoods(goods) {
+		var isAgent = this.props.member.level==1||this.props.member.level==2;
+		for (var i = 0; i < goods.length; i++) {
+			var g = goods[i];
+			if (g.special) {
+				g.price = '特卖价:¥'+(isAgent?g.special.specialPriceAgent:g.specialPrice);
+			}
+		}
+		return goods;
 	}
 
 	handleSortItemClick(sortBy) {
@@ -136,6 +146,7 @@ class SearchResult extends Component {
 						this.state.goods.map(el => (
 							<GoodsItem 
 								key={el.id}
+								speText=""
 								data={GoodsItem.ormParams(el.id,el.name,el.imgPath,el.price,el.originPrice)}
 							/>
 						))
@@ -146,4 +157,11 @@ class SearchResult extends Component {
 	}
 }
 
-export default SearchResult
+// export default SearchResult;
+const mapStateToProps = (state) => {
+  return {
+    member: state.member
+  }
+}
+
+export default connect(mapStateToProps)(SearchResult);

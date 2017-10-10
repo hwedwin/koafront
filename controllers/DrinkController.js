@@ -1,6 +1,7 @@
 const Drink = require('../models/Drink');
 const DrinkImage = require('../models/DrinkImage');
 const DrinkBrand = require('../models/DrinkBrand');
+const IndexTopSpecialController = require('./IndexTopSpecialController');
 const respond = require('../utils/respond');
 const DrinkController = {
     /**
@@ -117,8 +118,11 @@ const DrinkController = {
                     id: result.brandId
                 }
             });
+
+            var special = await IndexTopSpecialController.getOneById(id);
             result.dataValues.imgPaths = imgPaths;
             result.dataValues.brand = brand;
+            result.dataValues.special = special;
             respond.json(ctx, true, '查询成功', result);
         } catch (e) {
             respond.json(ctx, false, '查询失败', null, e);
@@ -152,6 +156,11 @@ const DrinkController = {
                 },
                 order: orderQuery
             });
+            for (var i = 0; i < result.length; i++) {
+                await (async function(item){
+                    item.dataValues.special = await IndexTopSpecialController.getOneById(item.id);
+                })(result[i]);
+            }
             respond.json(ctx, true, '查询成功', result);
         } catch (e) {
             respond.json(ctx, false, '查询失败', null, e);
@@ -185,6 +194,11 @@ const DrinkController = {
                 },
                 order: orderQuery
             });
+            for (var i = 0; i < result.length; i++) {
+                await (async function(item){
+                    item.dataValues.special = await IndexTopSpecialController.getOneById(item.id);
+                })(result[i]);
+            }
             respond.json(ctx, true, '查询成功', result);
         } catch (e) {
             respond.json(ctx, false, '查询失败', null, e);
@@ -227,6 +241,11 @@ const DrinkController = {
                     ]
                 }
             });
+            for (var i = 0; i < result.length; i++) {
+                await (async function(item){
+                    item.dataValues.special = await IndexTopSpecialController.getOneById(item.id);
+                })(result[i]);
+            }
             respond.json(ctx, true, '查询成功', result);
         } catch (e) {
             respond.json(ctx, false, '查询失败', null, e);

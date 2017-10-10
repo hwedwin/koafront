@@ -22,25 +22,38 @@ import Pay from './pages/Pay/Index.jsx';
 import Customer from './pages/Customer/Index.jsx';
 
 import Ajax from './utils/Ajax';
+import Util from './utils/Util';
 import Config from './config/Config';
 import {connect} from 'react-redux';
 import {initMember} from './store/userStore';
+import {initAgentId} from './store/userStore';
 
 class AppWrapper extends Component {
-  
-  componentDidMount() {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: null
+    }
+  }
+
+  componentWillMount() {
     var self = this;
     // this.beatTimer = setInterval(function(){
       Ajax.post({url: Config.API.BEAT})
-      .then(function(data) {
-        if (data.status === 200 && data.data.code === 200) {
-          self.props.onInitMember(data.data.data);
+      .then((res) => {
+        if (res.status === 200 && res.data.code === 200) {
+          this.setState({
+            data: res.data.data
+          });
+          self.props.onInitMember(res.data.data);
         }else{
         }
       }).catch(function(error){
         console.log(error);
       });
     // },3000);
+    self.props.onInitAgentId(Util.getSearch(window.location.search,'aid'));
   }
 
   render() {
@@ -60,7 +73,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onInitMember: (member) => dispatch(initMember(member))
+    onInitMember: (member) => dispatch(initMember(member)),
+    onInitAgentId: (agentId) => dispatch(initAgentId(agentId))
   }
 }
 
@@ -74,7 +88,11 @@ class App extends Component {
       <Router>
         <div className="app">
           <Route path="/" exact render={
-          		() => <Redirect to="/home" />
+          		(p) => {
+                var search = p.location.search;
+                search = search ? search : '';
+                return <Redirect to={"/home"+search} />
+              }
           	}
           />
           <Route path="/home" component={Index} />

@@ -47,6 +47,11 @@ class OrderItem extends Component {
 		this.props.onItemClick(this.props.data.id);
 	}
 
+	handleDeleteClick(e) {
+		e.stopPropagation();
+		this.props.onDelete(this.props.data.id);
+	}
+
 	render() {
 		var props = this.props;
 		return (
@@ -55,7 +60,7 @@ class OrderItem extends Component {
 					<Link className="u-link-shop" to="/"></Link>
 					<div>
 						<span className="u-order-status-tip">{Util.formatOrderState(props.data.progressState)}</span>
-						<span className="u-btn-delete">删除</span>
+						<span className="u-btn-delete" onClick={this.handleDeleteClick.bind(this)}>删除</span>
 					</div>
 				</div>
 				<div className="m-center-item">
@@ -181,6 +186,21 @@ class Order extends Component {
 		this.props.history.push('/orderdetail/'+id)
 	}
 
+	handleOrderDelete(id) {
+		if (window.confirm('确定要删除此订单吗？')) {
+			Ajax.post({url: Config.API.ORDER_DELETE,data: {id: id}})
+			.then((data) => {
+				Toast.info(data.message);
+				if (data.status === 200) {
+					this.handleTabClick(this.state.defaultActiveKey);
+				}else{
+				}
+			}).catch(function(error){
+				console.log(error);
+			});
+		}
+	}
+
 	render() {
 		return (
 			<div className="page-order">
@@ -197,6 +217,7 @@ class Order extends Component {
 			           				data={el}
 			           				key={el.id}
 			           				onButtonClick={this.handleOrderButtonClick.bind(this)}
+			           				onDelete={this.handleOrderDelete.bind(this)}
 			           				onItemClick={this.handleOrderClick.bind(this)} />
 			        			)
 			        	}
@@ -210,6 +231,7 @@ class Order extends Component {
 			           				data={el}
 			           				key={el.id}
 			           				onButtonClick={this.handleOrderButtonClick.bind(this)}
+			           				onDelete={this.handleOrderDelete.bind(this)}
 			           				onItemClick={this.handleOrderClick.bind(this)} />
 			        			)
 			        	}
@@ -223,6 +245,7 @@ class Order extends Component {
 			           				data={el}
 			           				key={el.id}
 			           				onButtonClick={this.handleOrderButtonClick.bind(this)}
+			           				onDelete={this.handleOrderDelete.bind(this)}
 			           				onItemClick={this.handleOrderClick.bind(this)} />
 			        			)
 			        	}
@@ -236,6 +259,7 @@ class Order extends Component {
 			           				data={el}
 			           				key={el.id}
 			           				onButtonClick={this.handleOrderButtonClick.bind(this)}
+			           				onDelete={this.handleOrderDelete.bind(this)}
 			           				onItemClick={this.handleOrderClick.bind(this)} />
 			        			)
 			        	}

@@ -10,6 +10,7 @@ const Util = {
 		if (!searchStr) {
 			return null;
 		}
+		searchStr = window.unescape(searchStr);
 		searchStr = searchStr.substr(1);
 		var reg = new RegExp(name+'=([^&]*)');
 		if (reg.exec(searchStr)) {

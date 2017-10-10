@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const Drink = require('./Drink');
 const ShopCart = sequelize.define('shopCart',{
 	id: {
 		type: Sequelize.UUID,
@@ -17,6 +18,11 @@ const ShopCart = sequelize.define('shopCart',{
 		type: Sequelize.INTEGER,
 		allowNull: false
 	}
+});
+
+ShopCart.belongsTo(Drink,{
+	foreignKey: 'drinkId',
+	as: 'cart'
 });
 
 module.exports = ShopCart;
