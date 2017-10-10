@@ -35,18 +35,21 @@ const IndexController = {
     },
 
     wxOauth: async function(ctx) {
-        var { code } = ctx.request.query;
+        var { code,state } = ctx.request.query;
         var resBody = await IndexController.getWXToken(code);
         resBody = JSON.parse(resBody);
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
+        console.log(resUserInfo);
         // ctx.type = 'text/plain';
         // ctx.body = resUserInfo;
         resUserInfo = JSON.parse(resUserInfo);
-        console.log(typeof resUserInfo);
         ctx.cookies.set('openid',resUserInfo.openid);
-        // resUserInfo = JSON.parse(resUserInfo);
         ctx.session.openid = resUserInfo.openid;
-        ctx.redirect('http://www.baebae.cn');
+        if (state === 'regagent') {
+            ctx.redirect('http://www.baebae.cn/regagent');
+        }else{
+            ctx.redirect('http://www.baebae.cn');
+        }
     },
 
     getWXToken: function(code) {

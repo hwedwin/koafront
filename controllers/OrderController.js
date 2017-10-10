@@ -9,8 +9,7 @@ const DrinkForOrderController = require('./DrinkForOrderController');
 const ConsigneeForOrderController = require('./ConsigneeForOrderController');
 const ExpressForOrderController = require('./ExpressForOrderController');
 //微信支付相关
-var wxConfig = require('../config/weixin');
-var WXPay = require('weixin-pay');
+const weixinPay = require('../core/weixinPay');
 
 const OrderController = {
 	// 用于创建注册为代理商的礼品订单
@@ -197,30 +196,11 @@ const OrderController = {
 				respond.json(ctx,false,'订单不存在或已支付');
 				return;
 			}
-
 			var totalPrice = orderDetail.totalPrice;
 			var payInfo = orderDetail.payInfo;
-
-			// 创建微信支付接口
-			var wxpay = WXPay({
-				appid: wxConfig.appid,
-				mch_id: wxConfig.mch_id
-			});
-
-			wxpay.getBrandWCPayRequestParams({
-				openid: '微信用户 openid',
-				body: payInfo,
-			    detail: '公众号支付测试',
-				out_trade_no: id,//内部订单号
-				total_fee: 0.01,
-				spbill_create_ip: ctx.ip,
-				notify_url: 'http://baebae.cn/api/order/paynotify'
-			}, function(err, result){
-				// in express
-			    // res.render('wxpay/jsapi', { payargs:result })
-				respond.json(ctx,true,'微信支付订单创建成功',result);
-			});
-
+			//创建微信订单
+			var wxOrder = await weixinPay.createUniOrder(ctx.session.openid,id,totalPrice,payInfo,'http://baebae.cn/api/order/paynotify');
+			respond.json(ctx,true,'微信支付订单创建成功',result);
 		}catch(e){
 			respond.json(ctx,false,'微信支付订单创建失败',null,e);
 		}

@@ -32,6 +32,7 @@ var Config = {
 		MEMBER_CUSTOMER: window.host+'api/member/customer',
 		MEMBER_REG_AGENT: window.host+'api/member/regagent',
 		MEMBER_AGENT: window.host+'api/member/agent',
+		MEMBER_WXORDER: window.host+'api/member/wxorder',
 
 		// 购物车
 		CART_ADD: window.host+'api/cart/add',

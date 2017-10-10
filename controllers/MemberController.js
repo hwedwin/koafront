@@ -9,6 +9,9 @@ const crypto = require('../utils/crypto');
 const respond = require('../utils/respond');
 const smsVerify = require('../utils/smsVerify');
 
+const weixinPay = require('../core/weixinPay');
+const CommonUtil = require('../utils/CommonUtil');
+
 const MemberController = {
     login: async function(ctx) {
         let { mobile, password } = ctx.request.body;
@@ -126,6 +129,22 @@ const MemberController = {
         } catch (e) {
             respond.json(ctx, false, '注册失败', null, e);
         }
+    },
+
+    // 创建一笔订单用于微信支付
+    createWXPayOrder: async function(ctx) {
+        //创建微信订单
+        try{
+            var wxOrder = await weixinPay.createUniOrder(ctx.session.openid,CommonUtils.guid(),0.01,'用户注册代理商订单','http://baebae.cn/api/member/paynotify');
+            respond.json(ctx,true,'微信支付订单创建成功',result);
+        }catch(e){
+            respond.json(ctx,true,'微信支付订单创建失败',null,e);
+        }
+    },
+
+    // 支付成功回调
+    payNotify: async function(ctx) {
+        // await OrderController.changeOrderState(memberId,2,id);
     },
 
     //注册为普通会员

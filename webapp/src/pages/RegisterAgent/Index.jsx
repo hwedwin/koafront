@@ -33,7 +33,17 @@ class RegisterAgent extends Component {
 	}
 
 	componentDidMount() {
+		this._requestWxOrder();
 		KGArea.init('#area')
+	}
+
+	_requestWxOrder() {
+		Ajax.post({url: Config.API.MEMBER_WXORDER})
+			.then((res) => {
+				console.log(res);
+			}).catch(function(error){
+				console.log(error);
+			});
 	}
 
 	_startTimer() {
