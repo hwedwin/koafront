@@ -41,7 +41,7 @@ const IndexController = {
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
         // ctx.type = 'text/plain';
         // ctx.body = resUserInfo;
-        ctx.cookie.set('wxuserinfo',resUserInfo);
+        ctx.cookies.set('wxuserinfo',resUserInfo);
         resUserInfo = JSON.parse(resUserInfo);
         ctx.session.openid = resUserInfo.openid;
         ctx.redirect('http://www.baebae.cn');
