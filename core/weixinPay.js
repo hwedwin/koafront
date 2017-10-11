@@ -51,7 +51,7 @@ WXPay.mix('sign', function(param){
 	}
 	arr.sort();
 	str = arr.join('&');			
-	str = str+'&'+wxConfig.appSecret
+	// str = str+'&'+wxConfig.appSecret
 	return md5(str).toUpperCase();
 });
 
@@ -68,7 +68,7 @@ WXPay.mix('createWCPayOrder', function(order){
 			if (err) {
 				reject(err);
 			}else{
-				resolve(JSON.parse(data));
+				resolve(data);
 			}
 		},function(err){
 			reject(err);
