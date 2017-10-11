@@ -9,7 +9,11 @@ var xml2js = require('xml2js');
 exports.buildXML = function(json){
 	var str = '<xml>';
 	for (var name in json) {
-		str += '<'+name+'><![CDATA['+json[name]+']]></'+name+'>';
+		if (name == 'sign') {
+			str += '<'+name+'>'+json[name]+'</'+name+'>';
+		}else{
+			str += '<'+name+'><![CDATA['+json[name]+']]></'+name+'>';
+		}
 	}
 	str += '</xml>';
 	return str;
