@@ -9,7 +9,6 @@ router.post('/api/member/regagent',MemberController.registerAgent)
 		.post('/api/member/edit',MemberController.edit)
 		.post('/api/member/customer',MemberController.getCustomer)
 		.post('/api/member/register',MemberController.register)
-		.post('/api/member/wxorder',MemberController.createWXPayOrder)
 		.post('/api/member/paynotify',MemberController.payNotify)
 
 module.exports = router
