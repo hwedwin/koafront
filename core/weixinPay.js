@@ -78,6 +78,7 @@ WXPay.mix('createWCPayOrder', function(order){
 
 WXPay.mix('requestUnifiedOrder',function(order,fn,errFn){
 	console.log('8')
+	console.log(request)
 	request({
 		url: "https://api.mch.weixin.qq.com/pay/unifiedorder",
 		method: 'POST',
@@ -95,6 +96,7 @@ WXPay.mix('requestUnifiedOrder',function(order,fn,errFn){
 			util.parseXML(body,fn);
 		}
 	});	
+	console.log('10')
 });
 
 exports = module.exports = WXPay;
