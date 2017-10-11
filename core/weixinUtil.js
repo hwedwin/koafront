@@ -12,8 +12,7 @@ exports.buildXML = function(json){
 		str += '<'+name+'><![CDATA['+json[name]+']]></'+name+'>';
 	}
 	str += '</xml>';
-	var builder = new xml2js.Builder();
-	return builder.buildObject(json);
+	return str;
 };
 
 exports.parseXML = function(xml, fn){
