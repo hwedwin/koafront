@@ -87,7 +87,7 @@ WXPay.mix('sign', function(param){
 });
 
 WXPay.mix('createWCPayOrder', function(order){
-	order.ip = order.ip.match(/\d+.\d+.\d+.\d+/)[0];
+	order.spbill_create_ip = order.spbill_create_ip.match(/\d+.\d+.\d+.\d+/)[0];
 	order.trade_type = "JSAPI";
 	order.nonce_str = order.nonce_str || util.generateNonceString();
 	util.mix(order, this.wxpayID);
