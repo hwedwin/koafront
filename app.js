@@ -5,6 +5,7 @@ const koaBody = require('koa-body');
 const koaStatic = require('koa-static');
 const session = require('koa-session2');
 const cors = require('koa-cors');
+const xmlParser = require('koa-xml-body');
 const SessionStore = require('./core/SessionStore');
 const Koa = require('koa');
 const app = new Koa();
@@ -32,16 +33,17 @@ app.use(cors({
 }));
 
 //添加公共属性或方法到ctx
-app.use(async function(ctx,next) {
-	ctx.kgCommon = {
-		host: 'http://localhost:'+port+'/'
-	}
-	await next();
-});
+// app.use(async function(ctx,next) {
+// 	ctx.kgCommon = {
+// 		host: 'http://localhost:'+port+'/'
+// 	}
+// 	await next();
+// });
 
 //使用ejs模版
 app.use(views(path.join(__dirname,'/webapp/build'),{map:{html:'ejs'}}));
 //解析请求体
+app.use(xmlParser());
 app.use(koaBody({multipart: true}));
 //设置静态文件目录
 app.use(koaStatic(path.join(__dirname,'/webapp/build')));

@@ -606,6 +606,13 @@ koa-views@^6.0.2:
     koa-send "^4.0.0"
     mz "^2.4.0"
 
+koa-xml-body@^2.0.0:
+  version "2.0.0"
+  resolved "http://registry.npm.taobao.org/koa-xml-body/download/koa-xml-body-2.0.0.tgz#5ad70b7881c7f2aa041cfd67f8524b521aa59fa6"
+  dependencies:
+    raw-body "^2.2.0"
+    xml2js "^0.4.17"
+
 koa@^2.2.0:
   version "2.3.0"
   resolved "http://registry.npm.taobao.org/koa/download/koa-2.3.0.tgz#9e1e8e4da401839c57b8527eadc57f76127555a7"
@@ -1083,7 +1090,7 @@ wkx@^0.4.1:
   dependencies:
     "@types/node" "^6.0.48"
 
-xml2js@^0.4.19, xml2js@^0.4.6:
+xml2js@^0.4.17, xml2js@^0.4.19, xml2js@^0.4.6:
   version "0.4.19"
   resolved "http://registry.npm.taobao.org/xml2js/download/xml2js-0.4.19.tgz#686c20f213209e94abf0d1bcf1efaa291c7827a7"
   dependencies:

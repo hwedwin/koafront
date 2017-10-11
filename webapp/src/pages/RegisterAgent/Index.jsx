@@ -176,10 +176,11 @@ class RegisterAgent extends Component {
 				console.log(res);
 				if (res.status === 200) {
 					Util.wxPay(res.data,function(state){
+						Toast.hide();
 						if (state) {
-							console.log('支付成功')
+							Toast.info('支付成功,即将跳转至代理商首页');
 						}else{
-							console.log('支付失败')
+							console.log('支付失败');
 						}
 					});
 				}else{

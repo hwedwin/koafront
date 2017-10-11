@@ -178,7 +178,7 @@ const MemberController = {
                 phone: mobile
             });
             var memberId = member.id;
-            
+
             // 找到agentid
             var relation = await MemberRelation.findOne({
                 where: {
@@ -226,7 +226,15 @@ const MemberController = {
     // 支付成功回调
     payNotify: async function(ctx) {
         console.log(ctx.request.body);
+        var body = ctx.request.body;
+        if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
+            await MemberController.createRegisterTransaction(body.out_trade_no);
+        }else{
+            await MemberController.clearRegistedAgent(body.out_trade_no);  
+        }
         // await OrderController.changeOrderState(memberId,2,id);
+        var message = '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
+        ctx.body = message;
     },
 
     //注册为普通会员
