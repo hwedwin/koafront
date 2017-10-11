@@ -52,7 +52,6 @@ WXPay.mix('sign', function(param){
 		}
 	}
 	arr.sort();
-	console.log(arr);
 	str = arr.join('&');			
 	str = str + '&key=' + wxConfig.mch_key;
 	return md5(str).toUpperCase();
@@ -64,14 +63,25 @@ WXPay.mix('createWCPayOrder', function(order){
 	order.nonce_str = order.nonce_str || util.generateNonceString();
 	util.mix(order, this.wxpayID);
 	order.sign = this.sign(order);
-	console.log('order:'+JSON.stringify(order))
 	var self = this;
 	return new Promise(function(resolve,reject) {
 		self.requestUnifiedOrder(order,function(err,data){
 			if (err) {
 				reject(err);
 			}else{
-				resolve(data);
+				if (data.return_code == 'SUCCESS' && data.result_code == 'SUCCESS') {
+					var resParam = {
+						"appId":data.appid,     //公众号名称，由商户传入     
+			           "timeStamp":Math.floor(Date.now()/1000)+"",    //时间戳，自1970年以来的秒数     
+			           "nonceStr":data.nonce_str, //随机串     
+			           "package":"prepay_id="+data.prepay_id,     
+			           "signType":"MD5"         //微信签名方式：     
+					};
+					resParam.paySign = self.sign(resParam); 
+					resolve(resParam);
+				}else{
+					reject(data);
+				}
 			}
 		},function(err){
 			reject(err);
@@ -80,8 +90,6 @@ WXPay.mix('createWCPayOrder', function(order){
 });
 
 WXPay.mix('requestUnifiedOrder',function(order,fn,errFn){
-	console.log('8')
-	console.log(util.buildXML(order))
 	request({
 		url: "https://api.mch.weixin.qq.com/pay/unifiedorder",
 		method: 'POST',
@@ -91,7 +99,6 @@ WXPay.mix('requestUnifiedOrder',function(order,fn,errFn){
 		// 	passphrase: this.options.mch_id
 		// }
 	}, function(err, response, body){
-		console.log('9')
 		if (err) {
 			errFn();
 		}else{
@@ -99,7 +106,6 @@ WXPay.mix('requestUnifiedOrder',function(order,fn,errFn){
 			util.parseXML(body,fn);
 		}
 	});	
-	console.log('10')
 });
 
 exports = module.exports = WXPay;

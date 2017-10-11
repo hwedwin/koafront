@@ -33,17 +33,16 @@ class RegisterAgent extends Component {
 	}
 
 	componentDidMount() {
-		this._requestWxOrder();
 		KGArea.init('#area')
 	}
 
 	_requestWxOrder() {
-		Ajax.post({url: Config.API.MEMBER_WXORDER})
-			.then((res) => {
-				console.log(res);
-			}).catch(function(error){
-				console.log(error);
-			});
+		// Ajax.post({url: Config.API.MEMBER_WXORDER})
+		// 	.then((res) => {
+		// 		console.log(res);
+		// 	}).catch(function(error){
+		// 		console.log(error);
+		// 	});
 	}
 
 	_startTimer() {
@@ -174,9 +173,15 @@ class RegisterAgent extends Component {
 		}
 		Ajax.post({url: Config.API.MEMBER_REG_AGENT,data: requestData})
 			.then((res) => {
-				Toast.info(res.message);
+				console.log(res);
 				if (res.status === 200) {
-					this.props.history.replace('/?aid='+res.id);
+					Util.wxPay(res.data,function(state){
+						if (state) {
+							console.log('支付成功')
+						}else{
+							console.log('支付失败')
+						}
+					});
 				}else{
 				}
 			}).catch(function(error){

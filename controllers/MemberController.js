@@ -1,4 +1,5 @@
 const Member = require('../models/Member');
+const Consignee = require('../models/Consignee');
 const MemberRelation = require('../models/MemberRelation');
 const MemberRelationController = require('./MemberRelationController');
 const MemberBalanceController = require('./MemberBalanceController');
@@ -52,7 +53,7 @@ const MemberController = {
         respond.json(ctx,true,'退出成功');
     },
 
-    //注册为经销商
+    //预注册为经销商-未支付
     registerAgent: async function(ctx) {
         let { mobile, verifyCode, password, agentId, consigneeName,consigneeMobile,province,city,county,address } = ctx.request.body;
         let { vCode, vMobile } = smsVerify.get(ctx);
@@ -68,7 +69,6 @@ const MemberController = {
             respond.json(ctx, false, '号码与已验证手机号码不匹配');
             return false;
         }
-        console.log('vCode:'+vCode);
         if (vCode != verifyCode) {
             respond.json(ctx, false, '短信验证码错误，请重试');
             return false;
@@ -99,63 +99,134 @@ const MemberController = {
                     consigneeName,consigneeMobile,province,city,county,address,
                 },t);
 
-                // 新建一笔订单，送注册礼品
-                await OrderController.createRegisterOrder(member.id,agentId,{
-                    consigneeName,consigneeMobile,province,city,county,address
-                },t);
+                // // 新建一笔订单，送注册礼品
+                // await OrderController.createRegisterOrder(member.id,agentId,{
+                //     consigneeName,consigneeMobile,province,city,county,address
+                // },t);
 
-                // 创建用户余额账户
-                var baResult = await MemberBalanceController.create(member.id,t);
-                // console.log(baResult);
+                // // 创建用户余额账户
+                // var baResult = await MemberBalanceController.create(member.id,t);
+                // // console.log(baResult);
 
-                // 创建一条注册为经销商的支出交易
-                var transResult = await MemberTransactionController.expenseByRegister(member.id,-400,agentId,t);
-                // console.log(transResult);
+                // // 创建一条注册为经销商的支出交易
+                // var transResult = await MemberTransactionController.expenseByRegister(member.id,-400,agentId,t);
+                // // console.log(transResult);
 
-                // 上级获取注册返利金额
-                // 交易记录,余额增量
-                await MemberTransactionController.incomeByRegister('top',400,member.id,t);
-                await MemberBalanceController.changeBanlance('top',400,t);
-                if (agentId !== 'top') {
-                    await MemberTransactionController.incomeByRegister(agentId,98,member.id,t);
-                    await MemberBalanceController.changeBanlance(agentId,98,t);
-                }
+                // // 上级获取注册返利金额
+                // // 交易记录,余额增量
+                // await MemberTransactionController.incomeByRegister('top',400,member.id,t);
+                // await MemberBalanceController.changeBanlance('top',400,t);
+                // if (agentId !== 'top') {
+                //     await MemberTransactionController.incomeByRegister(agentId,98,member.id,t);
+                //     await MemberBalanceController.changeBanlance(agentId,98,t);
+                // }
 
 	            return member;
             });
-            ctx.session.memberId = memberData.id;
-            smsVerify.destory(ctx);
-            respond.json(ctx, true, '注册成功', { id: memberData.id });
+            // ctx.session.memberId = memberData.id;
+            // smsVerify.destory(ctx);
+            var wxOrder = await MemberController.createWXPayOrder(memberData.id);
+            respond.json(ctx, true, '预注册成功', wxOrder);
         } catch (e) {
-            respond.json(ctx, false, '注册失败', null, e);
+            respond.json(ctx, false, '预注册失败', null, e);
+        }
+    },
+
+    // 未支付或支付失败清除注册的经销商
+    clearRegistedAgent: async function(memberId) {
+        try{
+            await Consignee.destory({
+                where: {
+                    memberId
+                }
+            });
+
+            await MemberRelation.destory({
+                where: {
+                    cid: memberId
+                }
+            });
+
+            await Member.destory({
+                where: {
+                    id: memberId
+                }
+            });
+        }catch(e){
+            console.log(e);
+           throw new Error(e); 
+        }
+    },
+
+    createRegisterTransaction: async function(memberId) {
+        try{
+            // 找到agentid
+            var relation = await MemberRelation.findOne({
+                where: {
+                    cid: memberId
+                }
+            });
+            var agentId = relation.pid;
+
+            // 找到收获地址
+            var consignee = await Consignee.findOne({
+                where: {
+                    memberId
+                }
+            });
+
+            // 新建一笔订单，送注册礼品
+            await OrderController.createRegisterOrder(member.id,agentId,{
+                consigneeName: consignee.consigneeName,
+                consigneeMobile: consignee.consigneeMobile,
+                province: consignee.province,
+                city: consignee.city,
+                county: consignee.county,
+                address: consignee.address
+            });
+
+            // 创建用户余额账户
+            await MemberBalanceController.create(member.id);
+
+            // 创建一条注册为经销商的支出交易
+            await MemberTransactionController.expenseByRegister(member.id,-400,agentId);
+
+            // 上级获取注册返利金额
+            // 交易记录,余额增量
+            await MemberTransactionController.incomeByRegister('top',400,member.id);
+            await MemberBalanceController.changeBanlance('top',400);
+            if (agentId !== 'top') {
+                await MemberTransactionController.incomeByRegister(agentId,98,member.id);
+                await MemberBalanceController.changeBanlance(agentId,98);
+            }
+        }catch(e){
+           throw new Error(e); 
         }
     },
 
     // 创建一笔订单用于微信支付
-    createWXPayOrder: async function(ctx) {
+    createWXPayOrder: async function(memberId) {
         //创建微信订单
         try{
             var wxpay = new WeixinPay();
-            console.log('openid:'+ctx.session.openid);
-            console.log('ip:'+ctx.ip);
             var wxOrder = await wxpay.createWCPayOrder({
                 openid: ctx.session.openid,
                 body: '用户注册代理商订单',
                 detail: '用户注册代理商订单',
-                out_trade_no: CommonUtil.wxOrderid(),//内部订单号
+                out_trade_no: memberId,//内部订单号
                 total_fee: 1,
                 spbill_create_ip: ctx.ip,
                 notify_url: 'http://baebae.cn/api/member/paynotify'
             });
-            console.log(JSON.stringify(wxOrder));
-            respond.json(ctx,true,'微信支付订单创建成功',wxOrder);
+            return wxOrder;
         }catch(e){
-            respond.json(ctx,false,'微信支付订单创建失败',null,e);
+            return e;
         }
     },
 
     // 支付成功回调
     payNotify: async function(ctx) {
+        console.log(ctx.request.body);
         // await OrderController.changeOrderState(memberId,2,id);
     },
 
