@@ -54,7 +54,7 @@ WXPay.mix('sign', function(param){
 	arr.sort();
 	console.log(arr);
 	str = arr.join('&');			
-	str = str+'&'+wxConfig.appSecret
+	str = str + '&key=' + 'ea4a3b55fa0b5918d477190a83a876d8';
 	return md5(str).toUpperCase();
 });
 
