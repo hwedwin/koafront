@@ -1,7 +1,17 @@
 
 var xml2js = require('xml2js');
 
+// exports.buildXML = function(json){
+// 	var builder = new xml2js.Builder();
+// 	return builder.buildObject(json);
+// };
+
 exports.buildXML = function(json){
+	var str = '<xml>';
+	for (var name in json) {
+		str += '<'+name+'><![CDATA['+json[name]+']]></'+name+'>';
+	}
+	str += '</xml>';
 	var builder = new xml2js.Builder();
 	return builder.buildObject(json);
 };
