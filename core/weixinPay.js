@@ -47,11 +47,14 @@ WXPay.mix('sign', function(param){
 	var str = '';
 	var arr = [];
 	for(var name in param) {
-		arr.push(name+'='+param[name]);
+		if (param[name] != null && param[name] != '') {
+			arr.push(name+'='+param[name]);
+		}
 	}
 	arr.sort();
+	console.log(arr);
 	str = arr.join('&');			
-	// str = str+'&'+wxConfig.appSecret
+	str = str+'&'+wxConfig.appSecret
 	return md5(str).toUpperCase();
 });
 
