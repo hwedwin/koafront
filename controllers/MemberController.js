@@ -125,7 +125,16 @@ const MemberController = {
             });
             // ctx.session.memberId = memberData.id;
             // smsVerify.destory(ctx);
-            var wxOrder = await MemberController.createWXPayOrder(memberData.id);
+            var wxpay = new WeixinPay();
+            var wxOrder = await wxpay.createWCPayOrder({
+                openid: ctx.session.openid,
+                body: '用户注册代理商订单',
+                detail: '用户注册代理商订单',
+                out_trade_no: mobile,//内部订单号
+                total_fee: 1,
+                spbill_create_ip: ctx.ip,
+                notify_url: 'http://baebae.cn/api/member/paynotify'
+            });
             respond.json(ctx, true, '预注册成功', wxOrder);
         } catch (e) {
             respond.json(ctx, false, '预注册失败', null, e);
@@ -133,8 +142,13 @@ const MemberController = {
     },
 
     // 未支付或支付失败清除注册的经销商
-    clearRegistedAgent: async function(memberId) {
+    clearRegistedAgent: async function(mobile) {
         try{
+            var member = await Member.findOne({
+                phone: mobile
+            });
+            var memberId = member.id;
+
             await Consignee.destory({
                 where: {
                     memberId
@@ -158,8 +172,13 @@ const MemberController = {
         }
     },
 
-    createRegisterTransaction: async function(memberId) {
+    createRegisterTransaction: async function(mobile) {
         try{
+            var member = await Member.findOne({
+                phone: mobile
+            });
+            var memberId = member.id;
+            
             // 找到agentid
             var relation = await MemberRelation.findOne({
                 where: {
@@ -201,26 +220,6 @@ const MemberController = {
             }
         }catch(e){
            throw new Error(e); 
-        }
-    },
-
-    // 创建一笔订单用于微信支付
-    createWXPayOrder: async function(memberId) {
-        //创建微信订单
-        try{
-            var wxpay = new WeixinPay();
-            var wxOrder = await wxpay.createWCPayOrder({
-                openid: ctx.session.openid,
-                body: '用户注册代理商订单',
-                detail: '用户注册代理商订单',
-                out_trade_no: memberId,//内部订单号
-                total_fee: 1,
-                spbill_create_ip: ctx.ip,
-                notify_url: 'http://baebae.cn/api/member/paynotify'
-            });
-            return wxOrder;
-        }catch(e){
-            return e;
         }
     },
 
