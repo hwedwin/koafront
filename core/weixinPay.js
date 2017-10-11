@@ -119,6 +119,7 @@ WXPay.mix('requestUnifiedOrder',function(order,fn,errFn){
 		if (err) {
 			errFn();
 		}else{
+			console.log('body:'+body);
 			util.parseXML(body,fn);
 		}
 	});	
