@@ -138,7 +138,7 @@ const MemberController = {
             var wxpay = new WeixinPay();
             console.log('openid:'+ctx.session.openid);
             console.log('ip:'+ctx.ip);
-            var wxOrder = await weixinPay.createWCPayOrder({
+            var wxOrder = await wxpay.createWCPayOrder({
                 openid: ctx.session.openid,
                 body: '用户注册代理商订单',
                 detail: '用户注册代理商订单',
