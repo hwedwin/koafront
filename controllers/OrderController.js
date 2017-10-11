@@ -9,7 +9,7 @@ const DrinkForOrderController = require('./DrinkForOrderController');
 const ConsigneeForOrderController = require('./ConsigneeForOrderController');
 const ExpressForOrderController = require('./ExpressForOrderController');
 //微信支付相关
-const weixinPay = require('../core/weixinPay');
+const WeixinPay = require('../core/weixinPay');
 
 const OrderController = {
 	// 用于创建注册为代理商的礼品订单
@@ -201,7 +201,8 @@ const OrderController = {
 			console.log('openid:'+ctx.session.openid);
 			console.log('ip:'+ctx.ip);
 			//创建微信订单
-			var wxOrder = await weixinPay.createUniOrder(ctx.session.openid,id,0.01,payInfo,ctx.ip,'http://baebae.cn/api/order/paynotify');
+			// var wxOrder = await weixinPay.createUniOrder(ctx.session.openid,id,0.01,payInfo,ctx.ip,'http://baebae.cn/api/order/paynotify');
+			var wxOrder={}
 			respond.json(ctx,true,'微信支付订单创建成功',wxOrder);
 		}catch(e){
 			respond.json(ctx,false,'微信支付订单创建失败',null,e);

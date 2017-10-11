@@ -9,7 +9,7 @@ const crypto = require('../utils/crypto');
 const respond = require('../utils/respond');
 const smsVerify = require('../utils/smsVerify');
 
-const weixinPay = require('../core/weixinPay');
+const WeixinPay = require('../core/weixinPay');
 const CommonUtil = require('../utils/CommonUtil');
 
 const MemberController = {
@@ -135,9 +135,19 @@ const MemberController = {
     createWXPayOrder: async function(ctx) {
         //创建微信订单
         try{
+            var wxpay = new WeixinPay();
             console.log('openid:'+ctx.session.openid);
             console.log('ip:'+ctx.ip);
-            var wxOrder = await weixinPay.createUniOrder(ctx.session.openid,CommonUtil.wxOrderid(),0.01,'用户注册代理商订单',ctx.ip,'http://baebae.cn/api/member/paynotify');
+            var wxOrder = await weixinPay.createWCPayOrder({
+                openid: ctx.session.openid,
+                body: '用户注册代理商订单',
+                detail: '用户注册代理商订单',
+                out_trade_no: CommonUtil.wxOrderid(),//内部订单号
+                total_fee: 0.01,
+                spbill_create_ip: ctx.ip,
+                notify_url: 'http://baebae.cn/api/member/paynotify'
+            });
+            console.log(JSON.stringify(wxOrder));
             respond.json(ctx,true,'微信支付订单创建成功',wxOrder);
         }catch(e){
             respond.json(ctx,false,'微信支付订单创建失败',null,e);
