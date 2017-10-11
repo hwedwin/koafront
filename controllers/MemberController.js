@@ -227,7 +227,6 @@ const MemberController = {
     payNotify: async function(ctx) {
         console.log(ctx.request.body);
         console.log(ctx.request);
-        console.log(ctx.req);
         var body = ctx.request.body;
         if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
             await MemberController.createRegisterTransaction(body.out_trade_no);

@@ -43,7 +43,17 @@ app.use(cors({
 //使用ejs模版
 app.use(views(path.join(__dirname,'/webapp/build'),{map:{html:'ejs'}}));
 //解析请求体
-app.use(xmlParser());
+app.use(xmlParser({
+    xmlOptions: {
+        trim:true, 
+        explicitArray:false, 
+        explicitRoot:false
+    },
+    onerror: (err, ctx) => {
+    	console.log(err);
+        ctx.throw(err.status, err.message);
+    }
+}));
 app.use(koaBody({multipart: true}));
 //设置静态文件目录
 app.use(koaStatic(path.join(__dirname,'/webapp/build')));
