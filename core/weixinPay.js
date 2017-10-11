@@ -62,8 +62,9 @@ WXPay.mix('createWCPayOrder', function(order){
 	util.mix(order, this.wxpayID);
 	order.sign = this.sign(order);
 	console.log('order:'+JSON.stringify(order))
-	return new Promise((resolve,reject) => {
-		this.requestUnifiedOrder(order,function(err,data){
+	var self = this;
+	return new Promise(function(resolve,reject) {
+		self.requestUnifiedOrder(order,function(err,data){
 			if (err) {
 				reject(err);
 			}else{
@@ -76,6 +77,7 @@ WXPay.mix('createWCPayOrder', function(order){
 });
 
 WXPay.mix('requestUnifiedOrder',function(order,fn,errFn){
+	console.log('8')
 	request({
 		url: "https://api.mch.weixin.qq.com/pay/unifiedorder",
 		method: 'POST',
@@ -85,6 +87,7 @@ WXPay.mix('requestUnifiedOrder',function(order,fn,errFn){
 			passphrase: this.options.mch_id
 		}
 	}, function(err, response, body){
+		console.log('9')
 		if (err) {
 			errFn();
 		}else{
