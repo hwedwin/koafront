@@ -12,6 +12,7 @@ const smsVerify = require('../utils/smsVerify');
 
 const WeixinPay = require('../core/weixinPay');
 const CommonUtil = require('../utils/CommonUtil');
+var getRawBody = require('raw-body');
 
 const MemberController = {
     login: async function(ctx) {
