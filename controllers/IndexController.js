@@ -7,16 +7,18 @@ const wxConfig = require('../config/weixin');
 const CommonUtil = require('../utils/CommonUtil');
 const IndexController = {
     index: async function(ctx) {
+        console.log(openid);
         // 进行微信授权
-        if (!ctx.session.id) {
+        if (!ctx.session.openid) {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index#wechat_redirect');
             return;
         }
         await ctx.render('index');
     },
     regagent: async function(ctx) {
+        console.log(openid);
         // 进行微信授权
-        if (!ctx.session.id) {
+        if (!ctx.session.openid) {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent#wechat_redirect');
             return;
         }
