@@ -204,8 +204,8 @@ const OrderController = {
             var wxpay = new WeixinPay();
             var wxOrder = await wxpay.createWCPayOrder({
                 openid: ctx.session.openid,
-                body: orderDetail.payInfo,
-                detail: orderDetail.payInfo,
+                body: orderDetail.payInfo || '购买商品',
+                detail: orderDetail.payInfo || '购买商品',
                 out_trade_no: orderDetail.code, //内部订单号
                 total_fee: 1,
                 spbill_create_ip: ctx.ip,
@@ -213,7 +213,7 @@ const OrderController = {
             });
             respond.json(ctx, true, '微信支付订单创建成功', wxOrder);
         } catch (e) {
-            respond.json(ctx, true, '微信支付订单创建失败', null, e);
+            respond.json(ctx, false, '微信支付订单创建失败', null, e);
         }
     },
 

@@ -85,7 +85,6 @@ class Pay extends Component {
 			var self = this;
 			Ajax.post({url: Config.API.ORDER_WEIXIN_PAY,data: {id: this.state.id}})
 			.then((res) => {
-				console.log(res);
 				if (res.status === 200) {
 					Util.wxPay(res.data,function(state){
 						Toast.hide();
@@ -96,6 +95,7 @@ class Pay extends Component {
 						}
 					});
 				}else{
+					Toast.info(res.message);
 				}
 			}).catch(function(error){
 				console.log(error);
