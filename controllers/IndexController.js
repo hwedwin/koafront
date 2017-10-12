@@ -55,10 +55,10 @@ const IndexController = {
         ctx.cookies.set('openid',resUserInfo.openid);
         ctx.session.openid = resUserInfo.openid;
         // headerimgurl
-        ctx.cookies.set('headerimgurl',resUserInfo.headerimgurl);
+        // ctx.cookies.set('headerimgurl',resUserInfo.headerimgurl);
         ctx.session.headerimgurl = resUserInfo.headerimgurl;
         // nickname
-        ctx.cookies.set('nickname',resUserInfo.nickname);
+        // ctx.cookies.set('nickname',resUserInfo.nickname);
         ctx.session.nickname = resUserInfo.nickname;
         // 通过openid登录
         var member = await MemberController.loginByOpenid(resUserInfo.openid);

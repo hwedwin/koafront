@@ -54,8 +54,7 @@ app.use(xmlParser({
         ctx.throw(err.status, err.message);
     }
 }));
-//设置静态文件目录
-app.use(koaStatic(path.join(__dirname,'/webapp/build')));
+
 //session
 app.use(session({
 	key: 'SESSIONID',
@@ -76,6 +75,9 @@ app.use(require('./routes/favorite').routes());
 app.use(require('./routes/consignee').routes());
 app.use(require('./routes/trans').routes());
 app.use(require('./routes/balance').routes());
+
+//设置静态文件目录
+app.use(koaStatic(path.join(__dirname,'/webapp/build')));
 
 app.listen(port);
 
