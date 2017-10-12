@@ -12,7 +12,7 @@ const IndexController = {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index#wechat_redirect');
             return;
         }
-        await ctx.render('index_');
+        await ctx.render('index');
     },
     regagent: async function(ctx) {
         // 进行微信授权
@@ -20,7 +20,7 @@ const IndexController = {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent#wechat_redirect');
             return;
         }
-        await ctx.render('index_');
+        await ctx.render('index');
     },
     beat: async function(ctx) {
         var memberId = ctx.session.memberId;
