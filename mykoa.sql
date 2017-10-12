@@ -58,7 +58,7 @@ CREATE TABLE `memberRelations` (
   CONSTRAINT `member_relation_p` FOREIGN KEY (`pid`) REFERENCES `members` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `member_relation_c` FOREIGN KEY (`cid`) REFERENCES `members` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=100284 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
-
+ 
 -- 用户交易表
 DROP TABLE IF EXISTS `memberTransactions`;
 CREATE TABLE `memberTransactions` (

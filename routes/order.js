@@ -7,6 +7,8 @@ router.post('/api/order/create',OrderController.create)
 		.post('/api/order/count',OrderController.getCountByState)
 		.post('/api/order/sign',OrderController.signOrder)
 		.post('/api/order/delete',OrderController.deleteOrder)
+		.post('/api/order/wxpay',OrderController.payOrder)
+		.post('/api/order/bpay',OrderController.payByBalance)
 		.post('/api/order/paynotify',OrderController.payNotify)
 
 module.exports = router

@@ -18,6 +18,8 @@ import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
 
+import defaultPortrait from '../../assets/images/portrait.png';
+
 
 const PortraitBox = (props) => {
 	return (
@@ -26,7 +28,7 @@ const PortraitBox = (props) => {
 				<Link className="u-setting" to="/uedit"><Icon type={svgCog} color="#FFF"/></Link>
 			</div>
 			<img className="u-portrait" 
-				src={props.member.headerImage || "http://img2.imgtn.bdimg.com/it/u=2835228047,2916562885&fm=26&gp=0.jpg"}
+				src={props.member.headerImage || defaultPortrait}
 				alt="头像" 
 				onClick={props.onPortraitClick}/>
 			<div className="u-name">{props.member.nickname || '--'}</div>
@@ -38,8 +40,10 @@ const PortraitBox = (props) => {
 const BanlanceBox = props => {
 	return (
 		<div className="m-banlance-box">
-			<div className="u-banlance">{props.expenseAll}</div>
-			<div className="u-title">累计收益</div>
+			<a onClick={()=>props.onBalanceClick()}>
+				<div className="u-banlance">{props.expenseAll}</div>
+				<div className="u-title">累计收益</div>
+			</a>
 		</div>
 	)
 }
@@ -95,7 +99,7 @@ const MyOrderBox = props => {
 		},
 		{
 			icon: svgChat,
-			text: '待评价',
+			text: '已完成',
 			tagId: 'waitComment'
 		},
 		{
@@ -266,7 +270,7 @@ class IndexUser extends Component {
 	}
 
 	handlePortraitClick() {
-		this.props.history.push('/login')
+		// this.props.history.push('/login')
 	}
 
 	handleOrderItemClick(item) {
@@ -293,6 +297,7 @@ class IndexUser extends Component {
 					onPortraitClick={this.handlePortraitClick}/>
 				<BanlanceBox 
 					expenseAll={this.state.expenseAll}
+					onBalanceClick={()=>this.props.history.push('/balance')}
 				/>
 				<EarningBox 
 					expenseToday={this.state.expenseToday}
@@ -304,6 +309,7 @@ class IndexUser extends Component {
 					countWaitPay={this.state.countWaitPay}
 					onItemClick={this.handleOrderItemClick}
 				/>
+				<BlockTitle title="我的"/>
 				<MineBox onItemClick={this.handleMineItemClick}/>
 				<IndexFillBottom />
 			</div>

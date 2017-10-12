@@ -48,6 +48,23 @@ const MemberController = {
         }
     },
 
+    loginByOpenid: async function(openid) {
+        //查询
+        try {
+            let member = await Member.findOne({
+                where: {
+                    wxtoken: openid
+                }
+            });
+            if (member) {
+                ctx.session.memberId = member.id;
+            }
+            return member;
+        } catch (e) {
+            return null;
+        }
+    },
+
     logout: async function(ctx) {
         ctx.session.memberId = null;
         respond.json(ctx,true,'退出成功');
@@ -76,12 +93,18 @@ const MemberController = {
         try {
         	//开启事务
             let memberData = await sequelize.transaction(async function(t) {
+                var agentData = {
+                    account: mobile,
+                    password: password,
+                    phone: mobile
+                };
+                if (ctx.session.openid) {
+                    agentData.nickname = ctx.session.nickname;
+                    agentData.headerImage = ctx.session.headerimgurl;
+                    agentData.wxtoken = ctx.session.openid;
+                }
 	            //写入
-	            const member = await Member.create({
-	                account: mobile,
-	                password: password,
-	                phone: mobile
-	            }, {transaction: t});
+	            const member = await Member.create(agentData, {transaction: t});
 
 	            //记录会员关系
 	            let level = agentId ? 2 : 1;
@@ -225,8 +248,6 @@ const MemberController = {
 
     // 支付成功回调
     payNotify: async function(ctx) {
-        console.log(ctx.request.body);
-        console.log(ctx.request);
         var body = ctx.request.body;
         if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
             await MemberController.createRegisterTransaction(body.out_trade_no);
@@ -257,12 +278,18 @@ const MemberController = {
         try {
         	//开启事务
             let memberData = await sequelize.transaction(async function(t) {
+                var agentData = {
+                    account: mobile,
+                    password: password,
+                    phone: mobile
+                };
+                if (ctx.session.openid) {
+                    agentData.nickname = ctx.session.nickname;
+                    agentData.headerImage = ctx.session.headerimgurl;
+                    agentData.wxtoken = ctx.session.openid;
+                }
 	            //写入
-	            const member = await Member.create({
-	                account: mobile,
-	                password: password,
-	                phone: mobile
-	            }, {transaction: t});
+	            const member = await Member.create(agentData, {transaction: t});
 
 	            //记录会员关系，三级为普通会员
 	            let level = 3;

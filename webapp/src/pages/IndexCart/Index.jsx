@@ -135,7 +135,7 @@ class IndexCart extends Component {
 	componentDidMount() {
 		var self = this;
 		// 获取购物车商品
-		Ajax.post({url: Config.API.CART_GET})
+		Ajax.post({url: Config.API.CART_GET},this.props.member.level)
 			.then(function(data) {
 				if (data.status === 200) {
 					var goods = self._formatGoods(data.data);
@@ -165,6 +165,7 @@ class IndexCart extends Component {
 	}
 
 	_formatGoods(goods) {
+		console.log(goods);
 		for (var i = 0; i < goods.length; i++) {
 			var gItem = goods[i];
 			if (gItem.special) {

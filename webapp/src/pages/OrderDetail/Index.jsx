@@ -83,7 +83,7 @@ class OrderDetail extends Component {
 					<div className="u-order-list">
 						<div className="u-item">订单编号：{o.id}</div>
 						<div className="u-item">下单时间：{Util.formatDate('yyyy-MM-dd hh:mm:ss',o.createdTimestamp)}</div>
-						<div className="u-item">支付方式：微信支付</div>
+						<div className="u-item">支付方式：{o.progressState=='1'?'未支付':(o.paidCode=='weixin'?'微信支付':'余额支付')}</div>
 						<div className="u-item">商品总额：¥{o.orderTotalPrice}</div>
 					</div>
 				</div>

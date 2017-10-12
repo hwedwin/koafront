@@ -1,8 +1,10 @@
 import '../Register/index.css';
+import './index.css';
 import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
-import {List,InputItem,Toast,Button} from 'antd-mobile';
+import {List,InputItem,Toast,Button,Radio,Icon} from 'antd-mobile';
 import KGArea from '../../components/KGArea/Index.jsx';
+import PayTip from '../../components/PayTip/Index.jsx';
 import Ajax from '../../utils/Ajax';
 import Util from '../../utils/Util';
 import Config from '../../config/Config';
@@ -28,7 +30,9 @@ class RegisterAgent extends Component {
 			consigneeName: '',
 			consigneeMobile: '',
 			verifyButton: true,
-			verifyCount: 60
+			verifyCount: 60,
+			paySuccess: false,
+			agreeProto: true
 		}
 	}
 
@@ -127,7 +131,10 @@ class RegisterAgent extends Component {
 	}
 
 	handleRegister() {
-		Toast.loading('注册中...',0);
+		if (!this.state.agreeProto) {
+			Toast.info('注册成为代理商，请阅读并同意注册协议');
+			return;
+		}
 		var mobile = this.state.phone.replace(/\s/g,'');
 		var consigneeMobile = this.state.consigneeMobile.replace(/\s/g,'');
 		if (!Util.isMobile(mobile)) {
@@ -171,6 +178,8 @@ class RegisterAgent extends Component {
 		if (agentId) {
 			requestData.agentId = agentId;	
 		}
+		Toast.loading('注册中...',0);
+		var self = this;
 		Ajax.post({url: Config.API.MEMBER_REG_AGENT,data: requestData})
 			.then((res) => {
 				console.log(res);
@@ -178,9 +187,9 @@ class RegisterAgent extends Component {
 					Util.wxPay(res.data,function(state){
 						Toast.hide();
 						if (state) {
-							Toast.info('支付成功,即将跳转至代理商首页');
+							self.handleSuccess();
 						}else{
-							console.log('支付失败');
+							Toast.info('支付失败，请重试');
 						}
 					});
 				}else{
@@ -190,9 +199,24 @@ class RegisterAgent extends Component {
 			});
 	}
 
+	handleSuccess() {
+		this.setState({
+			paySuccess: true
+		});
+		setTimeout(()=>{
+			this.props.history.replace('/');
+		},2000);
+	}
+
+	handleAgreeChange(e) {
+		this.setState({
+			agreeProto: !this.state.agreeProto
+		});
+	}
+
 	render() {
 		return (
-			<div>
+			<div className="page-reg-agent">
 				<List className="m-input-list">
 					<InputItem
 						type="phone"
@@ -264,13 +288,24 @@ class RegisterAgent extends Component {
 					</InputItem>
 				</List>
 
+				<div className="m-agree-box">
+					<a onClick={this.handleAgreeChange.bind(this)}><Icon type="check-circle" size="xxs" color={this.state.agreeProto ? '#108ee9':'#ccc'} className="u-icon-check"/>同意《注册代理商协议》</a>
+				</div>
+
 				<Button 
 					type="primary"
 					onClick={this.handleRegister}
-					style={{borderRadius: 0,marginTop: '1.5rem'}}
+					style={{borderRadius: 0,marginTop: '.6rem'}}
 				>
 					注册
 				</Button>
+
+				<PayTip
+					display={this.state.paySuccess}
+					text="支付成功即将跳转至商户首页"
+					money={400}
+					displayButton={false}
+				/>
 			</div>
 		)
 	}

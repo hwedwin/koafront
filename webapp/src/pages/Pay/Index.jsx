@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React,{Component} from 'react';
 import { Toast ,List, Radio} from 'antd-mobile';
 import CommonNavbar from '../../components/CommonNavbar/Index.jsx';
+import PayTip from '../../components/PayTip/Index.jsx';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
@@ -19,7 +20,8 @@ class Pay extends Component {
 			consignee: {},
 			drinks: [],
 			details: {},
-			balance: 0
+			balance: 0,
+			paySuccess: false
 		}
 	}
 
@@ -78,7 +80,58 @@ class Pay extends Component {
 	}
 
 	handlePay() {
-		console.log('pay')
+		Toast.loading('支付中...',0);
+		if (this.state.type == 0) {//微信支付
+			var self = this;
+			Ajax.post({url: Config.API.ORDER_WEIXIN_PAY,data: {id: this.state.id}})
+			.then((res) => {
+				console.log(res);
+				if (res.status === 200) {
+					Util.wxPay(res.data,function(state){
+						Toast.hide();
+						if (state) {
+							self.handleSuccess();
+						}else{
+							Toast.info('支付失败，请重试');
+						}
+					});
+				}else{
+				}
+			}).catch(function(error){
+				console.log(error);
+			});
+		}else{//余额支付
+			if (parseFloat(this.state.balance) < parseFloat(this.state.details.totalPrice)) {
+				Toast.info('您的余额不足以支付这笔订单');
+				return;
+			}
+			Ajax.post({url: Config.API.ORDER_BALANCE_PAY,data: {id: this.state.id}})
+			.then((res) => {
+				console.log(res);
+				Toast.hide();
+				if (res.status === 200) {
+					self.handleSuccess();
+				}else{
+					Toast.info('支付失败，请重试');
+				}
+			}).catch(function(error){
+				console.log(error);
+			});
+		}
+	}
+
+	handleSuccess() {
+		this.setState({
+			paySuccess: true
+		});
+	}
+
+	handlePayTipClose() {
+		this.props.history.replace('/order/waitComment');
+	}
+
+	handlePayTipDetail() {
+		this.props.history.replace('/orderdetail/'+this.state.id);
 	}
 
 	render() {
@@ -103,6 +156,14 @@ class Pay extends Component {
 			        ))}
 		        </List>
 		        <button className="u-button-pay" onClick={this.handlePay.bind(this)}>支付</button>
+		        <PayTip
+					display={this.state.paySuccess}
+					text="支付成功"
+					money={this.state.balance}
+					displayButton={true}
+					onCloseClick={this.handlePayTipClose.bind(this)}
+					onDetailClick={this.handlePayTipDetail.bind(this)}
+				/>
 			</div>
 		)
 	}

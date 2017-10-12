@@ -155,6 +155,34 @@ const MemberTransactionController = {
             respond.json(ctx,false,'获取订单失败',null,e);
         }
     },
+
+    getUserBalanceTransItem: async function(ctx) {
+        var memberId = ctx.session.memberId;
+        if (!memberId) {
+            respond.json(ctx,false,'获取订单失败，用户尚未登录',{code: 203});
+            return false;
+        }
+        var { pageIndex, pageSize } = ctx.request.body;
+        pageIndex = pageIndex ? pageIndex : 0;
+        pageSize = pageSize ? pageSize : 20;
+        pageIndex = parseInt(pageIndex, 10);
+        pageSize = parseInt(pageSize, 10);
+        try{
+            var result = await MemberTransaction.findAll({
+                offset: pageIndex * pageSize,
+                limit: pageSize,
+                where: {
+                    memberId,
+                    type: {
+                        $notIn: ['4','6']
+                    }
+                }
+            });
+            respond.json(ctx,true,'获取用户余额明细成功',{code: 200,data: result});
+        }catch(e) {
+            respond.json(ctx,false,'获取用户余额明细失败',null,e);
+        }
+    }
 }
 
 module.exports = MemberTransactionController

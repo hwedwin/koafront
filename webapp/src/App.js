@@ -20,6 +20,7 @@ import UserEdit from './pages/UserEdit/Index.jsx';
 import DrinkCate from './pages/DrinkCate/Index.jsx';
 import Pay from './pages/Pay/Index.jsx';
 import Customer from './pages/Customer/Index.jsx';
+import BalanceDetail from './pages/BalanceDetail/Index.jsx';
 
 import Ajax from './utils/Ajax';
 import Util from './utils/Util';
@@ -113,6 +114,7 @@ class App extends Component {
           <Route path="/brand/:id" component={DrinkCate} />
           <Route path="/pay/:id" component={Pay} />
           <Route path="/customer" component={Customer} />
+          <Route path="/balance" component={BalanceDetail} />
         </div>
       </Router>
       </AppWrapper2>

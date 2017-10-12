@@ -70,13 +70,15 @@ class OrderItem extends Component {
 						)
 					}
 					<div className="u-desc">
-						
+						{
+							props.data.remarks=='用户注册订单'?'用户注册礼品':''
+						}	
 					</div>
 				</div>
 				<div className="m-order-num">
-					共{getCount(props)}件商品 实付款：<span className="u-big">¥{props.data.orderTotalPrice}</span>
+					共{getCount(props)}{props.data.remarks=='用户注册订单'?'1':''}件商品 实付款：<span className="u-big">¥{props.data.orderTotalPrice}</span>
 				</div>
-				<div className="m-opt-box">
+				<div className="m-opt-box" style={{display: props.data.remarks=='用户注册订单'?'none':'block'}}>
 					<button className="u-btn-opt red" onClick={this.handleButtonClick.bind(this)}>{this.getButtonText()}</button>
 				</div>
 			</div>

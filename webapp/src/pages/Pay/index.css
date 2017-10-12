@@ -1,14 +1,14 @@
 .page-pay{
 }
 .page-pay .m-pay-money{
-	height: .85rem;
-	line-height: .85rem;
+	height: .9rem;
+	line-height: .9rem;
 	text-align: right;
 	background-color: #fff;
 	border-top: 1px solid #f1f1f1;
 }
 .page-pay .m-pay-money .u-text{
-	font-size: .28rem;
+	font-size: .3rem;
 	margin-right: .28rem;
 }
 .page-pay .m-pay-money .u-text .red{

@@ -1,0 +1,19 @@
+.page-reg-agent{
+
+}
+.page-reg-agent .m-agree-box{
+	font-size: .24rem;
+	margin-top: .26rem;
+	padding-left: .14rem;
+	line-height: .3rem;
+}
+.page-reg-agent .m-agree-box .u-radio .am-radio{
+	padding: 0.05rem;
+	border: 1px solid #ccc;
+	border-radius: 50%;
+	margin-right: 0.16rem;
+}
+
+.page-reg-agent .m-agree-box .u-icon-check{
+	margin-right: .1rem;
+}

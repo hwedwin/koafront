@@ -3,6 +3,7 @@ const MemberTransactionController = require('../controllers/MemberTransactionCon
 
 router.post('/api/trans/expense',MemberTransactionController.getAllExpense)
 		.post('/api/trans/sumorder',MemberTransactionController.getAllOrders)
+		.post('/api/trans/items',MemberTransactionController.getUserBalanceTransItem)
 
 module.exports = router
 

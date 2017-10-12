@@ -1,0 +1,29 @@
+.page-balance-detail .m-trans-item{
+	display: flex;
+	background-color: #fff;
+	padding: .23rem .3rem;
+	border-bottom: 1px solid #f1f1f1;
+}
+.page-balance-detail .m-trans-item .m-left-wrapper{
+	width: 70%;
+	flex-grow: 0;
+}
+.page-balance-detail .m-trans-item .m-left-wrapper .u-title{
+	font-size: .28rem;
+	white-space: nowrap;
+	overflow: hidden;
+	-ms-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+}
+.page-balance-detail .m-trans-item .m-left-wrapper .u-money{
+	font-size: .26rem;
+	color: #aaa;
+	margin-top: .1rem;
+}
+.page-balance-detail .m-trans-item .m-right-wrapper{
+	flex-basis: 1;
+	text-align: right;
+	font-size: .32rem;
+	font-weight: bold;
+	width: 30%;
+}

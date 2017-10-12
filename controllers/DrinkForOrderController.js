@@ -30,19 +30,21 @@ const DrinkForOrderController = {
 		}
 	},
 
-	getByOrderId: async function(orderId) {
+	getByOrderId: async function(orderId,allAttr) {
+		var includeModel = {
+			attributes: ['id','imgPath','name'],
+			model: Drink,
+			as: 'drink'
+		};
+		if (allAttr) {
+			delete includeModel.attributes;
+		}
 		try{
 			var result = await DrinkForOrder.findAll({
 				where: {
 					orderId
 				},
-				include: [
-					{
-						attributes: ['id','imgPath','name'],
-						model: Drink,
-						as: 'drink'
-					}
-				]
+				include: [includeModel]
 			});
 			return result;
 		} catch(e){

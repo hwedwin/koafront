@@ -19,6 +19,10 @@ const Drink = sequelize.define('drink',{
 	pruduceDate: Sequelize.STRING(50),
 	alcoholic: Sequelize.STRING(100),
 	factory: Sequelize.STRING(100),
+	costPrice: {//成本
+		type: Sequelize.DECIMAL(12,2),
+		defaultValue: 0
+	},
 	originPrice: {
 		type: Sequelize.DECIMAL(12,2),//原价
 		defaultValue: 0
@@ -32,7 +36,7 @@ const Drink = sequelize.define('drink',{
 		defaultValue: 0
 	},
 	commission: {
-		type: Sequelize.DECIMAL(12,2),
+		type: Sequelize.DECIMAL(12,2),//佣金
 		defaultValue: 0
 	},
 	maxStorage: {

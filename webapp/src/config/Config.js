@@ -57,6 +57,8 @@ var Config = {
 		ORDER_COUNT: window.host + 'api/order/count',
 		ORDER_SIGN: window.host + 'api/order/sign',
 		ORDER_DELETE: window.host + 'api/order/delete',
+		ORDER_WEIXIN_PAY: window.host + 'api/order/wxpay',
+		ORDER_BALANCE_PAY: window.host + 'api/order/bpay',
 
 		// 验证码
 		SMSCODE_REGISTER: window.host + 'api/sms/register',
@@ -64,6 +66,7 @@ var Config = {
 		// 交易
 		TRANS_EXPENSE: window.host + 'api/trans/expense',
 		TRANS_SUM_ORDER: window.host + 'api/trans/sumorder',
+		TRANS_ITEMS: window.host + 'api/trans/items',
 
 		// 文件上传
 		FILE_PORTRAIT: window.host + 'api/file/portrait',

@@ -1,16 +1,26 @@
 const respond = require('../utils/respond');
 const Member = require('../models/Member');
 const MemberRelationController = require('./MemberRelationController');
+const MemberController = require('./MemberController');
 const request = require('request');
 const wxConfig = require('../config/weixin');
 const CommonUtil = require('../utils/CommonUtil');
 const IndexController = {
     index: async function(ctx) {
-        await ctx.render('index')
+        // 进行微信授权
+        if (!ctx.session.id) {
+            ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index#wechat_redirect');
+            return;
+        }
+        await ctx.render('index');
     },
     regagent: async function(ctx) {
-        console.log(ctx.params.id)
-        await ctx.render('index')
+        // 进行微信授权
+        if (!ctx.session.id) {
+            ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent#wechat_redirect');
+            return;
+        }
+        await ctx.render('index');
     },
     beat: async function(ctx) {
         var memberId = ctx.session.memberId;
@@ -40,12 +50,19 @@ const IndexController = {
         resBody = JSON.parse(resBody);
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
         console.log(resUserInfo);
-        // ctx.type = 'text/plain';
-        // ctx.body = resUserInfo;
         resUserInfo = JSON.parse(resUserInfo);
+        // openid
         ctx.cookies.set('openid',resUserInfo.openid);
         ctx.session.openid = resUserInfo.openid;
-        if (state === 'regagent') {
+        // headerimgurl
+        ctx.cookies.set('headerimgurl',resUserInfo.headerimgurl);
+        ctx.session.headerimgurl = resUserInfo.headerimgurl;
+        // nickname
+        ctx.cookies.set('nickname',resUserInfo.nickname);
+        ctx.session.nickname = resUserInfo.nickname;
+        // 通过openid登录
+        var member = await MemberController.loginByOpenid(resUserInfo.openid);
+        if (state === 'regagent' && !member) {
             ctx.redirect('http://www.baebae.cn/regagent');
         }else{
             ctx.redirect('http://www.baebae.cn');

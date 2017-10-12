@@ -1,7 +1,8 @@
-import React,{Component} from 'react'
-import PropTypes from 'prop-types'
-import {Carousel} from 'antd-mobile'
-import './carousel.css'
+import React,{Component} from 'react';
+import PropTypes from 'prop-types';
+import {Carousel} from 'antd-mobile';
+import './carousel.css';
+import {Link} from 'react-router-dom'
 
 class IndexCarousel extends Component {
 
@@ -52,7 +53,7 @@ class IndexCarousel extends Component {
 			            </div>
 			          )):
 					this.props.data.map((el,ii) => (
-			            <a href={'/goods/'+el.drinkId} key={ii} className="m-carousel-itema" style={{height: this.props.height+'rem'}}>
+			            <Link to={'/goods/'+el.drinkId} key={ii} className="m-carousel-itema" style={{height: this.props.height+'rem'}}>
 			              <img
 			                src={el.imgPath}
 			                alt="icon"
@@ -60,7 +61,7 @@ class IndexCarousel extends Component {
 			                	this.props.adjustImageSize && window.gUtil.resizeImage(e.target)
 			                }}
 			              />
-			            </a>
+			            </Link>
 			          ))
 				}
 				</Carousel>
