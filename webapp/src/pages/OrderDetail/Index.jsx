@@ -120,7 +120,7 @@ class OrderDetail extends Component {
 						<div className="u-item">支付方式：{o.progressState=='1'?'未支付':(o.paidCode!='balance'?'微信支付':'余额支付')}</div>
 						<div className="u-item">商品总额：¥{o.orderTotalPrice}</div>
 						{
-							this.state.remainTime > 1000 ? <div className="u-item">剩余支付时间：{this._format(this.state.remainTime)}</div>:''
+							this.state.remainTime > 1000 && o.progressState == '1' ? <div className="u-item">剩余支付时间：{this._format(this.state.remainTime)}</div>:''
 						}
 					</div>
 				</div>

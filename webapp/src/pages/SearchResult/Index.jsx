@@ -92,7 +92,7 @@ class SearchResult extends Component {
 				<CommonNavbar 
 					showLeftIcon={false}
 					leftContent="首页"
-					onBackbarClick={()=>this.props.history.goBack()}
+					onBackbarClick={()=>this.props.history.replace('/')}
 					centerText={this.state.query}
 				/>
 				<div className="m-sortbar">

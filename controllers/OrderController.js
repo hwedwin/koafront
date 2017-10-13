@@ -466,7 +466,6 @@ const OrderController = {
                 };
             }
         }
-        console.log(query);
         try {
             var results = await Order.findAll({
                 where: query
@@ -520,6 +519,11 @@ const OrderController = {
         };
         if (state) {
             query.progressState = state;
+            if (state == 1) {
+                query.createdTimestamp = {
+                    $gt: Date.now() - 24*60*60*1000*1
+                };
+            }
         }
         try {
             var result = await Order.findAndCountAll({

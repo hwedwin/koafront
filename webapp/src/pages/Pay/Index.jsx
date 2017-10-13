@@ -127,11 +127,17 @@ class Pay extends Component {
 	}
 
 	handlePayTipClose() {
-		this.props.history.replace('/order/waitComment');
+		this.props.history.replace('/order/myOrders');
 	}
 
 	handlePayTipDetail() {
 		this.props.history.replace('/orderdetail/'+this.state.id);
+	}
+
+	handleBackClick() {
+		if (window.confirm('确认离开支付页面？')) {
+			this.props.history.replace('/order/waitPay')
+		}
 	}
 
 	render() {
@@ -142,8 +148,10 @@ class Pay extends Component {
 		return (
 			<div className="page-pay">
 				<CommonNavbar 
+					showLeftIcon={false}
+					leftContent="我的订单"
 					centerText="支付"
-					onBackbarClick={()=>this.props.history.goBack()}
+					onBackbarClick={()=>this.handleBackClick()}
 				/>
 				<div className="m-pay-money">
 					<span className="u-text">需支付:<i className="red">{this.state.details.totalPrice}元</i></span>

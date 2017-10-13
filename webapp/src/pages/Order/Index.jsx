@@ -163,7 +163,6 @@ class Order extends Component {
 	}
 
 	handleTabChange(key) {
-	  console.log('onChange', key);
 	}
 
 	handleTabClick(key) {
@@ -180,11 +179,38 @@ class Order extends Component {
 
 	handleOrderButtonClick(state,id) {
 		if (state == 1) {
-			this.props.history.push('/pay/'+id);
+			this.props.history.replace('/pay/'+id);
 		} else if(state == 3){
 			this.requestReceiveOrder(id);
-		}else {
+		} else if(state == 9 || state == 2) {
+			this.handleAchieveButtonClick(id); 
 		}
+	}
+
+	handleAchieveButtonClick(id) {
+		Toast.loading('订单创建中...',0);
+		Ajax.post({url: Config.API.ORDER_DETAIL,data: {id: id}})
+		.then((res) => {
+			Toast.hide();
+			if (res.status === 200) {
+				if (res.data.code === 200) {
+					var o = res.data.data;
+					var goods = [];
+					for(var i=0;i<o.drinks.length;i++){
+						var item = {};
+						item.id = o.drinks[i].drinkId;
+						item.num = o.drinks[i].nums;
+						goods.push(item);
+					}
+					goods = JSON.stringify(goods);
+					this.props.history.push('/ordercreate/?goods='+goods);
+				}
+			}else{
+				Toast.info(res.message);
+			}
+		}).catch(function(error){
+			console.log(error);
+		});	
 	}
 
 	handleOrderClick(id) {
