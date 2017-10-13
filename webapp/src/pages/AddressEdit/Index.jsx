@@ -162,7 +162,6 @@ class AddressEdit extends Component {
 						<InputItem
 							type="text"
 							placeholder=""
-							maxLength={12}
 							value={this.state.address}
 							onChange={this.handleAddressChange.bind(this)}
 						>
