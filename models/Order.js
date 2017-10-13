@@ -20,7 +20,7 @@ const Order = sequelize.define('order',{
 		allowNull: false
 	},
 	payInfo: {
-		type: Sequelize.STRING(100)
+		type: Sequelize.STRING(100)//付款详情
 	},
 	totalPrice: {
 		type: Sequelize.DECIMAL(12,2),
@@ -40,7 +40,7 @@ const Order = sequelize.define('order',{
 		allowNull: false
 	},
 	paidCode: {
-		type: Sequelize.STRING(100),
+		type: Sequelize.STRING(100),//支付方式
 	},
 	orderImage: {
 		type: Sequelize.STRING(200),

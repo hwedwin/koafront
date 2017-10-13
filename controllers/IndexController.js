@@ -7,17 +7,21 @@ const wxConfig = require('../config/weixin');
 const CommonUtil = require('../utils/CommonUtil');
 const IndexController = {
     index: async function(ctx) {
+        var {aid} = ctx.request.query;
+        aid = aid ? aid : '';
         // 进行微信授权
         if (!ctx.session.openid) {
-            ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index#wechat_redirect');
+            ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index'+aid+'#wechat_redirect');
             return;
         }
         await ctx.render('index');
     },
     regagent: async function(ctx) {
+        var {aid} = ctx.request.query;
+        aid = aid ? aid : '';
         // 进行微信授权
         if (!ctx.session.openid) {
-            ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent#wechat_redirect');
+            ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent'+aid+'#wechat_redirect');
             return;
         }
         await ctx.render('index');
@@ -62,11 +66,21 @@ const IndexController = {
         ctx.session.nickname = resUserInfo.nickname;
         // 通过openid登录
         var member = await MemberController.loginByOpenid(resUserInfo.openid);
-        if (state === 'regagent' && !member) {
-            ctx.redirect('http://www.baebae.cn/regagent');
+        var mats = /^regagent(.*)/.exec(state);
+        var redUrl = '';
+        if (mats && !member) {
+            redUrl = 'http://www.baebae.cn/regagent';
+            if (mats[1] !== '') {
+                redUrl = redUrl+'?aid='+mats[1];
+            }
         }else{
-            ctx.redirect('http://www.baebae.cn');
+            redUrl = 'http://www.baebae.cn';
+            mats = /^index(.*)/.exec(state);
+            if (mats && mats[1] !== '') {
+                redUrl = redUrl+'?aid='+mats[1]; 
+            }
         }
+        ctx.redirect(redUrl);
     },
 
     getWXToken: function(code) {

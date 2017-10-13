@@ -51,14 +51,7 @@ const OrderController = {
 
     create: async function(ctx) {
         var { totalPrice, agentId, remarks, goods, consignee } = ctx.request.body;
-        /*var verifyData = [
-        	{
-        		name: 'memberId',
-        		type: paramsVerify.STRING,
-        		value: memberId,
-
-        	}
-        ]*/
+        agentId = agentId ? agentId : 'top';
         if (typeof consignee === 'string') {
             consignee = JSON.parse(consignee);
         }
@@ -81,7 +74,10 @@ const OrderController = {
             //获取用户等级
             var memberLevel = await MemberRelationController.getMemberLevelById(memberId);
             // 获取店铺代理人等级
-            var agentLevel = await MemberRelationController.getMemberLevelById(agentId);
+            var agentLevel = 3;
+            if (agentId != 'top') {
+                agentLevel = await MemberRelationController.getMemberLevelById(agentId);
+            }
             // 获取商品结果
             var drinkResult = await Drink.findAll({
                 attributes: ['id', 'retailPrice', 'supplyPrice'],
@@ -101,9 +97,11 @@ const OrderController = {
                     }
                 })(drinkResult[i]);
             }
-            //计算总价格
+            //计算总价格,生成订单信息
+            var payInfo = '';
             for (var i = 0; i < drinkResult.length; i++) {
                 var drink = drinkResult[i];
+                payInfo += drink.name+',';
                 for (var j = 0; j < goods.length; j++) {
                     var gItem = goods[j];
                     if (gItem.id === drink.id) {
@@ -127,7 +125,10 @@ const OrderController = {
 
             //开启事务
             let orderData = await sequelize.transaction(async function(t) {
-
+                // 如果代理人等级为3，则将代理人设为top
+                if (agentLevel != 1 || agentLevel != 2) {
+                    agentId = 'top';
+                }
                 //创建订单
                 var order = await Order.create({
                     memberId: memberId,
@@ -140,6 +141,7 @@ const OrderController = {
                     orderFrom: 'wechat',
                     remarks: remarks,
                     agentId: agentId,
+                    payInfo: payInfo,
                     createdTimestamp: Date.now()
                 }, { transaction: t });
 
@@ -254,7 +256,7 @@ const OrderController = {
             var agentId1 = order.agentId;
             var memberId = order.memberId;
             var commision = 0; //佣金,给一级经销商的返利（在二级经销商购买，一级获得返利。在一级经销商购买，无佣金）
-            var agentProfit = 0; //代理商获取的利润（）
+            var agentProfit = 0; //代理商获取的利润，
             var profit = 0; //总利润 普通消费者：零售价-成本，代理商：零售价-供货价
             var drinks = await DrinkForOrderController.getByOrderId(result.id);
 

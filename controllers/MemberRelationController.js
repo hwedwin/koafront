@@ -24,7 +24,10 @@ const MemberRelationController = {
 	    			cid: memberId
 	    		}
 	    	});
-	    	return result.fxLevel;
+            if (result) {
+	    	    return result.fxLevel;
+            }
+            return null;
     	} catch(e) {
     		return null;
     	}
