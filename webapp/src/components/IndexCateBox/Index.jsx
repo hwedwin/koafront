@@ -4,6 +4,7 @@ import svgWhite from '../../assets/svg/white-wine.svg'
 import svgRed from '../../assets/svg/red-wine.svg'
 import svgBeer from '../../assets/svg/beer.svg'
 import svgOther from '../../assets/svg/wine-glass.svg'
+import './index.css';
 
 class IndexCateBox extends Component {
 
@@ -12,22 +13,22 @@ class IndexCateBox extends Component {
 		this.state = {
 			data: [
 				{
-				  icon: <Icon type={svgWhite} />,
+				  icon: <Icon type={svgWhite}/>,
 				  text: `白酒`,
 				  id: 1
 				},
 				{
-				  icon: <Icon type={svgRed} />,
+				  icon: <Icon type={svgRed}/>,
 				  text: `红酒`,
 				  id: 2
 				},
 				{
-				  icon: <Icon type={svgBeer} />,
+				  icon: <Icon type={svgBeer}/>,
 				  text: `啤酒`,
 				  id: 3
 				},
 				{
-				  icon: <Icon type={svgOther} />,
+				  icon: <Icon type={svgOther}/>,
 				  text: `其他`,
 				  id: 4
 				}
@@ -41,12 +42,13 @@ class IndexCateBox extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="m-index-cate-grid">
 				<Grid
 					data={this.state.data}
 					columnNum={4}
 					hasLine={false}
 					onClick={this.handleItemClick.bind(this)}
+					style={{height: '1rem'}}
 				/>
 			</div>
 		)

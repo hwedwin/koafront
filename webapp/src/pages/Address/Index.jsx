@@ -43,7 +43,8 @@ class Address extends Component {
 		});
 	}
 
-	handleIconEditClick(id) {
+	handleIconEditClick(e,id) {
+		e.stopPropagation();
 		this.props.history.push('/addressedit/'+id);
 	}
 
@@ -74,7 +75,7 @@ class Address extends Component {
 								</div>
 							</div>
 							<div className="m-right-wrapper">
-								<Icon type={svgEdit} size="md" onClick={this.handleIconEditClick.bind(this,el.id)} />
+								<Icon type={svgEdit} size="md" onClick={(e)=>this.handleIconEditClick(e,el.id)} />
 							</div>
 						</div>
 
