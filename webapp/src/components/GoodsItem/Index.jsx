@@ -21,14 +21,14 @@ class GoodsItem extends Component {
 		speText: '¥'
 	}
 
-	static ormParams(id,title,logo,price,originPrice) {
+	static ormParams(id,title,logo,price,originPrice,backProfit) {
 		return {
-			id,title,logo,price,originPrice
+			id,title,logo,price,originPrice,backProfit
 		}
 	}
 
 	render() {
-		var data = this.props.data
+		var data = this.props.data;
 		return (
 			<div className="m-goods-itema">
 				<Link to={`/goods/${data.id}`}>
@@ -39,6 +39,9 @@ class GoodsItem extends Component {
 						<div className="u-title">{data.title}</div>
 						<div className="u-price">
 							{this.props.speText}{data.price}<span className="u-origin-price">¥{data.originPrice}</span>
+						</div>
+						<div className="u-price">
+							{data.backProfit?'返利:¥'+data.backProfit:''}
 						</div>
 						<div className="m-tag-box">
 							<span className="u-tag">自营</span>

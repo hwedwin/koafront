@@ -10,14 +10,16 @@ class CommonNavbar extends Component {
 		centerText: PropTypes.string,
 		showLeftIcon: PropTypes.any,
 		fixed: PropTypes.bool,
-		onBackbarClick: PropTypes.func
+		onBackbarClick: PropTypes.func,
+		leftContent: PropTypes.string
 	}
 
 	static defaultProps = {
 		centerText: 'Navbar',
 		showLeftIcon: 'left',
 		fixed: false,
-		onBackbarClick: () => {}
+		onBackbarClick: () => {},
+		leftContent: ''
 	}
 
 	render() {
@@ -31,7 +33,7 @@ class CommonNavbar extends Component {
 					<NavBar
 						mode="light"
 						iconName={this.props.showLeftIcon}
-						leftContent=""
+						leftContent={this.props.leftContent}
 						onLeftClick={e => this.props.onBackbarClick()}
 						rightContent={[
 							<Link to="/search" key="linksearch"><Icon key="0" type="search" color="#000" /></Link>

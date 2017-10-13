@@ -165,11 +165,10 @@ class IndexCart extends Component {
 	}
 
 	_formatGoods(goods) {
-		console.log(goods);
 		for (var i = 0; i < goods.length; i++) {
 			var gItem = goods[i];
 			if (gItem.special) {
-				gItem.price = this.props.isAgent?gItem.special.specialPrice:gItem.special.specialPriceAgent;
+				gItem.price = gItem.special.specialPrice;
 			}
 		}
 		return goods;

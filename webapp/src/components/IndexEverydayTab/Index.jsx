@@ -34,7 +34,7 @@ const makeTabPane = (text,key,data,timeChunk) => {
 			goods.push(<GoodsItem 
 				speText="特卖价：¥"
 				data={
-					GoodsItem.ormParams(dataItem.drinkId,dataItem.drink.name,dataItem.drink.imgPath,dataItem.price,dataItem.drink.originPrice)
+					GoodsItem.ormParams(dataItem.drinkId,dataItem.drink.name,dataItem.drink.imgPath,dataItem.price,dataItem.drink.originPrice,dataItem.backProfit)
 				}
 				key={dataItem.id}
 			/>)
@@ -82,7 +82,7 @@ class IndexEverydayTab extends Component {
 						<GoodsItem 
 							speText="特卖价：¥"
 							data={
-								GoodsItem.ormParams(item.drinkId,item.drink.name,item.drink.imgPath,item.price,item.drink.originPrice)
+								GoodsItem.ormParams(item.drinkId,item.drink.name,item.drink.imgPath,item.price,item.drink.originPrice,item.backProfit)
 							}
 							key={item.id}
 						/>

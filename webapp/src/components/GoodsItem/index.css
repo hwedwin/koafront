@@ -1,5 +1,5 @@
 .m-goods-itema{
-	height: 2.4rem;
+	min-height: 2.4rem;
 	/*padding: .2rem 0;*/
 	padding-right: .3rem;
 	background-color: #fff;
@@ -24,7 +24,8 @@
 	box-sizing: border-box;
 	margin-left: 2.2rem;
 	padding: 0;
-	padding-top: .3rem;
+	padding-top: .2rem;
+	padding-bottom: .2rem;
 	border-bottom: 1px solid #dbdbdb;
 }
 .m-goods-itema .m-detail-wrapper .u-title{
@@ -36,7 +37,7 @@
 	color: #000;
 }
 .m-goods-itema .m-detail-wrapper .u-price{
-	margin-top: .15rem;
+	margin-top: .06rem;
 	color: #f13030;
 	font-size: .29rem;
 }

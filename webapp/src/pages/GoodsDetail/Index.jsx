@@ -255,6 +255,12 @@ class GoodsDetail extends Component {
 	render() {
 		var goodsInfo = this.state.goodsInfo;
 		var isAgent = this.props.member.level==1||this.props.member.level==2;
+		var backProfit = 0;
+		if (goodsInfo.special) {
+			backProfit = goodsInfo.special.specialPrice - goodsInfo.special.specialPriceAgent;
+		}else{
+			backProfit = goodsInfo.retailPrice - goodsInfo.supplyPrice;
+		}
 		return (
 			<div className="page-goods-detail">
 				<CommonNavbar 
@@ -273,8 +279,11 @@ class GoodsDetail extends Component {
 						{goodsInfo.name}
 					</div>
 					<div className="m-price-box">
-						<span className="u-web-price">{goodsInfo.special?'特卖价：¥'+(isAgent?goodsInfo.special.specialPriceAgent:goodsInfo.special.specialPrice):'¥'+goodsInfo.price}</span>
+						<span className="u-web-price">{goodsInfo.special?'特卖价：¥'+(goodsInfo.special.specialPrice):'¥'+goodsInfo.price}</span>
 						<span className="u-origin-price">¥{goodsInfo.originPrice}</span>
+					</div>
+					<div className="m-price-box">
+						<span className="u-web-price">{isAgent?'返利：¥'+backProfit:''}</span>
 					</div>
 				</div>
 				<div className="m-purchase-box">

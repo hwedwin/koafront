@@ -67,16 +67,25 @@ class OrderCreate extends Component {
 	}
 
 	_getDefaultAddress() {
-		return Ajax.post({url: Config.API.CONSIGNEE_LIST,data: {defaults: true}})
-		.then((data) => {
-			if (data.status === 200) {
-				if (data.data.code === 200) {
+		var url = Config.API.CONSIGNEE_LIST;
+		var requestData = {defaults: true};
+		var consignee = Util.getSearch(this.props.location.search,'consignee');
+		if (consignee && consignee.length > 32) {
+			url = Config.API.CONSIGNEE_ONE;
+			requestData = {
+				id: consignee
+			};
+		}
+		return Ajax.post({url: url,data: requestData})
+		.then((res) => {
+			if (res.status === 200) {
+				if (res.data.code === 200) {
 					this.setState({
-						addressData: data.data.data
+						addressData: res.data.data
 					});
 				}
 			}else{
-				Toast.info(data.message);
+				Toast.info(res.message);
 			}
 		}).catch(function(error){
 			console.log(error);
@@ -112,7 +121,7 @@ class OrderCreate extends Component {
 
 	_formatGoods(gItem) {
 		if (gItem.special) {
-			gItem.price = this.props.isAgent?gItem.special.specialPrice:gItem.special.specialPriceAgent;
+			gItem.price = gItem.special.specialPrice;
 		}
 		return gItem;
 	}
@@ -173,6 +182,10 @@ class OrderCreate extends Component {
 		});
 	}
 
+	handleAddressClick() {
+		this.props.history.push('/address?from=order&goods='+Util.getSearch(this.props.location.search,'goods'));
+	}
+
 	render() {
 		const addressData = this.state.addressData;
 		return (
@@ -181,7 +194,7 @@ class OrderCreate extends Component {
 					centerText="创建订单"
 					onBackbarClick={()=>this.props.history.goBack()}
 				/>
-				<div className="m-address-box">
+				<div className="m-address-box" onClick={this.handleAddressClick.bind(this)}>
 					<div className="m-left-wrapper">
 						<div className="u-top-name">
 							<span className="u-name">{addressData.consigneeName}</span>

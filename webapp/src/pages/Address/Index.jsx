@@ -47,6 +47,12 @@ class Address extends Component {
 		this.props.history.push('/addressedit/'+id);
 	}
 
+	handleAddressItemClick(id) {
+		if (Util.getSearch(this.props.location.search,'from') === 'order') {
+			this.props.history.replace('/ordercreate/?goods='+Util.getSearch(this.props.location.search,'goods')+'&consignee='+id);
+		}
+	}
+
 	render() {
 		return (
 		<div className="page-address">
@@ -57,7 +63,7 @@ class Address extends Component {
 			<div className="m-address-box">
 				{
 					this.state.address.map(el => (
-						<div className="m-address-item" key={el.id}>
+						<div className="m-address-item" key={el.id} onClick={this.handleAddressItemClick.bind(this,el.id)}>
 							<div className="m-left-wrapper">
 								<div className="m-name-mobile">
 									<span className="u-name">{el.consigneeName}</span>

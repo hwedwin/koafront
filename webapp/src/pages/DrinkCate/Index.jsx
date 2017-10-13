@@ -70,13 +70,13 @@ class SearchResult extends Component {
 	}
 
 	_formatGoods(goods) {
-		var isAgent = this.props.member.level==1||this.props.member.level==2;
+		/*var isAgent = this.props.member.level==1||this.props.member.level==2;
 		for (var i = 0; i < goods.length; i++) {
 			var g = goods[i];
 			if (g.special) {
 				g.price = '特卖价:¥'+(isAgent?g.special.specialPriceAgent:g.specialPrice);
 			}
-		}
+		}*/
 		return goods;
 	}
 
@@ -105,6 +105,8 @@ class SearchResult extends Component {
 			<div className="m-page-result">
 				<CommonNavbar 
 					showLeftIcon={false}
+					leftContent="首页"
+					onBackbarClick={()=>this.props.history.goBack()}
 					centerText={this.state.navTitle}
 				/>
 				<div className="m-sortbar">
@@ -146,8 +148,8 @@ class SearchResult extends Component {
 						this.state.goods.map(el => (
 							<GoodsItem 
 								key={el.id}
-								speText=""
-								data={GoodsItem.ormParams(el.id,el.name,el.imgPath,el.price,el.originPrice)}
+								speText="¥"
+								data={GoodsItem.ormParams(el.id,el.name,el.imgPath,el.price,el.originPrice,el.backProfit)}
 							/>
 						))
 					}

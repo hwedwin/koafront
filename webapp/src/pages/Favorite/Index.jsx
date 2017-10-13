@@ -41,12 +41,12 @@ class Favorite extends Component {
 	}
 
 	_formatGoods(goods) {
-		for (var i = 0; i < goods.length; i++) {
+		/*for (var i = 0; i < goods.length; i++) {
 			var g = goods[i];
 			if (g.special) {
 				g.drink.price = (this.props.member.level == 1 || this.props.member.level==2)?g.special.specialPriceAgent:g.special.specialPrice;
 			}
-		}
+		}*/
 		return goods;
 	}
 
@@ -63,7 +63,7 @@ class Favorite extends Component {
 								el => 
 								<GoodsItem 
 									key={el.id}
-									data={GoodsItem.ormParams(el.drink.id,el.drink.name,el.drink.imgPath,el.drink.price,el.drink.originPrice)}
+									data={GoodsItem.ormParams(el.drink.id,el.drink.name,el.drink.imgPath,el.drink.price,el.drink.originPrice,el.drink.backProfit)}
 								/>
 							)
 					}

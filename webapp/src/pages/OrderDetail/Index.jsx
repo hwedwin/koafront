@@ -15,7 +15,8 @@ class OrderDetail extends Component {
 		this.state = {
 			consignee: {},
 			drinks: [],
-			details: {}
+			details: {},
+			remainTime: 0
 		}
 	}
 
@@ -33,7 +34,12 @@ class OrderDetail extends Component {
 					this.setState({
 						consignee: o.consignee, 
 						drinks: o.drinks,
-						details: o
+						details: o,
+						remainTime: (o.createdTimestamp+24*60*60*1000)-Date.now()
+					},()=>{
+						if (this.state.remainTime > 1000) {
+							this._startTimer();
+						}
 					});
 				}
 			}else{
@@ -42,6 +48,34 @@ class OrderDetail extends Component {
 		}).catch(function(error){
 			console.log(error);
 		});
+	}
+
+	_startTimer() {
+		this.timer = window.setInterval(()=>{
+			var remain = this.state.remainTime - 1000;
+			if (remain > 1000) {
+				this.setState({
+					remainTime: remain
+				});
+			}else{
+				window.clearInterval(this.timer);
+			}
+		},1000);
+	}
+
+	_format(millsecond) {
+		var hour = parseInt(millsecond / 3600000,10);
+		var minute = parseInt((millsecond - hour * 3600000) / 60000, 10);
+		var str = '';
+		if (hour > 0) {
+			str = hour + '小时';
+		}
+		str += minute + '分钟';
+		return str;
+	}
+
+	componentWillUnmount() {
+		window.clearInterval(this.timer);
 	}
 
 	render() {
@@ -83,8 +117,11 @@ class OrderDetail extends Component {
 					<div className="u-order-list">
 						<div className="u-item">订单编号：{o.id}</div>
 						<div className="u-item">下单时间：{Util.formatDate('yyyy-MM-dd hh:mm:ss',o.createdTimestamp)}</div>
-						<div className="u-item">支付方式：{o.progressState=='1'?'未支付':(o.paidCode=='weixin'?'微信支付':'余额支付')}</div>
+						<div className="u-item">支付方式：{o.progressState=='1'?'未支付':(o.paidCode!='balance'?'微信支付':'余额支付')}</div>
 						<div className="u-item">商品总额：¥{o.orderTotalPrice}</div>
+						{
+							this.state.remainTime > 1000 ? <div className="u-item">剩余支付时间：{this._format(this.state.remainTime)}</div>:''
+						}
 					</div>
 				</div>
 			</div>

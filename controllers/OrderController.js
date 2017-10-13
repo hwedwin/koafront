@@ -110,18 +110,19 @@ const OrderController = {
                     }
                 }
             }
+
             //
-            if (memberLevel == 1 || memberLevel == 2) {
-                if (totalPrice != totalPriceSupply) {
-                    respond.json(ctx, false, '价格计算有误', null, { memberLevel, totalPrice, totalPriceRetail, totalPriceSupply });
-                    return;
-                }
-            } else {
+            // if (memberLevel == 1 || memberLevel == 2) {
+            //     if (totalPrice != totalPriceSupply) {
+            //         respond.json(ctx, false, '价格计算有误', null, { memberLevel, totalPrice, totalPriceRetail, totalPriceSupply });
+            //         return;
+            //     }
+            // } else {
                 if (totalPrice != totalPriceRetail) {
                     respond.json(ctx, false, '价格计算有误', null, { memberLevel, totalPrice, totalPriceRetail, totalPriceSupply });
                     return;
                 }
-            }
+            // }
 
             //开启事务
             let orderData = await sequelize.transaction(async function(t) {
@@ -444,9 +445,28 @@ const OrderController = {
         }
         var { state } = ctx.request.body;
         var query = { memberId, isDeleted: 0 };
-        if (state && ["1", "2", "3", "4", "5", "9", "19", "99"].indexOf(state) > -1) {
+        if (!state) {
+            query.$or = {
+                progressState: {
+                    $ne: 1
+                },
+                $and: {
+                    progressState: 1,
+                    createdTimestamp: {
+                        $gt: Date.now() - 24*60*60*1000*1
+                    }
+                }
+            };
+        }else if(["1", "2", "3", "4", "5", "9", "19", "99"].indexOf(state) > -1){
             query.progressState = state;
+            // 过滤超过时间未支付的订单,天
+            if(state == 1){
+                query.createdTimestamp = {
+                    $gt: Date.now() - 24*60*60*1000*1
+                };
+            }
         }
+        console.log(query);
         try {
             var results = await Order.findAll({
                 where: query

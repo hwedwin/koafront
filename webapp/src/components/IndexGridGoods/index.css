@@ -6,7 +6,7 @@
 }
 
 .m-index-grid .am-grid.am-grid-line .am-flexbox{
-	height: 4.3rem;
+	height: 4.6rem;
 }
 
 .m-index-grid .am-grid .am-flexbox .am-flexbox-item .am-grid-item-content .am-grid-item-inner-content.column-num-2 .am-grid-text{
@@ -14,5 +14,5 @@
 }
 
 .m-grid-goods{}
-.m-grid-goods .u-title{font-size: .3rem;}
-.m-grid-goods .u-price{color: #f13030;font-size: .29rem;}
+.m-grid-goods .u-title{font-size: .3rem;line-height: .36rem;max-height: .72rem;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;overflow: hidden;}
+.m-grid-goods .u-price{color: #f13030;font-size: .29rem;margin-top: .1rem;}

@@ -101,16 +101,31 @@ const ConsigneeController = {
 			respond.json(ctx,false,'获取收货地址失败，用户尚未登录',{code: 203});
 			return false;
 		}
+		var updateObj = {consigneeName,consigneeMobile,province,city,county,address,isDefault};
+		for (let name in updateObj) {
+			if (!updateObj[name]) {
+				delete updateObj[name];
+			}
+		}
 		try{
-			var result = await Consignee.update({
-				consigneeName,consigneeMobile,province,city,county,address,isDefault
-			},{
-				where: {
-					id,
-					memberId
+			if (Object.keys(updateObj).length != 0) {
+				if (updateObj.isDefault == '1') {
+					await Consignee.update({
+						isDefault: 0
+					},{
+						where: {
+							memberId
+						}
+					});
 				}
-			});
-			respond.json(ctx,true,'保存地址成功',{code: 200,data: result});
+				await Consignee.update(updateObj,{
+					where: {
+						id,
+						memberId
+					}
+				});
+			}
+			respond.json(ctx,true,'保存地址成功',{code: 200});
 		}catch(e){
 			respond.json(ctx,false,'保存地址失败',null,e);
 		}

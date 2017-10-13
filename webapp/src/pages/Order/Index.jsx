@@ -107,10 +107,15 @@ class Order extends Component {
 	}
 
 	_getOrderByTag(state) {
+		console.log(state)
 		Toast.loading('加载中...',0);
 		var self = this;
+		var requestData = {};
+		if (state) {
+			requestData.state = state;
+		}
 		// 获取全部订单
-		Ajax.post({url: Config.API.ORDER_LIST,data: {state}})
+		Ajax.post({url: Config.API.ORDER_LIST,data: requestData})
 			.then(function(data) {
 				Toast.hide();
 				if (data.status === 200 && data.data.code === 200) {
@@ -180,8 +185,6 @@ class Order extends Component {
 			this.requestReceiveOrder(id);
 		}else {
 		}
-		console.log(state)
-		console.log(id)
 	}
 
 	handleOrderClick(id) {

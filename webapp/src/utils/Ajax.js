@@ -29,18 +29,29 @@ const Ajax = {
 			}
 		}else if(this.getType(data) === 'Object'){
 			if (data.retailPrice) {
+				data.price = data.retailPrice;
 				if (isAgent) {
-					data.price = data.supplyPrice;
-				}else{
-					data.price = data.retailPrice;
+					data.backProfit = data.retailPrice - data.supplyPrice;//返利
 				}
-			}else if (data.specialPrice) {
+			}else if(data.specialPrice){
+				data.price = data.specialPrice;
 				if (isAgent) {
-					data.price = data.specialPriceAgent;
-				}else{
-					data.price = data.specialPrice;
+					data.backProfit = data.specialPrice - data.specialPriceAgent;//返利
 				}
 			}
+			// if (data.retailPrice) {
+			// 	if (isAgent) {
+			// 		data.price = data.supplyPrice;
+			// 	}else{
+			// 		data.price = data.retailPrice;
+			// 	}
+			// }else if (data.specialPrice) {
+			// 	if (isAgent) {
+			// 		data.price = data.specialPriceAgent;
+			// 	}else{
+			// 		data.price = data.specialPrice;
+			// 	}
+			// }
 			for (var name in data) {
 				if (this.getType(data[name]) === 'Object' || this.getType(data[name]) === 'Array') {
 					this.deepFind(data[name],level);
