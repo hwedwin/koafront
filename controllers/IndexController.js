@@ -25,6 +25,7 @@ const IndexController = {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent'+aid+'#wechat_redirect');
             return;
         }
+        console.log('openid:'+ctx.session.openid);
         await ctx.render('index');
     },
     beat: async function(ctx) {
