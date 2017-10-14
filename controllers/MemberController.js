@@ -56,8 +56,10 @@ const MemberController = {
                     wxtoken: openid
                 }
             });
+            console.log(member)
             if (member) {
                 ctx.session.memberId = member.id;
+                console.log(ctx.session.memberId);
             }
             return member;
         } catch (e) {
