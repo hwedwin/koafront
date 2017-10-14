@@ -37,7 +37,8 @@ class RegisterAgent extends Component {
 	}
 
 	componentDidMount() {
-		KGArea.init('#area')
+		this._handleShareUrl();
+		KGArea.init('#area');
 	}
 
 	_requestWxOrder() {
@@ -47,6 +48,23 @@ class RegisterAgent extends Component {
 		// 	}).catch(function(error){
 		// 		console.log(error);
 		// 	});
+	}
+
+	_handleShareUrl() {
+		var aid = Util.getSearch('aid');
+		if (!aid) {
+			Ajax.post({url: Config.API.MEMBER_DATA})
+				.then((res) => {
+					if (res.status === 200) {
+						if (res.data.code === 200) {
+							this.props.history.push('/regagent?aid='+res.data.data.id);
+						}
+					}else{
+					}
+				}).catch(function(error){
+					console.log(error);
+				});
+		}
 	}
 
 	_startTimer() {
