@@ -224,6 +224,7 @@ const OrderController = {
     // 支付回调
     payNotify: async function(ctx) {
         var body = ctx.request.body;
+        console.log(body);
         if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
             // 更新订单状态
             var order = await Order.update({
