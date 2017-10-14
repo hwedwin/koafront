@@ -58,6 +58,7 @@ class RegisterAgent extends Component {
 					if (res.status === 200) {
 						if (res.data.code === 200) {
 							this.props.history.push('/regagent?aid='+res.data.data.id);
+						}else{
 						}
 					}else{
 					}
