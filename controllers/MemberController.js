@@ -224,7 +224,8 @@ const MemberController = {
                 province: consignee.province,
                 city: consignee.city,
                 county: consignee.county,
-                address: consignee.address
+                address: consignee.address,
+                mobile: mobile
             });
 
             // 创建用户余额账户

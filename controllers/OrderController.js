@@ -21,15 +21,16 @@ const OrderController = {
                 memberId: memberId,
                 progressState: 2,
                 progressInfo: '待配货',
-                code: CommonUtil.guid(),
+                code: consignee.mobile,
                 totalPrice: 400,
                 orderTotalPrice: 400,
                 orderTotalDiscount: 0,
-                orderFrom: 'register',
+                orderFrom: 'weixin',
                 remarks: '用户注册订单',
                 agentId: agentId,
                 createdTimestamp: Date.now(),
-                payInfo: '注册代理订单'
+                payInfo: '注册代理商订单',
+                payCode: 'weixin'
             }, { transaction: t });
 
             //创建订单收货人
