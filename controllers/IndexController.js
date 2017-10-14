@@ -10,6 +10,7 @@ const IndexController = {
         var {aid} = ctx.request.query;
         aid = aid ? aid : '';
         // 进行微信授权
+        console.log('opneid:'+ctx.session.openid)
         if (!ctx.session.openid) {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index'+aid+'#wechat_redirect');
             return;
