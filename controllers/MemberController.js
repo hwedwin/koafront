@@ -103,25 +103,31 @@ const MemberController = {
                     agentData.headerImage = ctx.session.headerimgurl;
                     agentData.wxtoken = ctx.session.openid;
                 }
-	            //写入
-	            const member = await Member.create(agentData, {transaction: t});
+                var member;
+                try{
+	                //写入
+	                member = await Member.create(agentData, {transaction: t});
+    	            //记录会员关系
+    	            let level = agentId ? 2 : 1;
+    	            agentId = agentId ? agentId : 'top';
+    	            const memberRe = await MemberRelation.create({
+    	                fxLevel: level,
+    	                pid: agentId,
+    	                cid: member.id,
+    	            }, {transaction: t});
+                    console.log(memberRe);
+                    // 添加用户收货地址
+                    var oResult = await ConsigneeController.create({
+                        isDefault: '1',
+                        memberId: member.id,
+                        consigneeName,consigneeMobile,province,city,county,address,
+                    },t);
+                    console.log(oResult);
+                }catch(e){
+                    respond.json(ctx, false, '预注册失败', null, e);
+                    return;
+                }
 
-	            //记录会员关系
-	            let level = agentId ? 2 : 1;
-	            agentId = agentId ? agentId : 'top';
-	            const memberRe = await MemberRelation.create({
-	                fxLevel: level,
-	                pid: agentId,
-	                cid: member.id,
-	            }, {transaction: t});
-                console.log(memberRe);
-                // 添加用户收货地址
-                var oResult = await ConsigneeController.create({
-                    isDefault: '1',
-                    memberId: member.id,
-                    consigneeName,consigneeMobile,province,city,county,address,
-                },t);
-                console.log(oResult);
                 // // 新建一笔订单，送注册礼品
                 // await OrderController.createRegisterOrder(member.id,agentId,{
                 //     consigneeName,consigneeMobile,province,city,county,address

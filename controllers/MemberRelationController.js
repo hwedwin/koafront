@@ -9,15 +9,14 @@ const MemberRelationController = {
     		transactionO.transaction = t;
     	}
         try{
-            var memberRe = await MemberRelation.create({
+            return await MemberRelation.create({
                 fxLevel: level,
                 pid: agentId,
                 cid: memberId,
             }, transactionO);
         }catch(e){
-            return e;
+            throw new Error(e);
         }
-        return memberRe;
     },
 
     getMemberLevelById: async function(memberId) {
