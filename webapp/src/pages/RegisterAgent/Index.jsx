@@ -55,7 +55,7 @@ class RegisterAgent extends Component {
 				.then((res) => {
 					if (res.status === 200) {
 						console.log(res);
-						this._handleWXShare(res.data);
+						this._handleWXShare(res.data.data);
 					}else{
 					}
 				}).catch(function(error){
