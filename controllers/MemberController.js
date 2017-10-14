@@ -121,7 +121,7 @@ const MemberController = {
                     memberId: member.id,
                     consigneeName,consigneeMobile,province,city,county,address,
                 },t);
-
+                console.log(oResult);
                 // // 新建一笔订单，送注册礼品
                 // await OrderController.createRegisterOrder(member.id,agentId,{
                 //     consigneeName,consigneeMobile,province,city,county,address
