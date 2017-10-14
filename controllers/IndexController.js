@@ -5,6 +5,8 @@ const MemberController = require('./MemberController');
 const request = require('request');
 const wxConfig = require('../config/weixin');
 const CommonUtil = require('../utils/CommonUtil');
+const weixinSign = require('../core/weixinSign');
+
 const IndexController = {
     index: async function(ctx) {
         var {aid} = ctx.request.query;
@@ -65,7 +67,6 @@ const IndexController = {
         var resBody = await IndexController.getWXToken(code);
         resBody = JSON.parse(resBody);
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
-        console.log(resUserInfo);
         resUserInfo = JSON.parse(resUserInfo);
         // openid
         ctx.cookies.set('openid',resUserInfo.openid);
@@ -76,6 +77,14 @@ const IndexController = {
         // nickname
         // ctx.cookies.set('nickname',resUserInfo.nickname);
         ctx.session.nickname = resUserInfo.nickname;
+
+        // 获取jsAPI
+        var ticketBody = await IndexController.getJsTicket(resBody.access_token);
+        if (ticketBody && ticketBody.errmsg == 'ok') {
+            ctx.session.wxticket = ticketBody.ticket;
+        }
+        console.log(ticketBody);
+
         // 通过openid登录
         var member = await MemberController.loginByOpenid(resUserInfo.openid);
         var mats = /^regagent(.*)/.exec(state);
@@ -141,6 +150,28 @@ const IndexController = {
                 }
             });
         })
+    },
+
+    getJsTicket: function(AccessToken) {
+        let reqUrl = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token='+AccessToken+'&type=jsapi';
+        let options = {
+            method: 'get',
+            url: reqUrl
+        };
+        return new Promise((resolve, reject) => {
+            request(options, function(err, res, body) {
+                if (res) {
+                    resolve(body);
+                } else {
+                    reject(err);
+                }
+            });
+        })
+    },
+
+    getWeixinJSConfig: async function(ctx){
+        var sign = weixinSign(ctx.session.wxticket,ctx.url);
+        respond.json(ctx, true, '获取签名成功',sign);
     }
 }
 
