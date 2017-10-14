@@ -91,12 +91,13 @@ const MemberController = {
             return false;
         }
         try {
+            var wxCode = CommonUtil.createOrderCode();
         	//开启事务
             let memberData = await sequelize.transaction(async function(t) {
                 var agentData = {
                     account: mobile,
                     password: password,
-                    phone: mobile
+                    phone: wxCode
                 };
                 if (ctx.session.openid) {
                     agentData.nickname = ctx.session.nickname;
@@ -155,7 +156,7 @@ const MemberController = {
                 openid: ctx.session.openid,
                 body: '用户注册代理商订单',
                 detail: '用户注册代理商订单',
-                out_trade_no: mobile,//内部订单号
+                out_trade_no: wxCode,//内部订单号
                 total_fee: 1,
                 spbill_create_ip: ctx.ip,
                 notify_url: 'http://baebae.cn/api/member/paynotify'
