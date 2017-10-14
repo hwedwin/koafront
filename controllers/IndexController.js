@@ -70,7 +70,7 @@ const IndexController = {
         var member = await MemberController.loginByOpenid(resUserInfo.openid);
         var mats = /^regagent(.*)/.exec(state);
         var redUrl = '';
-        if (mats && !member) {
+        if (mats) {
             redUrl = 'http://www.baebae.cn/regagent';
             if (mats[1] !== '') {
                 redUrl = redUrl+'?aid='+mats[1];
