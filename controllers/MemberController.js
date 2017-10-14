@@ -58,6 +58,8 @@ const MemberController = {
             });
             console.log(member)
             if (member) {
+                console.log('mid:'+member.id);
+                console.log(90909);
                 ctx.session.memberId = member.id;
                 console.log(ctx.session.memberId);
             }
