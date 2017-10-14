@@ -121,33 +121,42 @@ class RegisterAgent extends Component {
 
 	_handleShareUrl() {
 		var aid = Util.getSearch('aid');
-		if (!aid) {
+		var isRedirect = Util.getSearch('isredirect');
+		if (!aid&&isRedirect!=1) {
 			Ajax.post({url: Config.API.MEMBER_DATA})
 				.then((res) => {
 					if (res.status === 200) {
 						if (res.data.code === 200) {
-							this.props.history.replace('/regagent?aid='+res.data.data.id);
+							this.props.history.replace('/regagent?isredirect=1&aid='+res.data.data.id);
 							// this._requestWXJsConfig(res.data.data);
 						}else{
+							this.props.history.replace('/regagent?isredirect=1');
 						}
 					}else{
+						this.props.history.replace('/regagent?isredirect=1');
 					}
 				}).catch(function(error){
 					console.log(error);
 				});
 		}else{
-			Ajax.post({url: Config.API.MEMBER_DATA_BYID,data:{id: aid}})
-				.then((res) => {
-					if (res.status === 200) {
-						if (res.data.code === 200) {
-							this._requestWXJsConfig(res.data.data);
+			if (aid) {
+				Ajax.post({url: Config.API.MEMBER_DATA_BYID,data:{id: aid}})
+					.then((res) => {
+						if (res.status === 200) {
+							if (res.data.code === 200) {
+								this._requestWXJsConfig(res.data.data);
+							}else{
+								this._requestWXJsConfig();
+							}
 						}else{
+							this._requestWXJsConfig();
 						}
-					}else{
-					}
-				}).catch(function(error){
-					console.log(error);
-				});
+					}).catch(function(error){
+						console.log(error);
+					});
+			}else{
+				this._requestWXJsConfig();	
+			}
 		}
 	}
 
