@@ -50,12 +50,12 @@ class RegisterAgent extends Component {
 		// 	});
 	}
 
-	_requestWXJsConfig() {
+	_requestWXJsConfig(memberData) {
 		Ajax.post({url: Config.API.WXJS_SIGN,data:{url: window.location.href}})
 				.then((res) => {
 					if (res.status === 200) {
 						console.log(res);
-						this._handleWXShare(res.data.data);
+						this._handleWXShare(res.data,memberData);
 					}else{
 					}
 				}).catch(function(error){
@@ -63,7 +63,7 @@ class RegisterAgent extends Component {
 				});
 	}
 
-	_handleWXShare(data) {
+	_handleWXShare(data,member) {
 		var wx = window.wx;
 		wx.config({
 	          debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -77,7 +77,7 @@ class RegisterAgent extends Component {
 	          ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 	      });
 
-		var title = data.nickname+'邀请您加入麦智合伙人';
+		var title = member.nickname+'邀请您加入麦智合伙人';
 		var link = window.location.href;
 		var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
 		var desc = '邀请您加入麦智合伙人，分享高性价比糖酒食品';
