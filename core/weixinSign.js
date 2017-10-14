@@ -42,7 +42,7 @@ var sign = function (jsapi_ticket, url) {
       // jsSHA = require('jssha');
       // shaObj = new jsSHA(string, 'TEXT');
       // shaObj.getHash('SHA-1', 'HEX')
-  ret.signature = crypto.createHmac('sha1', app_secret).update('待加密字串').digest('hex');
+  ret.signature = crypto.createHmac('sha1', string).update('待加密字串').digest('hex');
 
   return ret;
 };
