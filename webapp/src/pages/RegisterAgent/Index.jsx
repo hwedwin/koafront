@@ -140,12 +140,12 @@ class RegisterAgent extends Component {
 				.then((res) => {
 					if (res.status === 200) {
 						if (res.data.code === 200) {
-							this._requestWXJsConfig('http://www.baebae.cn/regagent?&aid='+aid.id,res.data.data);
+							this._requestWXJsConfig('http://www.baebae.cn/regagent?&aid='+aid,res.data.data);
 						}else{
-							this._requestWXJsConfig('http://www.baebae.cn/regagent?&aid='+aid.id);
+							this._requestWXJsConfig('http://www.baebae.cn/regagent?&aid='+aid);
 						}
 					}else{
-						this._requestWXJsConfig('http://www.baebae.cn/regagent?&aid='+aid.id);
+						this._requestWXJsConfig('http://www.baebae.cn/regagent?&aid='+aid);
 					}
 				}).catch(function(error){
 					console.log(error);
