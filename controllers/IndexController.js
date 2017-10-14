@@ -82,7 +82,7 @@ const IndexController = {
         ctx.session.nickname = resUserInfo.nickname;
 
         // 获取jsAPI
-        var baseToken = await IndexController.getWXToken(code);
+        var baseToken = await IndexController.getBaseToken();
         console.log(baseToken);
         baseToken = JSON.parse(baseToken);
         var ticketBody = await IndexController.getJsTicket(baseToken.access_token);
