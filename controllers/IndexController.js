@@ -201,7 +201,8 @@ const IndexController = {
     },
 
     getWeixinJSConfig: async function(ctx){
-        var sign = weixinSign(ctx.session.wxticket,ctx.url);
+        var {url} = ctx.request.body;
+        var sign = weixinSign(ctx.session.wxticket,url);
         respond.json(ctx, true, '获取签名成功',sign);
     }
 }
