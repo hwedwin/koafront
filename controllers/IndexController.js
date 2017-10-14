@@ -155,11 +155,17 @@ const IndexController = {
     },
 
     getJsTicket: function(AccessToken) {
-        let reqUrl = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token='+AccessToken+'&type=jsapi';
+        let reqUrl = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?';
+        let params = {
+            access_token: AccessToken,
+            type: 'jsapi'   
+        };
+        
         let options = {
             method: 'get',
-            url: reqUrl
+            url: reqUrl + CommonUtil.json2RequestParam(params)
         };
+
         return new Promise((resolve, reject) => {
             request(options, function(err, res, body) {
                 if (res) {
