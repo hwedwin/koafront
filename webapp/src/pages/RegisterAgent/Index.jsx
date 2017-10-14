@@ -50,6 +50,18 @@ class RegisterAgent extends Component {
 		// 	});
 	}
 
+	_requestWXJsConfig() {
+		Ajax.post({url: Config.API.WXJS_SIGN})
+				.then((res) => {
+					if (res.status === 200) {
+						console.log(res);
+					}else{
+					}
+				}).catch(function(error){
+					console.log(error);
+				});
+	}
+
 	_handleShareUrl() {
 		var aid = Util.getSearch('aid');
 		if (!aid) {
@@ -57,7 +69,7 @@ class RegisterAgent extends Component {
 				.then((res) => {
 					if (res.status === 200) {
 						if (res.data.code === 200) {
-							this.props.history.push('/regagent?aid='+res.data.data.id);
+							this.props.history.replace('/regagent?aid='+res.data.data.id);
 						}else{
 						}
 					}else{

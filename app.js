@@ -12,7 +12,6 @@ const app = new Koa();
 
 var port = 4000;
 var env = process.env.NODE_ENV;
-console.log(env);
 if (env === 'production') {
 	port = 80;
 }

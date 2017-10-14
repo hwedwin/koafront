@@ -76,6 +76,7 @@ var Config = {
 
 		// 心跳借口
 		BEAT: window.host + 'api/beat',
+		WXJS_SIGN: window.host + 'api/wxsign',
 	}
 }
 

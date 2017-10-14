@@ -188,9 +188,13 @@ cookies@~0.7.0:
     depd "~1.1.0"
     keygrip "~1.0.1"
 
-core-util-is@1.0.2, core-util-is@~1.0.0:
+core-util-is@1.0.2, core-util-is@^1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/core-util-is/download/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
+
+crc@^3.4.4:
+  version "3.5.0"
+  resolved "http://registry.npm.taobao.org/crc/download/crc-3.5.0.tgz#98b8ba7d489665ba3979f59b21381374101a1964"
 
 cross-env@^3.1.2:
   version "3.2.4"
@@ -463,9 +467,21 @@ is-bluebird@^1.0.2:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/is-bluebird/download/is-bluebird-1.0.2.tgz#096439060f4aa411abee19143a84d6a55346d6e2"
 
+is-class@~0.0.4:
+  version "0.0.4"
+  resolved "http://registry.npm.taobao.org/is-class/download/is-class-0.0.4.tgz#e057451705bb34e39e3e33598c93a9837296b736"
+
 is-generator-function@^1.0.3:
   version "1.0.6"
   resolved "http://registry.npm.taobao.org/is-generator-function/download/is-generator-function-1.0.6.tgz#9e71653cd15fff341c79c4151460a131d31e9fc4"
+
+is-type-of@^1.0.0:
+  version "1.2.0"
+  resolved "http://registry.npm.taobao.org/is-type-of/download/is-type-of-1.2.0.tgz#b553cbb4621adf5b4171e8883f370e7a6ec38995"
+  dependencies:
+    core-util-is "^1.0.2"
+    is-class "~0.0.4"
+    isstream "~0.1.2"
 
 is-typedarray@~1.0.0:
   version "1.0.0"
@@ -607,6 +623,15 @@ koa-session2@^2.2.4:
   version "2.2.4"
   resolved "http://registry.npm.taobao.org/koa-session2/download/koa-session2-2.2.4.tgz#f4685c26641af012f7a95b79a0046109d4e85756"
 
+koa-session@^5.5.0:
+  version "5.5.0"
+  resolved "http://registry.npm.taobao.org/koa-session/download/koa-session-5.5.0.tgz#743ea5e5ead0a23444788c8776d66f674f325815"
+  dependencies:
+    crc "^3.4.4"
+    debug "^2.2.0"
+    is-type-of "^1.0.0"
+    uid-safe "^2.1.3"
+
 koa-static@^3.0.0:
   version "3.0.0"
   resolved "http://registry.npm.taobao.org/koa-static/download/koa-static-3.0.0.tgz#40442233d2c0b35c225e450199c10bf8a539e416"
@@ -629,6 +654,10 @@ koa-xml-body@^2.0.0:
   dependencies:
     raw-body "^2.2.0"
     xml2js "^0.4.17"
+
+koa2-cookie-session@^0.0.1:
+  version "0.0.1"
+  resolved "http://registry.npm.taobao.org/koa2-cookie-session/download/koa2-cookie-session-0.0.1.tgz#03d37a72867c5ad171a5ca57879db945b2040f48"
 
 koa@^2.2.0:
   version "2.3.0"
@@ -818,6 +847,10 @@ q@^1.1.2:
 qs@^6.4.0, qs@~6.5.1:
   version "6.5.1"
   resolved "http://registry.npm.taobao.org/qs/download/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
+
+random-bytes@~1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/random-bytes/download/random-bytes-1.0.0.tgz#4f68a1dc0ae58bd3fb95848c30324db75d64360b"
 
 raw-body@^2.2.0, raw-body@^2.3.2:
   version "2.3.2"
@@ -1055,6 +1088,12 @@ type-is@^1.5.5, type-is@^1.6.14:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.15"
+
+uid-safe@^2.1.3:
+  version "2.1.5"
+  resolved "http://registry.npm.taobao.org/uid-safe/download/uid-safe-2.1.5.tgz#2b3d5c7240e8fc2e58f8aa269e5ee49c0857bd3a"
+  dependencies:
+    random-bytes "~1.0.0"
 
 underscore@^1.7.0:
   version "1.8.3"
