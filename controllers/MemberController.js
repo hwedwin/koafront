@@ -110,17 +110,13 @@ const MemberController = {
     	            //记录会员关系
     	            let level = agentId ? 2 : 1;
     	            agentId = agentId ? agentId : 'top';
-    	            const memberRe = await MemberRelation.create({
-    	                fxLevel: level,
-    	                pid: agentId,
-    	                cid: member.id,
-    	            }, {transaction: t});
+    	            const memberRe = await MemberRelationController.create(level,agentId,member.id,t);
                     console.log(memberRe);
                     // 添加用户收货地址
                     var oResult = await ConsigneeController.create({
                         isDefault: '1',
                         memberId: member.id,
-                        consigneeName,consigneeMobile,province,city,county,address,
+                        consigneeName,consigneeMobile,province,city,county,address
                     },t);
                     console.log(oResult);
                 }catch(e){
