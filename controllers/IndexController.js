@@ -69,15 +69,6 @@ const IndexController = {
         var resBody = await IndexController.getWXToken(code);
         resBody = JSON.parse(resBody);
 
-
-        // 获取jsAPI
-        var ticketBody = await IndexController.getJsTicket(resBody.access_token);
-        console.log(ticketBody);
-        ticketBody = JSON.parse(ticketBody);
-        if (ticketBody && ticketBody.errmsg == 'ok') {
-            ctx.session.wxticket = ticketBody.ticket;
-        }
-
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
         resUserInfo = JSON.parse(resUserInfo);
         // openid
@@ -90,7 +81,16 @@ const IndexController = {
         // ctx.cookies.set('nickname',resUserInfo.nickname);
         ctx.session.nickname = resUserInfo.nickname;
 
-        
+        // 获取jsAPI
+        var baseToken = await IndexController.getWXToken(code);
+        console.log(baseToken);
+        baseToken = JSON.parse(baseToken);
+        var ticketBody = await IndexController.getJsTicket(baseToken.access_token);
+        console.log(ticketBody);
+        ticketBody = JSON.parse(ticketBody);
+        if (ticketBody && ticketBody.errmsg == 'ok') {
+            ctx.session.wxticket = ticketBody.ticket;
+        }
 
         // 通过openid登录
         var member = await MemberController.loginByOpenid(resUserInfo.openid);
@@ -157,6 +157,24 @@ const IndexController = {
                 }
             });
         })
+    },
+
+    getBaseToken: function() {
+        let reqUrl = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='+wxConfig.appid+'&secret='+wxConfig.appSecret;
+
+        let options = {
+            method: 'get',
+            url: reqUrl
+        };
+        return new Promise((resolve, reject) => {
+            request(options, function(err, res, body) {
+                if (res) {
+                    resolve(body);
+                } else {
+                    reject(err);
+                }
+            })
+        });
     },
 
     getJsTicket: function(AccessToken) {
