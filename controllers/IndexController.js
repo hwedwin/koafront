@@ -16,18 +16,26 @@ const IndexController = {
             return;
         }
         var member = await MemberController.loginByOpenid(ctx.session.openid);
+        if (member) {
+            ctx.session.memberId = member.id;
+        }
+        console.log('opneid:'+ctx.session.openid)
         await ctx.render('index');
     },
     regagent: async function(ctx) {
         var {aid} = ctx.request.query;
         aid = aid ? aid : '';
+        console.log('opneid:'+ctx.session.openid)
         // 进行微信授权
         if (!ctx.session.openid) {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent'+aid+'#wechat_redirect');
             return;
         }
         var member = await MemberController.loginByOpenid(ctx.session.openid);
-        console.log('openid:'+ctx.session.openid);
+        if (member) {
+            ctx.session.memberId = member.id;
+        }
+        console.log('opneid:'+ctx.session.openid)
         await ctx.render('index');
     },
     beat: async function(ctx) {
