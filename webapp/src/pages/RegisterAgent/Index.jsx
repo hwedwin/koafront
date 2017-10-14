@@ -50,8 +50,8 @@ class RegisterAgent extends Component {
 		// 	});
 	}
 
-	_requestWXJsConfig(memberData) {
-		Ajax.post({url: Config.API.WXJS_SIGN,data:{url: window.location.href}})
+	_requestWXJsConfig(url,memberData) {
+		Ajax.post({url: Config.API.WXJS_SIGN,data:{url: url}})
 				.then((res) => {
 					if (res.status === 200) {
 						console.log(res);
@@ -77,7 +77,7 @@ class RegisterAgent extends Component {
 	          ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 	      });
 
-		var title = member.nickname+'邀请您加入麦智合伙人';
+		var title = (member.nickname||'')+'邀请您加入麦智合伙人';
 		var link = window.location.href;
 		var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
 		var desc = '邀请您加入麦智合伙人，分享高性价比糖酒食品';
@@ -121,42 +121,35 @@ class RegisterAgent extends Component {
 
 	_handleShareUrl() {
 		var aid = Util.getSearch('aid');
-		var isRedirect = Util.getSearch('isredirect');
-		if (!aid&&isRedirect!=1) {
+		if (!aid) {
 			Ajax.post({url: Config.API.MEMBER_DATA})
 				.then((res) => {
 					if (res.status === 200) {
 						if (res.data.code === 200) {
-							this.props.history.replace('/regagent?isredirect=1&aid='+res.data.data.id);
-							// this._requestWXJsConfig(res.data.data);
+							this.props.history.replace('/regagent?aid='+res.data.data.id);
+							this._requestWXJsConfig('http://www.baebae.cn/regagent?&aid='+res.data.data.id,res.data.data);
 						}else{
-							this.props.history.replace('/regagent?isredirect=1');
 						}
 					}else{
-						this.props.history.replace('/regagent?isredirect=1');
 					}
 				}).catch(function(error){
 					console.log(error);
 				});
 		}else{
-			if (aid) {
-				Ajax.post({url: Config.API.MEMBER_DATA_BYID,data:{id: aid}})
-					.then((res) => {
-						if (res.status === 200) {
-							if (res.data.code === 200) {
-								this._requestWXJsConfig(res.data.data);
-							}else{
-								this._requestWXJsConfig();
-							}
+			Ajax.post({url: Config.API.MEMBER_DATA_BYID})
+				.then((res) => {
+					if (res.status === 200) {
+						if (res.data.code === 200) {
+							this._requestWXJsConfig('http://www.baebae.cn/regagent?&aid='+aid.id,res.data.data);
 						}else{
-							this._requestWXJsConfig();
+							this._requestWXJsConfig('http://www.baebae.cn/regagent?&aid='+aid.id);
 						}
-					}).catch(function(error){
-						console.log(error);
-					});
-			}else{
-				this._requestWXJsConfig();	
-			}
+					}else{
+						this._requestWXJsConfig('http://www.baebae.cn/regagent?&aid='+aid.id);
+					}
+				}).catch(function(error){
+					console.log(error);
+				});
 		}
 	}
 
