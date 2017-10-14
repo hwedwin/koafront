@@ -33,6 +33,7 @@ var Config = {
 		MEMBER_REG_AGENT: window.host+'api/member/regagent',
 		MEMBER_AGENT: window.host+'api/member/agent',
 		MEMBER_WXORDER: window.host+'api/member/wxorder',
+		MEMBER_DATA_BYID: window.host+'api/member/databyid',
 
 		// 购物车
 		CART_ADD: window.host+'api/cart/add',

@@ -426,6 +426,23 @@ const MemberController = {
             respond.json(ctx,false,'获取客户失败',null,e);
         }
     },
+
+    getDataById: async function(ctx){
+        var {id} = ctx.request.body;
+        try{
+            var result = await Member.findOne({
+                where: {
+                    id
+                }
+            });
+            if (!result) {
+                respond.json(ctx,true,'用户不存在',{code: 203}); 
+            }
+            respond.json(ctx,true,'获取用户资料成功',{code: 200,data: result});
+        }catch(e) {
+            respond.json(ctx,false,'获取用户资料失败',null,e);
+        }
+    }
 }
 
 module.exports = MemberController;

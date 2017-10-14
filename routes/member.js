@@ -10,6 +10,7 @@ router.post('/api/member/regagent',MemberController.registerAgent)
 		.post('/api/member/customer',MemberController.getCustomer)
 		.post('/api/member/register',MemberController.register)
 		.post('/api/member/paynotify',MemberController.payNotify)
+		.post('/api/member/databyid',MemberController.getDataById)
 
 module.exports = router
 

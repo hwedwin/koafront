@@ -127,6 +127,19 @@ class RegisterAgent extends Component {
 					if (res.status === 200) {
 						if (res.data.code === 200) {
 							this.props.history.replace('/regagent?aid='+res.data.data.id);
+							// this._requestWXJsConfig(res.data.data);
+						}else{
+						}
+					}else{
+					}
+				}).catch(function(error){
+					console.log(error);
+				});
+		}else{
+			Ajax.post({url: Config.API.MEMBER_DATA_BYID,data:{id: aid}})
+				.then((res) => {
+					if (res.status === 200) {
+						if (res.data.code === 200) {
 							this._requestWXJsConfig(res.data.data);
 						}else{
 						}
