@@ -68,6 +68,16 @@ const IndexController = {
         var { code,state } = ctx.request.query;
         var resBody = await IndexController.getWXToken(code);
         resBody = JSON.parse(resBody);
+
+
+        // 获取jsAPI
+        var ticketBody = await IndexController.getJsTicket(resBody.access_token);
+        console.log(ticketBody);
+        ticketBody = JSON.parse(ticketBody);
+        if (ticketBody && ticketBody.errmsg == 'ok') {
+            ctx.session.wxticket = ticketBody.ticket;
+        }
+
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
         resUserInfo = JSON.parse(resUserInfo);
         // openid
@@ -80,12 +90,7 @@ const IndexController = {
         // ctx.cookies.set('nickname',resUserInfo.nickname);
         ctx.session.nickname = resUserInfo.nickname;
 
-        // 获取jsAPI
-        var ticketBody = await IndexController.getJsTicket(resBody.access_token);
-        if (ticketBody && ticketBody.errmsg == 'ok') {
-            ctx.session.wxticket = ticketBody.ticket;
-        }
-        console.log(ticketBody);
+        
 
         // 通过openid登录
         var member = await MemberController.loginByOpenid(resUserInfo.openid);
@@ -160,7 +165,7 @@ const IndexController = {
             access_token: AccessToken,
             type: 'jsapi'   
         };
-        
+
         let options = {
             method: 'get',
             url: reqUrl + CommonUtil.json2RequestParam(params)
