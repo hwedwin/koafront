@@ -8,11 +8,15 @@ const MemberRelationController = {
     	if (t) {
     		transactionO.transaction = t;
     	}
-        var memberRe = await MemberRelation.create({
-            fxLevel: level,
-            pid: agentId,
-            cid: memberId,
-        }, transactionO);
+        try{
+            var memberRe = await MemberRelation.create({
+                fxLevel: level,
+                pid: agentId,
+                cid: memberId,
+            }, transactionO);
+        }catch(e){
+            return e;
+        }
         return memberRe;
     },
 

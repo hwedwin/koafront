@@ -114,7 +114,7 @@ const MemberController = {
 	                pid: agentId,
 	                cid: member.id,
 	            }, {transaction: t});
-
+                console.log(memberRe);
                 // 添加用户收货地址
                 var oResult = await ConsigneeController.create({
                     isDefault: '1',
