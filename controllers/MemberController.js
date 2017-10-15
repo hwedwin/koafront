@@ -145,7 +145,7 @@ const MemberController = {
 
                 return member;
             });
-            // ctx.session.memberId = memberData.id;
+            ctx.session.memberId = memberData.id;
             // smsVerify.destory(ctx);
             var wxpay = new WeixinPay();
             var wxOrder = await wxpay.createWCPayOrder({
