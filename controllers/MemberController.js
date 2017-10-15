@@ -171,19 +171,19 @@ const MemberController = {
             });
             var memberId = member.id;
 
-            await Consignee.destory({
+            await Consignee.destroy({
                 where: {
                     memberId
                 }
             });
 
-            await MemberRelation.destory({
+            await MemberRelation.destroy({
                 where: {
                     cid: memberId
                 }
             });
 
-            await Member.destory({
+            await Member.destroy({
                 where: {
                     id: memberId
                 }
@@ -273,6 +273,7 @@ const MemberController = {
     // 支付成功回调
     payNotify: async function(ctx) {
         var body = ctx.request.body;
+        console.log(body)
         if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
             await MemberController.createRegisterTransaction(body.out_trade_no);
         } else {
