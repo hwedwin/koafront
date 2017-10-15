@@ -264,7 +264,7 @@ class RegisterAgent extends Component {
 		var self = this;
 		Ajax.post({url: Config.API.MEMBER_REG_AGENT,data: requestData})
 			.then((res) => {
-				console.log(res);
+				Toast.hide();
 				if (res.status === 200) {
 					Util.wxPay(res.data,function(state){
 						Toast.hide();
@@ -275,6 +275,7 @@ class RegisterAgent extends Component {
 						}
 					});
 				}else{
+					Toast.hide(res.message);
 				}
 			}).catch(function(error){
 				console.log(error);

@@ -100,7 +100,7 @@ const MemberController = {
                     isAgent: '1'
                 };
                 if (ctx.session.openid) {
-                    agentData.nickname = ctx.session.nickname;
+                    agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'');
                     agentData.headerImage = ctx.session.headerimgurl;
                     agentData.wxtoken = ctx.session.openid;
                 }
@@ -262,7 +262,7 @@ const MemberController = {
                     var t4 = await MemberTransactionController.incomeByRegister(pid, 98, memberId,t);
                     var t5 = await MemberBalanceController.changeBanlance(pid, 98, t);
                 }
-                if (gPid !== 'top') {
+                if (gPid !== 'top' && gPid != null) {
                     var t6 = await MemberTransactionController.incomeByRegister(gPid, 30, memberId,t);
                     var t7 = await MemberBalanceController.changeBanlance(gPid, 30, t);
                 }
@@ -287,7 +287,7 @@ const MemberController = {
                 await MemberController.clearRegistedAgent(body.out_trade_no);
             }
         }catch(e){
-            
+
         }
         // await OrderController.changeOrderState(memberId,2,id);
         var message = '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
