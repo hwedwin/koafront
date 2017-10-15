@@ -69,7 +69,7 @@ const MemberController = {
 
     //预注册为经销商-未支付
     registerAgent: async function(ctx) {
-        if (MemberController.openidExist(ctx.session.openid)) {
+        if (await MemberController.openidExist(ctx.session.openid)) {
             respond.json(ctx, false, '您的微信账号已被注册');
             return false;  
         }
