@@ -402,7 +402,7 @@ const MemberController = {
         const members = await Member.findAll({
             attributes: ['id'],
             where: {
-                wxCode: openid
+                wxtoken: openid
             }
         });
         return members.length > 0;
