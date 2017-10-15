@@ -198,9 +198,15 @@ const MemberController = {
     createRegisterTransaction: async function(wxCode) {
         try {
             await sequelize.transaction(async function(t) {
-                var member = await Member.update({
+                await Member.update({
                     isPay: '1'
-                }, {
+                },{
+                    where: {
+                        payCode: wxCode
+                    },
+                    transaction: t
+                });
+                var member = await Member.findOne({
                     where: {
                         payCode: wxCode
                     },
