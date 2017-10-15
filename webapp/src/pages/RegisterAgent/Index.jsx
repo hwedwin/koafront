@@ -87,7 +87,7 @@ class RegisterAgent extends Component {
 		if (member && member.nickname) {
 			title = member.nickname + title;
 		}
-		var link = window.location.host;
+		var link = window.location.origin+window.location.pathname;
 		if (member && member.id) {
 			link += ('?aid='+member.id);
 		}
