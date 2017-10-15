@@ -235,7 +235,7 @@ const MemberController = {
                     }
                 });
                 // 新建一笔订单，送注册礼品
-                var order = await OrderController.createRegisterOrder(member.id, agentId, {
+                var order = await OrderController.createRegisterOrder(member.id, pid, {
                     consigneeName: consignee.consigneeName,
                     consigneeMobile: consignee.consigneeMobile,
                     province: consignee.province,
