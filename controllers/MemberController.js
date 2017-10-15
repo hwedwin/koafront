@@ -253,17 +253,17 @@ const MemberController = {
                 }
 
                 // 创建一条注册为经销商的支出交易
-                var t1 = await MemberTransactionController.expenseByRegister(member.id, -398, agentId,t);
+                var t1 = await MemberTransactionController.expenseByRegister(memberId, -398, pid,t);
                 // 上级获取注册返利金额
                 // 交易记录,余额增量
-                var t2 = await MemberTransactionController.incomeByRegister('top', 398, member.id,t);
+                var t2 = await MemberTransactionController.incomeByRegister('top', 398, memberId,t);
                 var t3 = await MemberBalanceController.changeBanlance('top', 398, t);
                 if (pid !== 'top') {
-                    var t4 = await MemberTransactionController.incomeByRegister(pid, 98, member.id,t);
+                    var t4 = await MemberTransactionController.incomeByRegister(pid, 98, memberId,t);
                     var t5 = await MemberBalanceController.changeBanlance(pid, 98, t);
                 }
                 if (gPid !== 'top') {
-                    var t6 = await MemberTransactionController.incomeByRegister(gPid, 30, member.id,t);
+                    var t6 = await MemberTransactionController.incomeByRegister(gPid, 30, memberId,t);
                     var t7 = await MemberBalanceController.changeBanlance(gPid, 30, t);
                 }
                 if (t1 instanceof Error || t2 instanceof Error || t3 instanceof Error || t4 instanceof Error || t5 instanceof Error || t6 instanceof Error || t7 instanceof Error ) {
@@ -280,10 +280,14 @@ const MemberController = {
     payNotify: async function(ctx) {
         var body = ctx.request.body;
         console.log(body)
-        if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
-            await MemberController.createRegisterTransaction(body.out_trade_no);
-        } else {
-            await MemberController.clearRegistedAgent(body.out_trade_no);
+        try{
+            if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
+                await MemberController.createRegisterTransaction(body.out_trade_no);
+            } else {
+                await MemberController.clearRegistedAgent(body.out_trade_no);
+            }
+        }catch(e){
+            
         }
         // await OrderController.changeOrderState(memberId,2,id);
         var message = '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
