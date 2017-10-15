@@ -75,7 +75,7 @@ const MemberController = {
             respond.json(ctx, false, '密码不符合要求,请输入6～12位密码');
             return false;
         }
-        if (!consigneeName || !consigneeMobile || !province || !city || !county || !address) {
+        if (!consigneeName || !consigneeMobile || !province || !city || !address) {
             respond.json(ctx, false, '注册失败，请详细填写收货人信息');
             return false;
         }

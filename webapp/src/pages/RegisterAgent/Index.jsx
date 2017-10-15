@@ -253,7 +253,7 @@ class RegisterAgent extends Component {
 			consigneeMobile: consigneeMobile,
 			province: areas[0],
 			city: areas[1],
-			county: areas[2],
+			county: areas[2] || '',
 			address: this.state.address,
 			verifyCode: this.state.verifyCode
 		}
