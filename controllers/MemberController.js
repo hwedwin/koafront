@@ -110,7 +110,7 @@ const MemberController = {
 
                 let level = 1;
                 if (agentId) {
-                    let agentLevel = MemberRelationController.getMemberLevelById(agentId);
+                    let agentLevel = await MemberRelationController.getMemberLevelById(agentId);
                     if (agentLevel === null) {
                         throw new Error('代理人不存在,请检查您的注册链接是否正确');
                     } else if (agentLevel instanceof Error) {
