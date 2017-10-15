@@ -205,6 +205,7 @@ const IndexController = {
 
     getWeixinJSConfig: async function(ctx){
         var {url} = ctx.request.body;
+        url = unescape(url);
         var sign = weixinSign(ctx.session.wxticket,url);
         respond.json(ctx, true, '获取签名成功',sign);
     }

@@ -58,7 +58,7 @@ class RegisterAgent extends Component {
 	}
 
 	_requestWXJsConfig(memberData) {
-		Ajax.post({url: Config.API.WXJS_SIGN,data:{url: window.location.href}})
+		Ajax.post({url: Config.API.WXJS_SIGN,data:{url: escape(window.location.hre)}})
 				.then((res) => {
 					console.log(res);
 					if (res.status === 200) {
