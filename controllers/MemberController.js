@@ -69,6 +69,10 @@ const MemberController = {
 
     //预注册为经销商-未支付
     registerAgent: async function(ctx) {
+        if (MemberController.openidExist(ctx.session.openid)) {
+            respond.json(ctx, false, '您的微信账号已被注册');
+            return false;  
+        }
         let { mobile, verifyCode, password, agentId, consigneeName, consigneeMobile, province, city, county, address } = ctx.request.body;
         let { vCode, vMobile } = smsVerify.get(ctx);
         if (!password || password.length < 6 || password.length > 12) {
@@ -316,10 +320,12 @@ const MemberController = {
                 var agentData = {
                     account: mobile,
                     password: password,
-                    phone: mobile
+                    phone: mobile,
+                    isAgent: '0',
+                    isPay: '0'
                 };
                 if (ctx.session.openid) {
-                    agentData.nickname = ctx.session.nickname;
+                    agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'');
                     agentData.headerImage = ctx.session.headerimgurl;
                     agentData.wxtoken = ctx.session.openid;
                 }
@@ -387,6 +393,16 @@ const MemberController = {
                 account: {
                     $eq: mobile
                 }
+            }
+        });
+        return members.length > 0;
+    },
+
+    openidExist: async function(openid) {
+        const members = await Member.findAll({
+            attributes: ['id'],
+            where: {
+                wxCode: openid
             }
         });
         return members.length > 0;

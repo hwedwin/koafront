@@ -203,9 +203,10 @@ class RegisterAgent extends Component {
 		}
 		Ajax.post({url: Config.API.SMSCODE_REGISTER,data: {mobile: mobile}})
 			.then((res) => {
-				Toast.info(res.message);
 				if (res.status === 200) {
 					this._startTimer();
+				}else{
+					Toast.info(res.message);
 				}
 			}).catch(function(error){
 				console.log(error);
