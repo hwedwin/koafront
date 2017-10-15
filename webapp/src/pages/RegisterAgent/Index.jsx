@@ -40,22 +40,29 @@ class RegisterAgent extends Component {
 		KGArea.init('#area');
 	}
 
-	_requestWxOrder() {
-		// Ajax.post({url: Config.API.MEMBER_WXORDER})
-		// 	.then((res) => {
-		// 		console.log(res);
-		// 	}).catch(function(error){
-		// 		console.log(error);
-		// 	});
+	_handleShareUrl() {
+		Ajax.post({url: Config.API.MEMBER_DATA})
+			.then((res) => {
+				if (res.status === 200) {
+					if (res.data.code === 200) {
+						this._requestWXJsConfig(res.data.data);
+					}else{
+						this._requestWXJsConfig({nickname: '我'});
+					}
+				}else{
+					this._requestWXJsConfig({nickname: '我'});
+				}
+			}).catch(function(error){
+				this._requestWXJsConfig({nickname: '我'});
+			});
 	}
 
 	_requestWXJsConfig(memberData) {
 		Ajax.post({url: Config.API.WXJS_SIGN,data:{url: window.location.href}})
 				.then((res) => {
+					console.log(res);
 					if (res.status === 200) {
-						console.log(res);
 						this._handleWXShare(res.data,memberData);
-					}else{
 					}
 				}).catch(function(error){
 					console.log(error);
@@ -122,21 +129,6 @@ class RegisterAgent extends Component {
       	console.log('err');
       	console.log(res);
       });
-	}
-
-	_handleShareUrl() {
-		Ajax.post({url: Config.API.MEMBER_DATA})
-			.then((res) => {
-				if (res.status === 200) {
-					if (res.data.code === 200) {
-						this._requestWXJsConfig(res.data.data);
-					}else{
-					}
-				}else{
-				}
-			}).catch(function(error){
-				console.log(error);
-			});
 	}
 
 	_startTimer() {
