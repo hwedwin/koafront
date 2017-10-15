@@ -100,7 +100,7 @@ const MemberController = {
                     isAgent: '1'
                 };
                 if (ctx.session.openid) {
-                    agentData.nickname = ctx.session.nickname;//.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'')
+                    agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'');//
                     agentData.headerImage = ctx.session.headerimgurl;
                     agentData.wxtoken = ctx.session.openid;
                 }
