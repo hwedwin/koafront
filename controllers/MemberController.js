@@ -211,14 +211,16 @@ const MemberController = {
                 var pid = await MemberRelationController.getPidByCid(memberId);
                 if (pid === null) {
                     throw new Error('获取pid为null');
-                } else if (pid instanceof Error) {
+                }else if (pid instanceof Error) {
                     throw new Error('获取上级代理ID时发生错误');
                 }
-                var gPid = await MemberRelationController.getPidByCid(memberId);
-                if (gPid === null) {
-                    throw new Error('获取gpid为null');
-                } else if (gPid instanceof Error) {
-                    throw new Error('获取上上级代理ID时发生错误');
+                if (pid !== 'top') {
+                    var gPid = await MemberRelationController.getPidByCid(memberId);
+                    if (gPid === null) {
+                        throw new Error('获取gpid为null');
+                    } else if (gPid instanceof Error) {
+                        throw new Error('获取上上级代理ID时发生错误');
+                    }
                 }
                 // 找到收获地址
                 var consignee = await Consignee.findOne({
