@@ -15,7 +15,7 @@ const MemberRelationController = {
                 cid: memberId,
             }, transactionO);
         }catch(e){
-            throw new Error(e);
+            return e;
         }
     },
 
@@ -32,8 +32,25 @@ const MemberRelationController = {
             }
             return null;
     	} catch(e) {
-    		return null;
+    		return e;
     	}
+    },
+
+    getPidByCid: async function(cid) {
+        try{
+            var result = await MemberRelation.findOne({
+                attributes: ['pid'],
+                where: {
+                    cid: cid
+                }
+            });
+            if (result) {
+                return result.pid;
+            }
+            return null;
+        } catch(e) {
+            return e;
+        }
     },
 
     getCustomerByMemberId: async function(memberId) {

@@ -51,7 +51,21 @@ const Member = sequelize.define('member',{
 	wxtoken: {
 		type: Sequelize.STRING(100),
 		unique: true
-	}
+	},
+	isAgent: {
+		type: Sequelize.ENUM,
+		values: ['0','1'],
+		defaultValue: '0'
+	},
+	isPay: {
+		type: Sequelize.ENUM,
+		values: ['0','1'],
+		defaultValue: '0'
+	},
+	payCode: {
+		type: Sequelize.STRING(50),
+		allowNull: false
+	},
 });
 
 module.exports = Member;

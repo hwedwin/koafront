@@ -90,6 +90,9 @@ const IndexController = {
         ticketBody = JSON.parse(ticketBody);
         if (ticketBody && ticketBody.errmsg == 'ok') {
             ctx.session.wxticket = ticketBody.ticket;
+            setTimeout(() => {
+                ctx.session.wxticket = null;
+            },7200000);
         }
 
         // 通过openid登录

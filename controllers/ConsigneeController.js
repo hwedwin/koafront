@@ -13,7 +13,7 @@ const ConsigneeController = {
 		try{
 			return await Consignee.create(option, transaction0);
 		} catch(e){
-			throw new Error(e);
+			return e;
 		}
 	},
 

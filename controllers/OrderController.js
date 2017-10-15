@@ -3,6 +3,7 @@ const respond = require('../utils/respond');
 const paramsVerify = require('../utils/paramsVerify');
 const Order = require('../models/Order');
 const Drink = require('../models/Drink');
+const ConsigneeForOrder = require('../models/ConsigneeForOrder');
 const IndexTopSpecialController = require('./IndexTopSpecialController');
 const MemberRelationController = require('./MemberRelationController');
 const DrinkForOrderController = require('./DrinkForOrderController');
@@ -21,7 +22,7 @@ const OrderController = {
                 memberId: memberId,
                 progressState: 2,
                 progressInfo: '待配货',
-                code: consignee.mobile,
+                code: consignee.payCode,
                 totalPrice: 400,
                 orderTotalPrice: 400,
                 orderTotalDiscount: 0,
@@ -34,7 +35,7 @@ const OrderController = {
             }, { transaction: t });
 
             //创建订单收货人
-            await ConsigneeForOrderController.create({
+            await ConsigneeForOrder.create({
                 orderId: order.id,
                 consigneeName: consignee.consigneeName,
                 consigneeMobile: consignee.consigneeMobile,
@@ -42,11 +43,11 @@ const OrderController = {
                 city: consignee.city,
                 county: consignee.county,
                 address: consignee.address
-            }, t);
+            }, { transaction: t });
 
-            return order
+            return order;
         } catch (e) {
-            throw new Error(e);
+            return e;
         }
     },
 

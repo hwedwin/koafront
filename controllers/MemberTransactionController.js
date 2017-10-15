@@ -30,79 +30,50 @@ const MemberTransactionController = {
             return result;
         }catch(e){
             return e;
-            throw new Error(e);
         }
     },
 
     //通过下级经销商注册获得收入
     incomeByRegister: async function(memberId,income,cId,t) {
-        try{
-            var result = await MemberTransactionController.create(memberId,income,1,null,cId,t);
-            return result;
-        }catch(e){
-            throw new Error(e);
-        }
+        var result = await MemberTransactionController.create(memberId,income,1,null,cId,t);
+        return result;
     },
 
     // 通过销售获得收入
     incomeBySale: async function(memberId,income,orderId,t) {
-        try{
-            var result = await MemberTransactionController.create(memberId,income,2,orderId,null,t);
-            return result;
-        }catch(e){
-            throw new Error(e);
-        } 
+        var result = await MemberTransactionController.create(memberId,income,2,orderId,null,t);
+        return result;
     },
 
     // 通过佣金获得收入
     incomeByCommission: async function(memberId,income,orderId,t) {
-        try{
-            var result = await MemberTransactionController.create(memberId,income,3,orderId,null,t);
-            return result;
-        }catch(e){
-            throw new Error(e);
-        }
+        var result = await MemberTransactionController.create(memberId,income,3,orderId,null,t);
+        return result;
     },
 
     // 购买，第三方支付支付
     expenseByPurchase: async function(memberId,expense,orderId,t) {
-        try{
-            var result = await MemberTransactionController.create(memberId,expense,4,orderId,null,t);
-            return result;
-        }catch(e){
-            throw new Error(e);
-        }
+        var result = await MemberTransactionController.create(memberId,expense,4,orderId,null,t);
+        return result;
     },
 
     // 余额购买支出
     expenseByPurchaseBanlance: async function(memberId,expense,orderId,t) {
-        try{
-            var result = await MemberTransactionController.create(memberId,expense,5,orderId,null,t);
-            return result;
-        }catch(e){
-            throw new Error(e);
-        }
+        var result = await MemberTransactionController.create(memberId,expense,5,orderId,null,t);
+        return result;
     },
 
     // 注册时支出,cId注册人Id
     expenseByRegister: async function(memberId,expense,cId,t) {
-        try{
-            var result = await MemberTransactionController.create(memberId,expense,6,null,cId,t);
-            return result;
-        }catch(e){
-            throw new Error(e);
-        }
+        var result = await MemberTransactionController.create(memberId,expense,6,null,cId,t);
+        return result;
     },
 
 
     // 提现支出
     expenseByWithdraw: async function(memberId,expense,t) {
-        try{
-            var result = await MemberTransactionController.create(memberId,expense,7,null,null,t);
-            return result;
-        }catch(e){
-            throw new Error(e);
-        }
+        var result = await MemberTransactionController.create(memberId,expense,7,null,null,t);
+        return result;
     },
 
     getAllExpense: async function(ctx) {

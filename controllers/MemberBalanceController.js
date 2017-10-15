@@ -20,7 +20,6 @@ const MemberBalanceController = {
             return memberB;
         }catch(e){
             return e;
-            throw new Error(e);
         }
     },
 
@@ -43,7 +42,7 @@ const MemberBalanceController = {
             },transactionO);
             return result;
         } catch(e) {
-            throw new Error(e);
+            return e;
         }
     },
 

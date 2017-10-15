@@ -23,6 +23,7 @@
     "koa": "^2.2.0",
     "koa-body": "^2.1.0",
     "koa-cors": "^0.0.16",
+    "koa-log4": "^2.2.1",
     "koa-logger": "^3.0.0",
     "koa-router": "^7.2.1",
     "koa-session": "^5.5.0",
