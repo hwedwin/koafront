@@ -276,7 +276,7 @@ class RegisterAgent extends Component {
 						}
 					});
 				}else{
-					Toast.hide(res.message);
+					Toast.info(res.message);
 				}
 			}).catch(function(error){
 				console.log(error);
