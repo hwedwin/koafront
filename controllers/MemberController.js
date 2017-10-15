@@ -221,7 +221,7 @@ const MemberController = {
                     throw new Error('获取上级代理ID时发生错误');
                 }
                 if (pid !== 'top') {
-                    var gPid = await MemberRelationController.getPidByCid(memberId);
+                    var gPid = await MemberRelationController.getPidByCid(pid);
                     if (gPid === null) {
                         throw new Error('获取gpid为null');
                     } else if (gPid instanceof Error) {
@@ -253,7 +253,7 @@ const MemberController = {
                 }
 
                 // 创建一条注册为经销商的支出交易
-                var t1 = await MemberTransactionController.expenseByRegister(memberId, -398, pid,t);
+                var t1 = await MemberTransactionController.expenseByRegister(memberId, -398, 'top',t);
                 // 上级获取注册返利金额
                 // 交易记录,余额增量
                 var t2 = await MemberTransactionController.incomeByRegister('top', 398, memberId,t);
