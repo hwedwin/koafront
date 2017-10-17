@@ -36,9 +36,7 @@ const MemberController = {
             });
 
             if (member) {
-                let memberLevel = await MemberRelationController.getMemberLevelById(member.id);
                 ctx.session.memberId = member.id;
-                member.dataValues.level = memberLevel;
                 respond.json(ctx, true, '登录成功', { code: 200, data: member });
             } else {
                 respond.json(ctx, true, '登录失败,用户名或密码错误', { code: 203 });
@@ -56,6 +54,9 @@ const MemberController = {
                     wxtoken: openid
                 }
             });
+            if (member) {
+                ctx.member.memberId = member.id;
+            }
             return member;
         } catch (e) {
             return null;
@@ -257,17 +258,17 @@ const MemberController = {
                 }
 
                 // 创建一条注册为经销商的支出交易
-                var t1 = await MemberTransactionController.expenseByRegister(memberId, -398, 'top',t);
+                var t1 = await MemberTransactionController.expenseByRegister(memberId, -398,wxCode, 'top',t);
                 // 上级获取注册返利金额
                 // 交易记录,余额增量
-                var t2 = await MemberTransactionController.incomeByRegister('top', 398, memberId,t);
+                var t2 = await MemberTransactionController.incomeByRegister('top', 398,wxCode, memberId,t);
                 var t3 = await MemberBalanceController.changeBanlance('top', 398, t);
                 if (pid !== 'top') {
-                    var t4 = await MemberTransactionController.incomeByRegister(pid, 98, memberId,t);
+                    var t4 = await MemberTransactionController.incomeByRegister(pid, 98,wxCode, memberId,t);
                     var t5 = await MemberBalanceController.changeBanlance(pid, 98, t);
                 }
                 if (gPid !== 'top' && gPid != null) {
-                    var t6 = await MemberTransactionController.incomeByRegister(gPid, 30, memberId,t);
+                    var t6 = await MemberTransactionController.incomeByRegister(gPid, 30,wxCode, memberId,t);
                     var t7 = await MemberBalanceController.changeBanlance(gPid, 30, t);
                 }
                 if (t1 instanceof Error || t2 instanceof Error || t3 instanceof Error || t4 instanceof Error || t5 instanceof Error || t6 instanceof Error || t7 instanceof Error ) {
@@ -437,10 +438,6 @@ const MemberController = {
                     id: memberId
                 }
             });
-            if (result) {
-                let memberLevel = await MemberRelationController.getMemberLevelById(memberId);
-                result.dataValues.level = memberLevel;
-            }
             respond.json(ctx, true, '获取用户资料成功', { code: 200, data: result });
         } catch (e) {
             respond.json(ctx, false, '获取用户资料失败', null, e);
@@ -485,8 +482,7 @@ const MemberController = {
         }
     },
 
-    getDataById: async function(ctx) {
-        var { id } = ctx.request.body;
+    obtainDataById: async function(id) {
         try {
             var result = await Member.findOne({
                 where: {
@@ -494,11 +490,93 @@ const MemberController = {
                 }
             });
             if (!result) {
+                return null;
+            }
+            return result;
+        } catch (e) {
+            return e;
+        }
+    },
+
+    getDataById: async function(ctx) {
+        var { id } = ctx.request.body;
+        try {
+            var result = await MemberController.obtainDataById(id);
+            if (!result) {
                 respond.json(ctx, true, '用户不存在', { code: 203 });
+            }else if(result instanceof Error){
+                throw new Error(e);
             }
             respond.json(ctx, true, '获取用户资料成功', { code: 200, data: result });
         } catch (e) {
-            respond.json(ctx, false, '获取用户资料失败', null, e);
+            respond.json(ctx, false, '服务器内部错误', null, e);
+        }
+    },
+
+    withdraw: async function(ctx) {
+        var openid = ctx.session.openid;
+        var memberId = ctx.session.memberId;
+        if (!openid || !memberId) {
+            respond.json(ctx, false, '用户未登录或未获取到用户openid');   
+            return; 
+        }
+        var {amount} = ctx.request.body;
+        amount = parseFloat(amount);
+        if (isNaN(amount) || amount < 1 || amount > 20000) {
+            respond.json(ctx, false, '提现金额有误，单笔提现需在1至20000元之间');   
+            return;
+        }
+
+        try{
+            //查询用户是否存在
+            var member = Member.findOne({
+                where: {
+                    id: memberId,
+                    wxtoken: openid
+                }
+            });
+            if (!member) {
+                respond.json(ctx, false, '用户不存在');
+                return;
+            }
+            // 获取用户余额
+            var memberBalance = await MemberBalanceController.getBalance(memberId);
+            if (!memberBalance) {
+                respond.json(ctx, false, '用户余额账户不存在，未获取到用户余额');
+                return;
+            }else if(memberBalance instanceof Error){
+                throw new Error(memberBalance);
+            }
+            // 检验余额
+            if (memberBalance.balance < amount) {
+                respond.json(ctx, false, '用户余额不足');   
+                return;
+            }
+            var orderNo = CommonUtil.createOrderCode();
+            var wxpay = new WeixinPay();
+            var wxOrder = await wxpay.createWCPayOrder({
+                 openid: openid,
+                 partner_trade_no: orderNo,
+                 re_user_name: member.name || '--',
+                 amount: parseInt(amount*100),
+                 spbill_create_ip: ctx.ip
+            });
+            if (wxOrder.return_code == 'SUCCESS' && wxOrder.result_code == 'SUCCESS') {
+                // 交易成功,扣除用户余额，增加交易记录
+                // 扣除总账户余额
+                await MemberBalanceController.changeBanlance('top',-amount);
+                // 添加提现记录
+                await MemberTransactionController.expenseByWithdraw('top',-amount,orderNo,memberId);
+                // 扣用户余额 
+                await MemberBalanceController.changeBanlance(memberId,-amount);
+                // 添加用户提现记录
+                await MemberTransactionController.expenseByWithdraw(memberId,-amount,orderNo,'top');
+                respond.json(ctx, true, '提现成功，请注意查收');     
+            }else{
+                respond.json(ctx, false, '提现失败,请联系管理员,err_code:'+wxOrder.err_code+',系统描述'+wxOrder.err_code_des);
+            }
+        }catch(e){
+            respond.json(ctx, false, '服务器内部错误',null,e);   
         }
     }
 }

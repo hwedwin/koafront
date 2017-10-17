@@ -1,0 +1,63 @@
+.page-count-room{
+
+}
+
+.page-count-room .m-withdraw-box{
+	width: 86%;
+	margin: 0 auto;
+	margin-top: .3rem;
+	padding: 0 .4rem;
+	background-color: #fff;
+	padding-bottom: .3rem;
+}
+
+.page-count-room .m-withdraw-box .m-banlance-box{
+	width: 100%;
+}
+
+.page-count-room .m-withdraw-box .m-withdraw-amount-box{
+	margin-top: .2rem;
+	border-bottom: 1px solid #dbdbdb;
+	padding-bottom: .1rem;
+}
+.page-count-room .m-withdraw-box .m-withdraw-amount-box .u-text{
+	font-size: .25rem;
+}
+.page-count-room .m-withdraw-box .m-amount-input-wrapper{
+	font-size: 0;
+	white-space: nowrap;
+	margin-top: .2rem;
+}
+.page-count-room .m-withdraw-box .m-amount-input-wrapper .u-text-rmb{
+	display: inline-block;
+	width: 8%;
+	font-size: .5rem;
+	vertical-align: top;
+	position: relative;
+	top: .1rem;
+}
+.page-count-room .m-withdraw-box .m-amount-input-wrapper .u-input-wrapper{
+	display: inline-block;
+	width: 90%;
+}
+.page-count-room .m-withdraw-box .m-amount-input-wrapper .u-input-wrapper input{
+	font-size: .9rem;
+	font-weight: bold;
+	vertical-align: top;
+	width: 100%;
+	border: none;
+	background: none;
+}
+.page-count-room .m-withdraw-box .u-button-withdraw{
+	text-align: center;
+	height: .7rem;
+	line-height: .7rem;
+	background-color: #f13030;
+	color: #fff;
+	border-radius: .1rem;
+	margin-top: .3rem;
+}
+.page-count-room .m-withdraw-box .u-tip{
+	font-size: .25rem;
+	margin-top: .15rem;
+}

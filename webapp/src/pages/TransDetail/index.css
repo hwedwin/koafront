@@ -1,0 +1,31 @@
+.page-trans-detail{}
+.page-trans-detail .m-money-box{
+	display: flex;
+	justify-content: space-between;
+	padding: .3rem;
+	border-bottom: 1px solid #f1f1f1;
+}
+.page-trans-detail .m-money-box .u-text{
+	color: #666;
+	font-size: .3rem;
+}
+.page-trans-detail .m-money-box .u-money{
+	font-size: .46rem;
+}
+.page-trans-detail .m-trans-box{
+	background-color: #fff;
+	padding: .3rem;
+	font-size: .3rem;
+}
+.page-trans-detail .m-trans-box .m-transd-item{
+	display: flex;
+	justify-content: space-between;
+	line-height: .55rem;
+}
+.page-trans-detail .m-trans-box .m-transd-item .u-text{
+	color: #666;
+	
+}
+.page-trans-detail .m-trans-box .m-transd-item .u-value{
+	
+}

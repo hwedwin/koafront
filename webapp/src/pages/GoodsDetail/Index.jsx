@@ -122,7 +122,7 @@ class GoodsDetail extends Component {
 	componentDidMount() {
 		var self = this;
 		//获取商品
-		var a1 = Ajax.post({url: Config.API.DRINK_ONE,data: {id: this.props.match.params.id}},this.props.member.level)
+		var a1 = Ajax.post({url: Config.API.DRINK_ONE,data: {id: this.props.match.params.id}},this.props.member.isPaidAgent)
 			a1.then(function(data) {
 				if (data.status === 200) {
 					self.setState({
@@ -254,13 +254,13 @@ class GoodsDetail extends Component {
 
 	render() {
 		var goodsInfo = this.state.goodsInfo;
-		var isAgent = this.props.member.level==1||this.props.member.level==2;
-		var backProfit = 0;
-		if (goodsInfo.special) {
-			backProfit = goodsInfo.special.specialPrice - goodsInfo.special.specialPriceAgent;
-		}else{
-			backProfit = goodsInfo.retailPrice - goodsInfo.supplyPrice;
-		}
+		// var isAgent = this.props.member.isPaidAgent;
+		// var backProfit = 0;
+		// if (goodsInfo.special) {
+		// 	backProfit = goodsInfo.special.specialPrice - goodsInfo.special.specialPriceAgent;
+		// }else{
+		// 	backProfit = goodsInfo.retailPrice - goodsInfo.supplyPrice;
+		// }
 		return (
 			<div className="page-goods-detail">
 				<CommonNavbar 
@@ -279,11 +279,11 @@ class GoodsDetail extends Component {
 						{goodsInfo.name}
 					</div>
 					<div className="m-price-box">
-						<span className="u-web-price">{goodsInfo.special?'特卖价：¥'+(goodsInfo.special.specialPrice):'¥'+goodsInfo.price}</span>
+						<span className="u-web-price">{(goodsInfo.isTodaySpecial=='1'?'特卖价：¥':'¥')+goodsInfo.price}</span>
 						<span className="u-origin-price">¥{goodsInfo.originPrice}</span>
 					</div>
 					<div className="m-price-box">
-						<span className="u-web-price">{isAgent?'返利：¥'+backProfit:''}</span>
+						<span className="u-web-price">{goodsInfo.backProfit?'返利：¥'+goodsInfo.backProfit:''}</span>
 					</div>
 				</div>
 				<div className="m-purchase-box">
@@ -296,7 +296,10 @@ class GoodsDetail extends Component {
 						/>
 					</div>
 					<div className="m-item-box">
-						<span className="u-tip">{goodsInfo.special&&'此商品正在特卖中'}</span>
+						<span className="u-tip">{goodsInfo.isTodaySpecial=='1'&&'此商品正在特卖中'}</span>
+					</div>
+					<div className="m-item-box">
+						<span className="u-tip">{'产品若无质量问题，一经售出，一概不退不换'}</span>
 					</div>
 				</div>
 				<BrandBox 

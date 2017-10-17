@@ -82,6 +82,10 @@ const Drink = sequelize.define('drink',{
 		type: Sequelize.ENUM('0','1'),
 		defaultValue: '0'
 	},
+	isTodaySpecial: {
+		type: Sequelize.ENUM('0','1'),
+		defaultValue: '0'
+	},
 	saleCount: {
 		type: Sequelize.INTEGER,
 		defaultValue: 0

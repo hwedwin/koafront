@@ -82,7 +82,7 @@ class IndexEverydayTab extends Component {
 						<GoodsItem 
 							speText="特卖价：¥"
 							data={
-								GoodsItem.ormParams(item.drinkId,item.drink.name,item.drink.imgPath,item.price,item.drink.originPrice,item.backProfit)
+								GoodsItem.ormParams(item.id,item.name,item.imgPath,item.price,item.originPrice,item.backProfit)
 							}
 							key={item.id}
 						/>

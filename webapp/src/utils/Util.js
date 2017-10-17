@@ -48,16 +48,11 @@ const Util = {
         return stateMap[state];
     },
 
-    formatMemberLevel: function(level) {
-        var strLevel = '';
-        if (level == '1') {
-            strLevel = '一级经销商';
-        } else if (level == '2') {
-            strLevel = '二级经销商';
-        } else {
-            strLevel = '普通会员';
+    formatMemberLevel: function(member) {
+        if (member.isAgent == '1' && member.isPay == '1') {
+            return '商城经销商';
         }
-        return strLevel;
+        return '商城会员';
     },
 
     formatDate: function(format, timeStamp) {

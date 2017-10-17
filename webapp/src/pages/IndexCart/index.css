@@ -39,12 +39,16 @@
 	flex-grow: 0;
 }
 .m-shopcart-item .m-right .u-name{
-	font-size: .28rem;
+	font-size: .3rem;
 	line-height: .34rem;
 	max-height: .68rem;
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	overflow: hidden;
+}
+.m-shopcart-item .m-right .u-backprofit{
+	font-size: .28rem;
+	color: #f13030;
 }
 .m-shopcart-item .m-right .u-bottom{
 	display: flex;

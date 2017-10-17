@@ -22,7 +22,7 @@ class Favorite extends Component {
 
 	componentDidMount() {
 		// 获取收藏商品
-		 Ajax.post({url: Config.API.FAV_LIST},this.props.member.level)
+		 Ajax.post({url: Config.API.FAV_LIST},this.props.member.isPaidAgent)
 		.then((res) => {
 			Toast.hide();
 			if (res.status === 200) {
@@ -30,7 +30,7 @@ class Favorite extends Component {
 					Toast.info(res.data.message);
 				}else{
 					this.setState({
-						goods: this._formatGoods(res.data.data)
+						goods: res.data.data
 					});
 				}
 			}
@@ -40,22 +40,13 @@ class Favorite extends Component {
 
 	}
 
-	_formatGoods(goods) {
-		/*for (var i = 0; i < goods.length; i++) {
-			var g = goods[i];
-			if (g.special) {
-				g.drink.price = (this.props.member.level == 1 || this.props.member.level==2)?g.special.specialPriceAgent:g.special.specialPrice;
-			}
-		}*/
-		return goods;
-	}
-
 	render() {
 		return (
 			<div>
 				<CommonNavbar 
 					centerText="关注商品"
 					onBackbarClick={()=>this.props.history.goBack()}
+					showRightContent={false}
 				/>
 				<div>
 					{

@@ -14,6 +14,7 @@
 	overflow: hidden;
 	-ms-text-overflow: ellipsis;
 	text-overflow: ellipsis;
+	color: #333;
 }
 .page-balance-detail .m-trans-item .m-left-wrapper .u-money{
 	font-size: .26rem;
@@ -26,4 +27,9 @@
 	font-size: .32rem;
 	font-weight: bold;
 	width: 30%;
+	color: #333;
+}
+
+.page-balance-detail .m-trans-item .m-right-wrapper.income{
+	color: #f13030;
 }

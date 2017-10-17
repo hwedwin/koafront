@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 import {List,InputItem,Toast,Button,Radio,Icon} from 'antd-mobile';
 import KGArea from '../../components/KGArea/Index.jsx';
 import PayTip from '../../components/PayTip/Index.jsx';
+import ProtoRegister from '../../components/ProtoRegister/Index.jsx';
 import Ajax from '../../utils/Ajax';
 import Util from '../../utils/Util';
 import Config from '../../config/Config';
@@ -31,7 +32,9 @@ class RegisterAgent extends Component {
 			verifyButton: true,
 			verifyCount: 60,
 			paySuccess: false,
-			agreeProto: true
+			agreeProto: true,
+			isPaidAgent: false,
+			displayProto: false
 		}
 	}
 
@@ -88,7 +91,7 @@ class RegisterAgent extends Component {
 			title = member.nickname + title;
 		}
 		var link = window.location.origin+window.location.pathname;
-		if (member && member.id) {
+		if (member && member.id && member.isAgent == '1' && member.isPay == '1') {
 			link += ('?aid='+member.id);
 		}
 		var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
@@ -373,9 +376,10 @@ class RegisterAgent extends Component {
 				</List>
 
 				<div className="m-agree-box">
-					<a onClick={this.handleAgreeChange.bind(this)}><Icon type="check-circle" size="xxs" color={this.state.agreeProto ? '#108ee9':'#ccc'} className="u-icon-check"/>同意《注册代理商协议》</a>
+					<Icon type="check-circle" onClick={this.handleAgreeChange.bind(this)} size="xs" color={this.state.agreeProto ? '#108ee9':'#ccc'} className="u-icon-check"/>
+					<span className="u-text-proto" onClick={()=>this.setState({displayProto: true})}>同意《注册代理商协议》</span>
 				</div>
-
+				
 				<Button 
 					type="primary"
 					onClick={this.handleRegister}
@@ -383,11 +387,15 @@ class RegisterAgent extends Component {
 				>
 					注册
 				</Button>
-
+				<div className="u-share-tip">tip:点击右上角菜单分享此页面来发展你的客户</div>
+				<ProtoRegister 
+					display={this.state.displayProto}
+					onClose={()=>this.setState({displayProto: false})}
+				/>
 				<PayTip
 					display={this.state.paySuccess}
 					text="支付成功即将跳转至商户首页"
-					money={400}
+					money={398}
 					displayButton={false}
 				/>
 			</div>

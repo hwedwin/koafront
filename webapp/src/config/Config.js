@@ -13,6 +13,7 @@ var Config = {
 		DRINK_LIST: window.host+'api/drink/list',
 		DRINK_LISTREC: window.host+'api/drink/listrec',
 		DRINK_LISTHOT: window.host+'api/drink/listhot',
+		DRINK_LISTSPECIAL: window.host+'api/drink/listspecial',
 		DRINK_ONE: window.host+'api/drink/one',
 		DRINK_CATE: window.host+'api/drink/listcate',//通过分类获取
 		DRINK_BRAND: window.host+'api/drink/listbrand',//通过品牌获取
@@ -34,6 +35,7 @@ var Config = {
 		MEMBER_AGENT: window.host+'api/member/agent',
 		MEMBER_WXORDER: window.host+'api/member/wxorder',
 		MEMBER_DATA_BYID: window.host+'api/member/databyid',
+		MEMBER_WITHDRAW: window.host+'api/member/withdraw',
 
 		// 购物车
 		CART_ADD: window.host+'api/cart/add',
@@ -68,6 +70,7 @@ var Config = {
 		TRANS_EXPENSE: window.host + 'api/trans/expense',
 		TRANS_SUM_ORDER: window.host + 'api/trans/sumorder',
 		TRANS_ITEMS: window.host + 'api/trans/items',
+		TRANS_ITEM: window.host + 'api/trans/item',
 
 		// 文件上传
 		FILE_PORTRAIT: window.host + 'api/file/portrait',

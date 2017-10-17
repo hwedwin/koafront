@@ -84,6 +84,16 @@ const DrinkController = {
         } catch (e) {
             respond.json(ctx, false, '查询失败', null, e)
         }
+    }, 
+
+    // 获取今日特价产品
+    listTodaySpecial: async function(ctx) {
+        try {
+            var result = await DrinkController.getGoodsList({pageIndex: 0,pageSize:20,orderTag: 'new',orderRule: 'DESC'},{isTodaySpecial: '1'});
+            respond.json(ctx, true, '查询成功', result)
+        } catch (e) {
+            respond.json(ctx, false, '查询失败', null, e)
+        }
     },  
 
     /**

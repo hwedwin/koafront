@@ -1,0 +1,36 @@
+.m-proto-register{
+	position: fixed;
+	z-index: 99999;
+	top: 0;
+	left: 0;
+	background-color: #fff;
+	width: 100%;
+	height: 100%;
+	overflow-y:scroll; 
+	padding: .2rem;
+}
+
+.m-proto-register .m-icons .wrapper{
+	display: inline-flex;
+	align-items: center;
+}
+
+.m-proto-register .m-text{
+
+}
+
+.m-proto-register .m-text h3{
+	text-align: center;
+	font-size: .32rem;
+	line-height: .5rem;
+}
+
+.m-proto-register .m-text h5{
+	font-size: .28rem;
+	line-height: .45rem;	
+}
+
+.m-proto-register .m-text p{
+	font-size: .26rem;
+	line-height: .4rem;	
+}

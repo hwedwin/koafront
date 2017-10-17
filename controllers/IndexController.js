@@ -47,17 +47,21 @@ const IndexController = {
         //查询
         try {
             if (memberId) {
-                let memberLevel = await MemberRelationController.getMemberLevelById(memberId);
-                ctx.session.memberId = memberId;
+                let member = await MemberController.obtainDataById(memberId);
+                console.log(member);
+                if (!member) {
+                   respond.json(ctx, true, '无此用户', { code: 203 }); 
+                   return;
+                }
+                if (member instanceof Error) {
+                    throw new Error(member);
+                }
                 respond.json(ctx, true, '用户已登录', {
                     code: 200,
-                    data: {
-                        id: memberId,
-                        level: memberLevel
-                    }
+                    data: member
                 });
             } else {
-                respond.json(ctx, true, '用户未登录', { code: 203 });
+                respond.json(ctx, true, '用户尚未登录', { code: 203 });
             }
         } catch (e) {
             respond.json(ctx, false, '失败,服务器内部错误', null, e);

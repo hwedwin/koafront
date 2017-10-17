@@ -16,15 +16,11 @@ const Ajax = {
 		return Object.prototype.toString.call(data).match(/\s([^\]]*)/)[1];
 	},
 
-	deepFind: function(data,level) {
-		var isAgent = false;
-		if (level == 1 || level == 2) {
-			isAgent = true;
-		}
+	deepFind: function(data,isAgent) {
 		if (this.getType(data) === 'Array') {
 			for (var i = 0; i < data.length; i++) {
 				if (this.getType(data[i]) === 'Object') {
-					this.deepFind(data[i],level);
+					this.deepFind(data[i],isAgent);
 				}
 			}
 		}else if(this.getType(data) === 'Object'){
@@ -33,28 +29,10 @@ const Ajax = {
 				if (isAgent) {
 					data.backProfit = data.retailPrice - data.supplyPrice;//返利
 				}
-			}else if(data.specialPrice){
-				data.price = data.specialPrice;
-				if (isAgent) {
-					data.backProfit = data.specialPrice - data.specialPriceAgent;//返利
-				}
 			}
-			// if (data.retailPrice) {
-			// 	if (isAgent) {
-			// 		data.price = data.supplyPrice;
-			// 	}else{
-			// 		data.price = data.retailPrice;
-			// 	}
-			// }else if (data.specialPrice) {
-			// 	if (isAgent) {
-			// 		data.price = data.specialPriceAgent;
-			// 	}else{
-			// 		data.price = data.specialPrice;
-			// 	}
-			// }
 			for (var name in data) {
 				if (this.getType(data[name]) === 'Object' || this.getType(data[name]) === 'Array') {
-					this.deepFind(data[name],level);
+					this.deepFind(data[name],isAgent);
 				}
 			}
 		}else{
@@ -93,7 +71,7 @@ const Ajax = {
 		});
 	},
 
-	post: function(options,level) {
+	post: function(options,isAgent) {
 		var self = this;
 		return new Promise(function(resolve,reject){
 			var xhr = new XMLHttpRequest();
@@ -106,7 +84,7 @@ const Ajax = {
 				if (this.readyState === this.DONE) {
 					if (this.status === 200 || this.status === 304) {
 						var data = this.response.data;
-						data = self.deepFind(data,level);
+						data = self.deepFind(data,isAgent);
 						var obj = Object.assign(this.response);
 						obj.data = data;
 						resolve(obj);

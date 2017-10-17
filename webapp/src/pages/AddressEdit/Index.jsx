@@ -133,6 +133,7 @@ class AddressEdit extends Component {
 				<CommonNavbar 
 					centerText={this.state.title}
 					onBackbarClick={()=>this.props.history.goBack()}
+					showRightContent={false}
 				/>
 				<div style={{marginBottom: '.2rem'}}>
 					<List className="">

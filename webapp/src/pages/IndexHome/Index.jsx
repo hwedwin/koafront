@@ -33,8 +33,9 @@ class IndexHome extends Component {
 
 	_request() {
 		var self = this;
+		var isAgent = this.props.member.isPaidAgent;
 		//获取轮播
-		var a1 = Ajax.post({url: Config.API.TOPADV_LIST},this.props.member.level)
+		var a1 = Ajax.post({url: Config.API.TOPADV_LIST},isAgent)
 			a1.then(function(data) {
 				if (data.status === 200) {
 					self.setState({
@@ -46,7 +47,7 @@ class IndexHome extends Component {
 			});
 
 		// 获取每日特卖
-		var a2 = Ajax.post({url: Config.API.TOPSPE_LIST},this.props.member.level)
+		var a2 = Ajax.post({url: Config.API.DRINK_LISTSPECIAL},isAgent)
 			a2.then(function(data) {
 				if (data.status === 200) {
 					self.setState({
@@ -58,7 +59,7 @@ class IndexHome extends Component {
 			});
 
 		// 获取每日推荐
-		var a3 = Ajax.post({url: Config.API.DRINK_LISTREC},this.props.member.level)
+		var a3 = Ajax.post({url: Config.API.DRINK_LISTREC},isAgent)
 			a3.then(function(data) {
 				if (data.status === 200) {
 					self.setState({

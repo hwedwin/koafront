@@ -6,10 +6,12 @@ const Drink = require('../models/Drink');
 const ConsigneeForOrder = require('../models/ConsigneeForOrder');
 const IndexTopSpecialController = require('./IndexTopSpecialController');
 const MemberRelationController = require('./MemberRelationController');
+const MemberController = require('./MemberController');
 const DrinkForOrderController = require('./DrinkForOrderController');
 const ConsigneeForOrderController = require('./ConsigneeForOrderController');
 const ExpressForOrderController = require('./ExpressForOrderController');
 const MemberBalanceController = require('./MemberBalanceController');
+const MemberTransactionController = require('./MemberTransactionController');
 //微信支付相关
 const WeixinPay = require('../core/weixinPay');
 
@@ -73,13 +75,21 @@ const OrderController = {
         try {
             var totalPriceRetail = 0,
                 totalPriceSupply = 0;
-            //获取用户等级
-            var memberLevel = await MemberRelationController.getMemberLevelById(memberId);
-            // 获取店铺代理人等级
-            var agentLevel = 3;
+
+            // 获取店铺是否是否存在并且是代理商
+            var isAgent = true;
             if (agentId != 'top') {
-                agentLevel = await MemberRelationController.getMemberLevelById(agentId);
+                var agentData = await MemberController.obtainDataById(agentId);
+                if (agentData) {
+                    isAgent = agentData.isAgent == '1';
+                }else{
+                    isAgent = false;
+                }
             }
+            if (!isAgent) {
+                agentId = 'top';
+            }
+
             // 获取商品结果
             var drinkResult = await Drink.findAll({
                 attributes: ['id', 'retailPrice', 'supplyPrice'],
@@ -89,8 +99,9 @@ const OrderController = {
                     }
                 }
             });
-            // 处理特价商品
-            for (var i = 0; i < drinkResult.length; i++) {
+
+            // 处理特价商品，改为直接根据dirnk中的isHot判断为每日推荐
+            /*for (var i = 0; i < drinkResult.length; i++) {
                 await (async function(item) {
                     var special = await IndexTopSpecialController.getOneById(item.id);
                     if (special) {
@@ -98,7 +109,8 @@ const OrderController = {
                         item.retailPrice = special.specialPrice;
                     }
                 })(drinkResult[i]);
-            }
+            }*/
+
             //计算总价格,生成订单信息
             var payInfo = '';
             for (var i = 0; i < drinkResult.length; i++) {
@@ -113,25 +125,14 @@ const OrderController = {
                 }
             }
 
-            //
-            // if (memberLevel == 1 || memberLevel == 2) {
-            //     if (totalPrice != totalPriceSupply) {
-            //         respond.json(ctx, false, '价格计算有误', null, { memberLevel, totalPrice, totalPriceRetail, totalPriceSupply });
-            //         return;
-            //     }
-            // } else {
-                if (totalPrice != totalPriceRetail) {
-                    respond.json(ctx, false, '价格计算有误', null, { memberLevel, totalPrice, totalPriceRetail, totalPriceSupply });
-                    return;
-                }
-            // }
+            // 计算价格是否与提交价格一直
+            if (totalPrice != totalPriceRetail) {
+                respond.json(ctx, false, '价格计算有误', null, { memberLevel, totalPrice, totalPriceRetail, totalPriceSupply });
+                return;
+            }
 
             //开启事务
             let orderData = await sequelize.transaction(async function(t) {
-                // 如果代理人等级为3，则将代理人设为top
-                if (agentLevel != 1 || agentLevel != 2) {
-                    agentId = 'top';
-                }
                 //创建订单
                 var order = await Order.create({
                     memberId: memberId,
@@ -158,7 +159,7 @@ const OrderController = {
                                 orderId: order.id,
                                 drinkId: drink.id,
                                 nums: gItem.nums,
-                                price: (memberLevel == 1 || memberLevel == 2) ? drink.supplyPrice : drink.retailPrice,
+                                price: drink.retailPrice,
                                 discountTotal: 0
                             }, t);
                         }
@@ -204,7 +205,8 @@ const OrderController = {
                 }
             });
             if (!orderDetail || orderDetail.progressState != 1) {
-                respond.json(ctx, false, '无此订单货订单状态错误');
+                respond.json(ctx, false, '无此订单货订单或订单状态错误');
+                return;
             }
             var wxpay = new WeixinPay();
             var wxOrder = await wxpay.createWCPayOrder({
@@ -228,7 +230,7 @@ const OrderController = {
         console.log(body);
         if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
             // 更新订单状态
-            var order = await Order.update({
+            Order.update({
                 progressState: 2,
                 progressInfo: '待配货',
                 paidCode: 'weixin'
@@ -237,43 +239,11 @@ const OrderController = {
                     code: body.out_trade_no
                 }
             });
-            if (!order) {
-                return;
-            }
             // 处理交易等操作
-            await OrderController.handleOrderSuccess(order.id);
+            await OrderController.handleOrderSuccess(code,'weixin');
         }
         var message = '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
         ctx.body = message;
-    },
-
-    handleOrderSuccess: async function(orderId) {
-        try {
-            var order = await Order.findOne({
-                where: {
-                    id: orderId
-                }
-            });
-            if (!order) {
-                return;
-            }
-            var agentId1 = order.agentId;
-            var memberId = order.memberId;
-            var commision = 0; //佣金,给一级经销商的返利（在二级经销商购买，一级获得返利。在一级经销商购买，无佣金）
-            var agentProfit = 0; //代理商获取的利润，
-            var profit = 0; //总利润 普通消费者：零售价-成本，代理商：零售价-供货价
-            var drinks = await DrinkForOrderController.getByOrderId(result.id);
-
-            // 1.增加top余额，
-            // 2.直接代理商获取利润
-            // 3.(代理商上级获取佣金)
-            // 4.写top交易记录
-            // 5.直接代理商交易记录
-            // 6.(代理商上级交易记录）
-            // 7.用户交易记录
-        } catch (e) {
-
-        }
     },
 
     payByBalance: async function(ctx) {
@@ -290,13 +260,16 @@ const OrderController = {
                     id
                 }
             });
-
+            if (!orderDetail || orderDetail.progressState != 1) {
+                respond.json(ctx, false, '无此订单货订单或订单状态错误');
+                return;
+            }
             // 查询用户余额
             var mBalance = await MemberBalanceController.getBalance(memberId);
             var balance = parseFloat(mBalance.balance);
             var orderMoney = parseFloat(orderDetail.orderTotalPrice);
             if (balance < orderMoney) {
-                respond.json(ctx, false, '余额不足以支付这笔订单');
+                respond.json(ctx, false, '您的余额不足以支付这笔订单');
                 return;
             }
             // 开启事务
@@ -305,27 +278,86 @@ const OrderController = {
                 await MemberBalanceController.changeBanlance(memberId, -orderMoney, t);
                 // 修改订单状态
                 let order = await Order.update({
-                	progressState: 2,
-                	progressInfo: '待配货',
-                	paidCode: 'balance'
-            	}, {
-            		where: {
-            			id
-            		},
-            		transaction: t
-            	});
+                    progressState: 2,
+                    progressInfo: '待配货',
+                    paidCode: 'balance'
+                }, {
+                    where: {
+                        id
+                    },
+                    transaction: t
+                });
 
-            	return order;
+                return order;
             });
             // 交易记录等操作
-            await OrderController.handleOrderSuccess(id);
+            await OrderController.handleOrderSuccess(orderDetail.code,'balance');
             respond.json(ctx, true, '支付成功', { orderId: id, money: orderMoney });
         } catch (e) {
             respond.json(ctx, false, '支付失败', null, e);
         }
     },
 
-    // 签收
+    handleOrderSuccess: async function(code,paidCode) {
+        try {
+            var order = Order.findOne({
+                where: {
+                    code: code    
+                }
+            });
+            if (!order) {
+                return;
+            }
+
+            var totalPrice = order.orderTotalPrice;//订单总金额
+            var agentId = order.agentId;//代理人ID
+            var memberId = order.memberId;//用户ID
+            var orderId = order.id;//订单ID
+            // 创建一笔消费者购买交易
+            var t1;
+            if (paidCode == 'balance') {//余额购买支出
+                t1 = await MemberTransactionController.expenseByPurchaseBanlance(memberId, -totalPrice, orderId,agentId,t);
+            }else{
+                t1 = await MemberTransactionController.expenseByPurchase(memberId, -totalPrice, orderId,agentId,t);
+            }
+            // 商城创建一笔收入记录
+            var t2 = await MemberTransactionController.incomeBySale('top', totalPrice, orderId,memberId,t);
+            // 将消费者付的钱记录到商城账户
+            var t3 = await MemberBalanceController.changeBanlance('top', totalPrice, t);
+            
+
+            var commission = 0; //佣金,给一级经销商的返利（在二级经销商购买，一级获得返利。在一级经销商购买，无佣金）
+            var agentProfit = 0; //代理商获取的利润，
+            var drinkOrders = await DrinkForOrderController.getByOrderId(orderId,true);
+            for (var i = 0; i < drinkOrders.length; i++) {
+                var drinkOrder = drinkOrders[i];
+                var drink = drinkOrder.drink;
+                commission = drink.commission * drinkOrder.nums;
+                agentProfit = (drink.retailPrice - drink.supplyPrice)  * drinkOrder.nums;
+            }
+            console.log('commission:'+commission);
+            console.log('agentProfit:'+agentProfit);
+            if (agentId == 'top') {
+                return;
+            }
+            // 获取agentId的上一级获取佣金
+            var agentIdTop = MemberRelationController.getPidByCid(agentId);
+
+            // 二级经销商交易记录与余额更新
+            await MemberTransactionController.incomeBySale(agentId, agentProfit, orderId,memberId,t);
+            await MemberBalanceController.changeBanlance(agentId, agentProfit, t);
+
+            // 一级经销商获取佣金
+            if (agentIdTop && agentIdTop != 'top' && !agentId instanceof Error) {
+                await MemberTransactionController.incomeByCommission(agentId, agentProfit, orderId,memberId,t);
+                await MemberBalanceController.changeBanlance(agentId, commission, t);
+            }
+        } catch (e) {
+
+        }
+    },
+
+    // 签收订单
     signOrder: async function(ctx) {
         var memberId = ctx.session.memberId;
         if (!memberId) {
@@ -389,13 +421,7 @@ const OrderController = {
         }
     },
 
-    /**
-     * 改变订单状态
-     * @Author   KuangGuanghu
-     * @DateTime 2017-08-13
-     * @param    {Number}     stateIndex [订单状态]
-     * @param    {String}     id         [订单id]
-     */
+    // 改变订单状态
     changeOrderState: async function(memberId, stateIndex, id, t) {
         var state = OrderController.getProgressState(stateIndex - 1);
         var query = {
@@ -414,7 +440,7 @@ const OrderController = {
             }, query);
             return result;
         } catch (e) {
-            throw new Error(e);
+            return e;
         }
     },
 
@@ -471,7 +497,8 @@ const OrderController = {
         }
         try {
             var results = await Order.findAll({
-                where: query
+                where: query,
+                order: [['updatedAt','DESC']]
             });
             for (var i = 0; i < results.length; i++) {
                 await (async function(item) {

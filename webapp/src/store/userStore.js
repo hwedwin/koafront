@@ -3,22 +3,25 @@
  */
 import {createStore} from 'redux';
 
-//action types
+//行为类型
 const INIT_MEMBER = 'INIT_MEMBER';
 const LOGIN_OUT = 'LOGIN_OUT';
-const INIT_AGENT = 'INIT_AGENT';
+const INIT_PARAM_AGENT = 'INIT_PARAM_AGENT';
 
 //reducer
 function reducer(state,action) {
 	if (!state) {
 		state = {
 			loginStatus: false,
-			member: {},
-			agentId: null,
+			member: {
+				isPaidAgent: false
+			},
+			paramAgentId: 'top',
 		}
 	}
 	switch(action.type){
 		case INIT_MEMBER:
+			action.member.isPaidAgent = action.member.isAgent == '1' && action.member.isPay == '1';
 			return {
 				...state,
 				loginStatus: true,
@@ -29,10 +32,10 @@ function reducer(state,action) {
 				...state,
 				loginStatus: false
 			};
-		case INIT_AGENT: 
+		case INIT_PARAM_AGENT: 
 			return {
 				...state,
-				agentId: action.agentId
+				paramAgentId: action.paramAgentId
 			};
 		default: 
 			return state;
@@ -41,7 +44,7 @@ function reducer(state,action) {
 
 export default createStore(reducer);
 
-//action creators
+//行为建造器
 export const initMember = (member) => {
 	return {type: INIT_MEMBER,member};
 }
@@ -50,6 +53,6 @@ export const loginOut = () => {
 	return {type: LOGIN_OUT};
 }
 
-export const initAgentId = (agentId) => {
-	return {type: INIT_AGENT,agentId};
+export const initParamAgentId = (agentId) => {
+	return {type: INIT_PARAM_AGENT,agentId};
 }

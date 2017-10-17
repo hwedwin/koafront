@@ -123,6 +123,7 @@ class UserEdit extends Component {
 				<CommonNavbar 
 					centerText="个人资料"
 					onBackbarClick={()=>this.props.history.goBack()}
+					showRightContent={false}
 				/>
 				<div className="m-field-wrapper">
 					<div className="m-field-item">

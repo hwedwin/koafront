@@ -60,6 +60,7 @@ class Address extends Component {
 			<CommonNavbar 
 				centerText="收货地址"
 				onBackbarClick={()=>this.props.history.goBack()}
+				showRightContent={false}
 			/>
 			<div className="m-address-box">
 				{

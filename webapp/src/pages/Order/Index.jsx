@@ -238,6 +238,7 @@ class Order extends Component {
 				<CommonNavbar 
 					centerText="我的订单"
 					onBackbarClick={()=>this.props.history.goBack()}
+					showRightContent={false}
 				/>
 				<Tabs defaultActiveKey={this.state.defaultActiveKey} animated={false} onChange={this.handleTabChange} onTabClick={this.handleTabClick}>
 			      <Tabs.TabPane tab="全部" key="1">

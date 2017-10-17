@@ -1,7 +1,8 @@
 const path = require('path');
+const fs = require('fs');
 const views = require('koa-views');
 const logger = require('koa-logger');
-// const log4js = require('koa-log4');
+const morgan = require('koa-morgan');
 const koaBody = require('koa-body');
 const koaStatic = require('koa-static');
 const session = require('koa-session2');
@@ -24,9 +25,11 @@ global.sequelize = sequelize;
 //中间件
 //日志
 app.use(logger());
-// app.use(log4js.koaLogger(log4js.getLogger("http"), { 
-//     level: 'auto'
-// }));
+
+//log file
+const accessLogStream = fs.createWriteStream(__dirname + '/log/access.log',{ flags: 'a' });
+app.use(morgan('combined', { stream: accessLogStream }));
+
 // 跨域
 app.use(cors({
 	origin: 'http://localhost:3000',

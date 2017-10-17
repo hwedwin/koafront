@@ -21,40 +21,82 @@ import DrinkCate from './pages/DrinkCate/Index.jsx';
 import Pay from './pages/Pay/Index.jsx';
 import Customer from './pages/Customer/Index.jsx';
 import BalanceDetail from './pages/BalanceDetail/Index.jsx';
+import CountRoom from './pages/CountRoom/Index.jsx';
+import TransDetail from './pages/TransDetail/Index.jsx';
+import Withdraw from './pages/Withdraw/Index.jsx';
 
 import Ajax from './utils/Ajax';
 import Util from './utils/Util';
 import Config from './config/Config';
 import {connect} from 'react-redux';
 import {initMember} from './store/userStore';
-import {initAgentId} from './store/userStore';
+import {initParamAgentId} from './store/userStore';
 
 class AppWrapper extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      data: null
-    }
   }
 
   componentWillMount() {
-    var self = this;
-    // this.beatTimer = setInterval(function(){
-      Ajax.post({url: Config.API.BEAT})
+    this._initParamAgentId();//检查地址带的agentId参数
+    this._initSelfAgentIdTimer();
+  }
+
+  _initParamAgentId() {
+    var aid = Util.getSearch(window.location.search,'aid');
+    // 检测地址参数ID是否合法
+    Ajax.post({url: Config.API.MEMBER_DATA_BYID,data: {id: aid}})
       .then((res) => {
         if (res.status === 200 && res.data.code === 200) {
-          this.setState({
-            data: res.data.data
-          });
-          self.props.onInitMember(res.data.data);
+          var mData = res.data.data;
+          if (mData.isAgent == '1' && mData.isPay == '1') {
+            this.props.onInitParamAgentId(aid);
+          }else{
+            this.props.onInitParamAgentId('top');  
+          }
         }else{
+          this.props.onInitParamAgentId('top');  
+        }
+      }).catch(function(error){
+      });
+  }
+
+  _initSelfAgentIdTimer() {
+    var aid = Util.getSearch(window.location.search,'aid');
+    this.beatTimer = setInterval(() => {
+      // this._initSelfAgentId();
+    },3000);
+    this._initSelfAgentId();
+  }
+
+  _initSelfAgentId(aid) {
+    var self = this;
+    Ajax.post({url: Config.API.BEAT})
+      .then((res) => {
+        if (res.status === 200 && res.data.code === 200) {
+          var mData = res.data.data;
+          if (mData.isAgent == '1' && mData.isPay == '1') {
+            if (aid) { //地址带了agentId
+              if (mData.id != aid) {//进入商城的用户是经销商，但进入了别人的店铺
+                if(window.confirm('尊敬的经销商，您目前为止处于他人店铺中，无法享受到返利，是否为您切换至您的店铺中?')){
+                  // 切换店铺
+                  self.props.onInitParamAgentId(mData.id);
+                }
+              }else{//在自己的店中
+                self.props.onInitParamAgentId(mData.id);
+              }
+            }else{
+              self.props.onInitParamAgentId(mData.id);  
+            }
+          }
+          self.props.onInitMember(mData);
+        }else{
+          self.props.onInitParamAgentId('top');
         }
       }).catch(function(error){
         console.log(error);
       });
-    // },3000);
-    self.props.onInitAgentId(Util.getSearch(window.location.search,'aid'));
   }
 
   render() {
@@ -75,7 +117,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onInitMember: (member) => dispatch(initMember(member)),
-    onInitAgentId: (agentId) => dispatch(initAgentId(agentId))
+    onInitParamAgentId: (agentId) => dispatch(initParamAgentId(agentId))
   }
 }
 
@@ -115,6 +157,9 @@ class App extends Component {
           <Route path="/pay/:id" component={Pay} />
           <Route path="/customer" component={Customer} />
           <Route path="/balance" component={BalanceDetail} />
+          <Route path="/countroom" component={CountRoom} />
+          <Route path="/transdetail/:id" component={TransDetail} />
+          <Route path="/withdraw" component={Withdraw} />
         </div>
       </Router>
       </AppWrapper2>

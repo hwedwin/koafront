@@ -55,7 +55,7 @@ const MemberBalanceController = {
             });
             return result;
         } catch(e) {
-            throw new Error(e);
+            return e;
         }
     },
 

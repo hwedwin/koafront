@@ -123,6 +123,7 @@ const FavoriteController = {
 				where: {
 					memberId
 				},
+				order: [['updatedAt','DESC']],
 				include: [
 					{
 						model: Drink,

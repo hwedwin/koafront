@@ -13,6 +13,7 @@ import svgHeart from '../../assets/svg/heart.svg'
 import svgMap from '../../assets/svg/map-marker.svg'
 import svgUsers from '../../assets/svg/users.svg'
 import svgCog from '../../assets/svg/cogWhite.svg'
+import svgCountRoom from '../../assets/svg/count-room.svg'
 
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
@@ -32,7 +33,7 @@ const PortraitBox = (props) => {
 				alt="头像" 
 				onClick={props.onPortraitClick}/>
 			<div className="u-name">{props.member.nickname || '--'}</div>
-			<div className="u-level">{Util.formatMemberLevel(props.member.level)}</div>
+			<div className="u-level">{Util.formatMemberLevel(props.member)}</div>
 		</div>
 	)
 }
@@ -130,6 +131,11 @@ const MineBox = props => {
 			text: '客户管理',
 			tagId: 'myCustomer'
 		},
+		{
+			icon: svgCountRoom,
+			text: '账房',
+			tagId: 'myCountRoom'
+		},
 	]
 	return (
 		<div className="mine-box">
@@ -150,7 +156,8 @@ class IndexUser extends Component {
 			expenseAll: 0,
 			expenseToday: 0,
 			orderAll: 0,
-			orderToday: 0
+			orderToday: 0,
+			isPaidAgent: false
 		}
 	}
 
@@ -192,8 +199,10 @@ class IndexUser extends Component {
 		.then((res) => {
 			if (res.status === 200) {
 				if (res.data.code === 200) {
+					var mData = res.data.data
 					this.setState({
-						member: res.data.data
+						member: mData,
+						isPaidAgent: mData.isAgent == '1' && mData.isPay == '1'
 					});
 				}
 			}else{
@@ -205,12 +214,12 @@ class IndexUser extends Component {
 	}
 
 	_getExpense() {
-		var p1 = Ajax.post({url: Config.API.TRANS_EXPENSE})
+		var p1 = Ajax.post({url: Config.API.BALANCE_GET})
 		.then((res) => {
 			if (res.status === 200) {
 				if (res.data.code === 200) {
 					this.setState({
-						expenseAll: res.data.data.sum
+						expenseAll: res.data.data.balance
 					});
 				}
 			}else{
@@ -285,6 +294,8 @@ class IndexUser extends Component {
 			href = '/favorite';
 		}else if(item.tagId === 'myCustomer'){
 			href = '/customer'
+		}else if(item.tagId === 'myCountRoom'){
+			href = '/countroom'
 		}
 		this.props.history.push(href);
 	}
@@ -299,11 +310,15 @@ class IndexUser extends Component {
 					expenseAll={this.state.expenseAll}
 					onBalanceClick={()=>this.props.history.push('/balance')}
 				/>
-				<EarningBox 
-					expenseToday={this.state.expenseToday}
-					orderAll={this.state.orderAll}
-					orderToday={this.state.orderToday}
-				/>
+				{
+					this.state.isPaidAgent 
+					&& 
+					(<EarningBox 
+						expenseToday={this.state.expenseToday}
+						orderAll={this.state.orderAll}
+						orderToday={this.state.orderToday}
+					/>)
+				}
 				<BlockTitle title="订单管理"/>
 				<MyOrderBox 
 					countWaitPay={this.state.countWaitPay}

@@ -96,8 +96,9 @@ class GoodsItem extends Component {
 				<img className="u-logo" src={data.imgPath}/>
 				<div className="m-right">
 					<div className="u-name">{data.name}</div>
+					<div className="u-backprofit">{data.backProfit?'返利:¥'+data.backProfit:''}</div>
 					<div className="u-bottom">
-						<span className="u-price">{data.price}</span>
+						<span className="u-price">¥{data.price}</span>
 						<PMOperatorButton
 							value={this.state.num}
 							onNumChange={this.handleNumChange}
@@ -135,10 +136,10 @@ class IndexCart extends Component {
 	componentDidMount() {
 		var self = this;
 		// 获取购物车商品
-		Ajax.post({url: Config.API.CART_GET},this.props.member.level)
+		Ajax.post({url: Config.API.CART_GET},this.props.member.isPaidAgent)
 			.then(function(data) {
 				if (data.status === 200) {
-					var goods = self._formatGoods(data.data);
+					var goods = data.data;
 					var cart={};
 					for (var i = 0; i < goods.length; i++) {
 						var gItem = goods[i];
@@ -162,16 +163,6 @@ class IndexCart extends Component {
 			}).catch(function(error){
 				console.log(error);
 			});
-	}
-
-	_formatGoods(goods) {
-		for (var i = 0; i < goods.length; i++) {
-			var gItem = goods[i];
-			if (gItem.special) {
-				gItem.price = gItem.special.specialPrice;
-			}
-		}
-		return goods;
 	}
 
 	_computedTotal() {

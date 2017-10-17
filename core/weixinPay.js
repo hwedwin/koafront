@@ -108,5 +108,57 @@ WXPay.mix('requestUnifiedOrder',function(order,fn,errFn){
 	});	
 });
 
+/**
+ * order:
+ * openid,
+ * partner_trade_no,
+ * re_user_name,
+ * amount,
+ * spbill_create_ip
+ */
+WXPay.mix('createTransferOrder', function(order){
+	order.spbill_create_ip = order.spbill_create_ip.match(/\d+.\d+.\d+.\d+/)[0];
+	order.trade_type = "JSAPI";
+	order.nonce_str = order.nonce_str || util.generateNonceString();
+	order.mch_appid = wxConfig.appid;
+	order.mchid = wxConfig.mch_id;
+	// order.partner_trade_no = 
+	order.check_name = 'NO_CHECK';//不强制检验真是姓名
+	order.desc = '用户提现';
+	order.sign = this.sign(order);
+	var self = this;
+	return new Promise(function(resolve,reject) {
+		self.requestTransferOrder(order,function(err,data) {
+			if (err) {
+				reject(err);
+			}else{
+				// if (data.return_code == 'SUCCESS' && data.result_code == 'SUCCESS') {
+				// 	resolve(data);
+				// }else{
+				// 	reject(data);
+				// }
+				resolve(data);
+			}
+		},function(err){
+			reject(err);
+		});
+	});
+});
+
+WXPay.mix('requestTransferOrder',function(order,fn,errFn){
+	request({
+		url: "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers",
+		method: 'POST',
+		body: util.buildXML(order)
+	}, function(err, response, body){
+		if (err) {
+			errFn();
+		}else{
+			console.log('body:'+body);
+			util.parseXML(body,fn);
+		}
+	});		
+});
+
 exports = module.exports = WXPay;
 

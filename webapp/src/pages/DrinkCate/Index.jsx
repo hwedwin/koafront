@@ -56,28 +56,17 @@ class SearchResult extends Component {
 		 	orderRule: this.state.sortPriceTag === 1 ? 'DESC' : 'ASC',
 		 	pageIndex: this.state.pageIndex,
 		 	pageSize: this.state.pageSize
-		 }},this.props.member.level)
+		 }},this.props.member.isPaidAgent)
 		.then((res) => {
 			Toast.hide();
 			if (res.status === 200) {
 				this.setState({
-					goods: this._formatGoods(res.data)
+					goods: res.data
 				});
 			}
 		}).catch(function(error){
 			console.log(error);
 		});
-	}
-
-	_formatGoods(goods) {
-		/*var isAgent = this.props.member.level==1||this.props.member.level==2;
-		for (var i = 0; i < goods.length; i++) {
-			var g = goods[i];
-			if (g.special) {
-				g.price = '特卖价:¥'+(isAgent?g.special.specialPriceAgent:g.specialPrice);
-			}
-		}*/
-		return goods;
 	}
 
 	handleSortItemClick(sortBy) {

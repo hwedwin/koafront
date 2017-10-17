@@ -8,17 +8,18 @@ import svgEdit from '../../assets/svg/edit.svg';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
+import defaultPortrait from '../../assets/images/portrait.png';
 
 var CustomerItem = (props) => {
 	return (
 		<div className="m-customer-item">
-			<img className="u-portrait" src={props.data.member.headerImage} />
+			<img className="u-portrait" src={props.data.member.headerImage || defaultPortrait} />
 			<div className="m-right-detail">
 				<div className="u-name">
 					{props.data.member.nickname}
 				</div>
 				<div className="u-desc">
-					{props.data.fxLevel}
+					{props.data.createdAt}
 				</div>
 			</div>
 		</div>
@@ -45,11 +46,13 @@ class Customer extends Component {
 	requestCustomer() {
 		Ajax.post({url: Config.API.MEMBER_CUSTOMER})
 		.then((res) => {
-			Toast.info(res.message);
+			Toast.hide();
 			if (res.status === 200 && res.data.code === 200) {
 				this.setState({
 					customers: res.data.data
 				});
+			}else{
+				Toast.info(res.message);
 			}
 		}).catch(function(error){
 			console.log(error);
@@ -62,6 +65,7 @@ class Customer extends Component {
 				<CommonNavbar 
 					centerText="我的经销商"
 					onBackbarClick={()=>this.props.history.goBack()}
+					showRightContent={false}
 				/>
 				<div className="m-customer-list">
 					{

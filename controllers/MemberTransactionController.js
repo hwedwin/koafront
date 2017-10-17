@@ -34,45 +34,45 @@ const MemberTransactionController = {
     },
 
     //通过下级经销商注册获得收入
-    incomeByRegister: async function(memberId,income,cId,t) {
-        var result = await MemberTransactionController.create(memberId,income,1,null,cId,t);
+    incomeByRegister: async function(memberId,income,code,cId,t) {
+        var result = await MemberTransactionController.create(memberId,income,1,code,cId,t);
         return result;
     },
 
     // 通过销售获得收入
-    incomeBySale: async function(memberId,income,orderId,t) {
-        var result = await MemberTransactionController.create(memberId,income,2,orderId,null,t);
+    incomeBySale: async function(memberId,income,orderId,memberId,t) {
+        var result = await MemberTransactionController.create(memberId,income,2,orderId,memberId,t);
         return result;
     },
 
     // 通过佣金获得收入
-    incomeByCommission: async function(memberId,income,orderId,t) {
-        var result = await MemberTransactionController.create(memberId,income,3,orderId,null,t);
+    incomeByCommission: async function(memberId,income,orderId,memberId,t) {
+        var result = await MemberTransactionController.create(memberId,income,3,orderId,memberId,t);
         return result;
     },
 
     // 购买，第三方支付支付
-    expenseByPurchase: async function(memberId,expense,orderId,t) {
-        var result = await MemberTransactionController.create(memberId,expense,4,orderId,null,t);
+    expenseByPurchase: async function(memberId,expense,orderId,agentId,t) {
+        var result = await MemberTransactionController.create(memberId,expense,4,orderId,agentId,t);
         return result;
     },
 
     // 余额购买支出
-    expenseByPurchaseBanlance: async function(memberId,expense,orderId,t) {
-        var result = await MemberTransactionController.create(memberId,expense,5,orderId,null,t);
+    expenseByPurchaseBanlance: async function(memberId,expense,orderId,agentId,t) {
+        var result = await MemberTransactionController.create(memberId,expense,5,orderId,agentId,t);
         return result;
     },
 
     // 注册时支出,cId注册人Id
-    expenseByRegister: async function(memberId,expense,cId,t) {
-        var result = await MemberTransactionController.create(memberId,expense,6,null,cId,t);
+    expenseByRegister: async function(memberId,expense,code,cId,t) {
+        var result = await MemberTransactionController.create(memberId,expense,6,code,cId,t);
         return result;
     },
 
-
     // 提现支出
-    expenseByWithdraw: async function(memberId,expense,t) {
-        var result = await MemberTransactionController.create(memberId,expense,7,null,null,t);
+    expenseByWithdraw: async function(memberId,expense,code,cId,t) {
+        // code代表交易单号
+        var result = await MemberTransactionController.create(memberId,expense,7,code,cId,t);
         return result;
     },
 
@@ -130,28 +130,57 @@ const MemberTransactionController = {
     getUserBalanceTransItem: async function(ctx) {
         var memberId = ctx.session.memberId;
         if (!memberId) {
-            respond.json(ctx,false,'获取订单失败，用户尚未登录',{code: 203});
+            respond.json(ctx,false,'获取用户余额明细失败，用户尚未登录',{code: 203});
             return false;
         }
-        var { pageIndex, pageSize } = ctx.request.body;
+        var { pageIndex, pageSize,type } = ctx.request.body;
         pageIndex = pageIndex ? pageIndex : 0;
         pageSize = pageSize ? pageSize : 20;
         pageIndex = parseInt(pageIndex, 10);
         pageSize = parseInt(pageSize, 10);
+        var query = {
+            memberId,
+            // type: {
+            //     $notIn: ['4','6']
+            // }
+        };
+        if (type && ['1','2','3','4','5','6','7'].indexOf(type) > -1) {
+            query.type = type;
+        }
         try{
             var result = await MemberTransaction.findAll({
                 offset: pageIndex * pageSize,
                 limit: pageSize,
-                where: {
-                    memberId,
-                    type: {
-                        $notIn: ['4','6']
-                    }
-                }
+                where: query,
+                order: [['updatedAt','DESC']]
             });
             respond.json(ctx,true,'获取用户余额明细成功',{code: 200,data: result});
         }catch(e) {
             respond.json(ctx,false,'获取用户余额明细失败',null,e);
+        }
+    },
+
+    getOneById: async function(ctx) {
+        var memberId = ctx.session.memberId;
+        if (!memberId) {
+            respond.json(ctx,false,'获取用户余额明细失败，用户尚未登录',{code: 203});
+            return false;
+        }    
+        var {id} = ctx.request.body;
+        if (!id) {
+            respond.json(ctx,false,'交易明细ID不能为空');
+            return false;  
+        }
+        try{
+            var result = await MemberTransaction.findOne({
+                where: {
+                    memberId,
+                    id
+                }
+            });
+            respond.json(ctx,true,'获取用户余额明细成功',{code: 200,data: result});  
+        }catch(e){
+            respond.json(ctx,false,'服务器内部错误',null,e);  
         }
     }
 }

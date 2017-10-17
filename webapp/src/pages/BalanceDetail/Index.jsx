@@ -14,7 +14,8 @@ class BanlanceDetail extends Component {
 		this.state = {
 			pageIndex: 0,
 			pageSize: 20,
-			items: []
+			items: [],
+			title: '收支明细'
 		}
 	}
 
@@ -37,9 +38,19 @@ class BanlanceDetail extends Component {
 	}
 
 	_request() {
-		return Ajax.post({url: Config.API.TRANS_ITEMS})
+		var queryData = {};
+		var type = Util.getSearch(this.props.location.search,'type');
+		if (type) {
+			queryData.type = type;
+			if (type == '7') {
+				this.setState({
+					title: '提现记录'
+				});
+			}
+		}
+		return Ajax.post({url: Config.API.TRANS_ITEMS,data:queryData})
 		.then((res) => {
-			Toast.info(res.message);
+			Toast.hide();
 			if (res.status === 200) {
 				if (res.data.code === 200) {
 					this.setState({
@@ -47,6 +58,7 @@ class BanlanceDetail extends Component {
 					});
 				}
 			}else{
+				Toast.info(res.message);
 			}
 		}).catch(function(error){
 			console.log(error);
@@ -57,23 +69,24 @@ class BanlanceDetail extends Component {
 		return (
 			<div className="page-balance-detail">
 				<CommonNavbar 
-					centerText="收支明细"
+					centerText={this.state.title}
 					onBackbarClick={()=>this.props.history.goBack()}
+					showRightContent={false}
 				/>
 				<div>
 					{
 						this.state.items.map(item => 
-							<div className="m-trans-item">
+							<Link to={'/transdetail/'+item.id} className="m-trans-item" key={item.id}>
 								<div className="m-left-wrapper">
 									<div className="u-title">{this._mapState(item.type)}</div>
 									<div className="u-money">
 										{item.createdAt}
 									</div>
 								</div>
-								<div className="m-right-wrapper">
-									{item.money}
+								<div className={'m-right-wrapper'+' '+(item.money>0?'income':'')}>
+									{item.money>0?'+'+item.money:item.money}
 								</div>
-							</div>
+							</Link>
 						)
 					}
 				</div>

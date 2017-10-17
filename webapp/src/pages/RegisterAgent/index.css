@@ -17,3 +17,16 @@
 .page-reg-agent .m-agree-box .u-icon-check{
 	margin-right: .1rem;
 }
+
+.page-reg-agent .m-agree-box .u-text-proto{
+	color: #108ee9;
+	position: relative;
+	top: -.1rem;
+}
+
+.page-reg-agent .u-share-tip{
+	font-size: .25rem;
+	color: #333;
+	margin-top: .15rem;
+	padding-left: .14rem;
+}
