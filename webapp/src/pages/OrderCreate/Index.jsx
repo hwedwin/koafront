@@ -198,6 +198,7 @@ class OrderCreate extends Component {
 				<CommonNavbar 
 					centerText="创建订单"
 					onBackbarClick={()=>this.props.history.goBack()}
+					showRightContent={false}
 				/>
 				<div className="m-address-box" onClick={this.handleAddressClick.bind(this)}>
 					<div className="m-left-wrapper">

@@ -151,6 +151,7 @@ class Pay extends Component {
 					showLeftIcon={false}
 					leftContent="我的订单"
 					centerText="支付"
+					showRightContent={false}
 					onBackbarClick={()=>this.handleBackClick()}
 				/>
 				<div className="m-pay-money">
