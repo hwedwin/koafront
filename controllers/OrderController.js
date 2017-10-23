@@ -228,7 +228,7 @@ const OrderController = {
                 }
             });
             // 处理交易等操作
-            await OrderController.handleOrderSuccess(code,'weixin');
+            await OrderController.handleOrderSuccess(body.out_trade_no,'weixin');
         }
         var message = '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
         ctx.body = message;
