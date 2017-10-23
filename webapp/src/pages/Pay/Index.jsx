@@ -87,6 +87,7 @@ class Pay extends Component {
 			.then((res) => {
 				Toast.hide();
 				if (res.status === 200) {
+					alert(res.data);
 					Util.wxPay(res.data,function(state){
 						Toast.hide();
 						if (state) {
