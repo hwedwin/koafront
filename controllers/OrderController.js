@@ -81,7 +81,7 @@ const OrderController = {
             }
             // 获取商品结果
             var drinkResult = await Drink.findAll({
-                attributes: ['id', 'retailPrice', 'supplyPrice'],
+                attributes: ['id', 'retailPrice', 'supplyPrice','name'],
                 where: {
                     id: {
                         $in: drinkIds
