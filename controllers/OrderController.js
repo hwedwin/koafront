@@ -218,7 +218,7 @@ const OrderController = {
         console.log(body);
         if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
             // 更新订单状态
-            Order.update({
+            await Order.update({
                 progressState: 2,
                 progressInfo: '待配货',
                 paidCode: 'weixin'
@@ -329,7 +329,7 @@ const OrderController = {
                 return;
             }
             // 获取agentId的上一级获取佣金
-            var agentIdTop = MemberRelationController.getPidByCid(agentId);
+            var agentIdTop = await MemberRelationController.getPidByCid(agentId);
 
             // 二级经销商交易记录与余额更新
             await MemberTransactionController.incomeBySale(agentId, agentProfit, orderId,memberId,t);
