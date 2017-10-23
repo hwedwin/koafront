@@ -196,6 +196,7 @@ const OrderController = {
                 respond.json(ctx, false, '无此订单货订单或订单状态错误');
                 return;
             }
+            console.log('psesssion:'+ctx.session.openid);
             var wxpay = new WeixinPay();
             var wxOrder = await wxpay.createWCPayOrder({
                 openid: ctx.session.openid,
