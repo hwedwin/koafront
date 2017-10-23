@@ -293,7 +293,9 @@ const OrderController = {
                     code: code    
                 }
             });
+            console.log(order);
             if (!order) {
+                console.log('return')
                 return;
             }
 
@@ -301,6 +303,10 @@ const OrderController = {
             var agentId = order.agentId;//代理人ID
             var memberId = order.memberId;//用户ID
             var orderId = order.id;//订单ID
+            console.log('totalPrice:'+totalPrice)
+            console.log('agentId:'+agentId)
+            console.log('memberId'+memberId)
+            console.log('orderId:'+orderId)
             // 创建一笔消费者购买交易
             var t1;
             if (paidCode == 'balance') {//余额购买支出
