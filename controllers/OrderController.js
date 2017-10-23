@@ -200,8 +200,8 @@ const OrderController = {
             var wxpay = new WeixinPay();
             var wxOrder = await wxpay.createWCPayOrder({
                 openid: ctx.session.openid,
-                body: orderDetail.payInfo || '购买商品',
-                detail: orderDetail.payInfo || '购买商品',
+                body: orderDetail.payInfo? orderDetail.payInfo:'购买商品',
+                detail: orderDetail.payInfo? orderDetail.payInfo:'购买商品',
                 out_trade_no: orderDetail.code, //内部订单号
                 total_fee: 1,
                 spbill_create_ip: ctx.ip,
@@ -209,8 +209,8 @@ const OrderController = {
             });
             console.log({
                 openid: ctx.session.openid,
-                body: orderDetail.payInfo || '购买商品',
-                detail: orderDetail.payInfo || '购买商品',
+                body: orderDetail.payInfo? orderDetail.payInfo:'购买商品',
+                detail: orderDetail.payInfo? orderDetail.payInfo:'购买商品',
                 out_trade_no: orderDetail.code, //内部订单号
                 total_fee: 1,
                 spbill_create_ip: ctx.ip,
