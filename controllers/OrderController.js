@@ -288,7 +288,7 @@ const OrderController = {
 
     handleOrderSuccess: async function(code,paidCode) {
         try {
-            var order = Order.findOne({
+            var order = await Order.findOne({
                 where: {
                     code: code    
                 }
