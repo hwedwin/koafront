@@ -1,12 +1,3 @@
-const respond = require('../utils/respond');
-const Member = require('../models/Member');
-const MemberRelationController = require('./MemberRelationController');
-const MemberController = require('./MemberController');
-const request = require('request');
-const wxConfig = require('../config/weixin');
-const CommonUtil = require('../utils/CommonUtil');
-const weixinSign = require('../core/weixinSign');
-
 const IndexController = {
     index: async function(ctx) {
         var {aid} = ctx.request.query;
@@ -48,7 +39,6 @@ const IndexController = {
         try {
             if (memberId) {
                 let member = await MemberController.obtainDataById(memberId);
-                console.log(member);
                 if (!member) {
                    respond.json(ctx, true, '无此用户', { code: 203 }); 
                    return;
@@ -213,6 +203,14 @@ const IndexController = {
         var sign = weixinSign(ctx.session.wxticket,url);
         respond.json(ctx, true, '获取签名成功',sign);
     }
-}
-
+};
 module.exports = IndexController;
+
+const respond = require('../utils/respond');
+const Member = require('../models/Member');
+const MemberRelationController = require('./MemberRelationController');
+const MemberController = require('./MemberController');
+const request = require('request');
+const wxConfig = require('../config/weixin');
+const CommonUtil = require('../utils/CommonUtil');
+const weixinSign = require('../core/weixinSign');

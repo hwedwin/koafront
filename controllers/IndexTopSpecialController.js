@@ -1,6 +1,3 @@
-const IndexTopSpecial = require('../models/IndexTopSpecial')
-const Drink = require('../models/Drink')
-const respond = require('../utils/respond')
 const IndexTopSpecialController = {
     list: async function(ctx) {
         var date = new Date();
@@ -55,5 +52,8 @@ const IndexTopSpecialController = {
         }
     }
 }
-
 module.exports = IndexTopSpecialController;
+
+const IndexTopSpecial = require('../models/IndexTopSpecial');
+const Drink = require('../models/Drink');
+const respond = require('../utils/respond');

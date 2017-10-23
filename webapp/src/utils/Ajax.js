@@ -80,6 +80,7 @@ const Ajax = {
 			xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
 			xhr.setRequestHeader('Cache-Control','no-cache');
 			xhr.responseType = 'json';
+			xhr.timeout = 5000;
 			xhr.onreadystatechange = function() {
 				if (this.readyState === this.DONE) {
 					if (this.status === 200 || this.status === 304) {
@@ -97,6 +98,11 @@ const Ajax = {
 			}
 
 			xhr.onerror = function() {
+				reject(this.error);
+			}
+
+			xhr.ontimeout = function() {
+				console.log('timeout')
 				reject(this.error);
 			}
 			if (options.data) {

@@ -1,5 +1,3 @@
-const DrinkBrand = require('../models/DrinkBrand')
-const respond = require('../utils/respond')
 const BrandController = {
     list: async function(ctx) {
         let { cate } = ctx.request.body;
@@ -22,5 +20,7 @@ const BrandController = {
         }
     }
 }
-
 module.exports = BrandController;
+
+const DrinkBrand = require('../models/DrinkBrand');
+const respond = require('../utils/respond');

@@ -1,6 +1,7 @@
 import './index.css'
 import React,{Component} from 'react';
 import {Icon,Toast} from 'antd-mobile';
+import BlockTitle from '../../components/BlockTitle/Index.jsx';
 import CommonNavbar from '../../components/CommonNavbar/Index.jsx';
 import svgMapMarker from '../../assets/svg/map-marker.svg';
 
@@ -16,7 +17,8 @@ class OrderDetail extends Component {
 			consignee: {},
 			drinks: [],
 			details: {},
-			remainTime: 0
+			remainTime: 0,
+			express: {}
 		}
 	}
 
@@ -41,6 +43,9 @@ class OrderDetail extends Component {
 							this._startTimer();
 						}
 					});
+					if (o.progressState === '3') {
+						this._requestExpress();
+					}
 				}
 			}else{
 				Toast.info(res.message);
@@ -48,6 +53,21 @@ class OrderDetail extends Component {
 		}).catch(function(error){
 			console.log(error);
 		});
+	}
+
+	_requestExpress() {
+		Ajax.post({url: Config.API.EXPRESS_GET,data: {orderId: this.props.match.params.id}})
+		.then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					express: res.data
+				});
+			}else{
+				Toast.info(res.message);
+			}
+		}).catch(function(error){
+			console.log(error);
+		});	
 	}
 
 	_startTimer() {
@@ -82,6 +102,9 @@ class OrderDetail extends Component {
 		var c = this.state.consignee;
 		var ds = this.state.drinks;
 		var o = this.state.details;
+		var e = this.state.express;
+		var display = o.progressState == '3' || o.progressState == '4' || o.progressState == '9';
+		var expressStyle = {display: display?'block':'none'};
 		return (
 			<div className="page-order-detail">
 				<CommonNavbar 
@@ -114,6 +137,7 @@ class OrderDetail extends Component {
 							))
 						}
 					</div>
+					<BlockTitle title="订单信息"/>
 					<div className="u-order-list">
 						<div className="u-item">订单编号：{o.id}</div>
 						<div className="u-item">下单时间：{Util.formatDate('yyyy-MM-dd hh:mm:ss',o.createdTimestamp)}</div>
@@ -122,6 +146,16 @@ class OrderDetail extends Component {
 						{
 							this.state.remainTime > 1000 && o.progressState == '1' ? <div className="u-item">剩余支付时间：{this._format(this.state.remainTime)}</div>:''
 						}
+					</div>
+					<div style={expressStyle}>
+						<BlockTitle title="物流信息"/>
+						<div className="m-express-detail u-order-list">
+							<div className="u-item">物流公司：{e.expressName}</div>
+							<div className="u-item">物流单号：{e.expressCode}</div>
+							<div className="u-item">物流联系电话：{e.expressPhone}</div>
+							<div className="u-item">备注：{e.expressInfo}</div>
+							<div className="u-item">发货时间：{e.createdAt}</div>
+						</div>
 					</div>
 				</div>
 			</div>

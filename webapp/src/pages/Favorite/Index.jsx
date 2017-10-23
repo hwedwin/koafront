@@ -1,6 +1,7 @@
 import './index.css';
 import React,{Component} from 'react';
 import CommonNavbar from '../../components/CommonNavbar/Index.jsx';
+import ButtonLoadMore from '../../components/ButtonLoadMore/Index.jsx';
 import GoodsItem from '../../components/GoodsItem/Index.jsx';
 import {Toast} from 'antd-mobile';
 import Ajax from '../../utils/Ajax'
@@ -12,17 +13,22 @@ class Favorite extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			goods: []
+			pageIndex: 0,
+			pageSize: 20,
+			goods: [],
+			displayLoadMore: false
 		}
 	}
 
-	componentWillMount() {
-		Toast.loading('加载中...',0)
+	componentDidMount() {
+		this._request();
 	}
 
-	componentDidMount() {
+	_request() {
+		Toast.loading('加载中...',0)
 		// 获取收藏商品
-		 Ajax.post({url: Config.API.FAV_LIST},this.props.member.isPaidAgent)
+		 Ajax.post({url: Config.API.FAV_LIST,
+		 	data:{pageIndex: this.state.pageIndex,pageSize: this.state.pageSize}},this.props.member.isPaidAgent)
 		.then((res) => {
 			Toast.hide();
 			if (res.status === 200) {
@@ -30,19 +36,27 @@ class Favorite extends Component {
 					Toast.info(res.data.message);
 				}else{
 					this.setState({
-						goods: res.data.data
+						goods: this.state.goods.concat(res.data.data.rows),
+						displayLoadMore: (this.state.pageSize * (this.state.pageIndex+1) < res.data.data.count)
 					});
 				}
 			}
 		}).catch(function(error){
 			console.log(error);
 		});
+	}
 
+	handleLoadMore() {
+		this.setState({
+			pageIndex: ++this.state.pageIndex
+		},() => {
+			this._request();
+		});
 	}
 
 	render() {
 		return (
-			<div>
+			<div className="page-favorite">
 				<CommonNavbar 
 					centerText="关注商品"
 					onBackbarClick={()=>this.props.history.goBack()}
@@ -59,6 +73,10 @@ class Favorite extends Component {
 							)
 					}
 				</div>
+				<ButtonLoadMore 
+					display={this.state.displayLoadMore}
+					onClick={this.handleLoadMore.bind(this)}
+				/>
 			</div>
 		)
 	}

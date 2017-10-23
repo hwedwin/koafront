@@ -81,7 +81,7 @@ class OrderCreate extends Component {
 			if (res.status === 200) {
 				if (res.data.code === 200) {
 					this.setState({
-						addressData: res.data.data
+						addressData: res.data.data || {consigneeName:'点击创建地址',consigneeMobile:'',province:'点击创建地址',city:'',county:'',address:''}
 					});
 				}
 			}else{
@@ -150,9 +150,10 @@ class OrderCreate extends Component {
 	}
 
 	handleSubmitOrder() {
+		var agentId = localStorage.getItem('agentId');
 		var data = {};
 		data.totalPrice = this.state.totalMoney;
-		data.agentId = 'top';
+		data.agentId = agentId;
 		data.remarks = this.state.remarks;
 		data.goods = [];
 		for (var i = 0; i < this.state.goods.length; i++) {
@@ -161,6 +162,10 @@ class OrderCreate extends Component {
 			gItem.id = item.id;
 			gItem.nums = item.num;
 			data.goods.push(gItem);
+		}
+		if (!/1[\d]{10}/.test(this.state.addressData.consigneeMobile)) {
+			Toast.info('点击上方地址创建新的收获地址');
+			return;
 		}
 		data.consignee = this.state.addressData;
 		Ajax.post({url: Config.API.ORDER_CREATE,data: data})

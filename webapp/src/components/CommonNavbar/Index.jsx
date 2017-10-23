@@ -12,7 +12,8 @@ class CommonNavbar extends Component {
 		fixed: PropTypes.bool,
 		onBackbarClick: PropTypes.func,
 		leftContent: PropTypes.string,
-		showRightContent: PropTypes.bool
+		showRightContent: PropTypes.bool,
+		rightContent: PropTypes.array
 	}
 
 	static defaultProps = {
@@ -21,7 +22,8 @@ class CommonNavbar extends Component {
 		fixed: false,
 		onBackbarClick: () => {},
 		leftContent: '',
-		showRightContent: true
+		showRightContent: true,
+		rightContent: []
 	}
 
 	render() {
@@ -32,6 +34,9 @@ class CommonNavbar extends Component {
 		var rightContent = [<Link to="/search" key="linksearch"><Icon key="0" type="search" color="#000" /></Link>];
 		if (!this.props.showRightContent) {
 			rightContent.length = 0;
+		}
+		if (this.props.rightContent.length > 0) {
+			rightContent = this.props.rightContent;
 		}
 		return (
 			<div className="m-navbar-wrapper">

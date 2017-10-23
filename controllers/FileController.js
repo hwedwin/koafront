@@ -1,9 +1,3 @@
-const BosClient = require('bce-sdk-js')
-const respond = require('../utils/respond')
-const CommonUtil = require('../utils/CommonUtil')
-const BAIDU = require('../config/baidu')
-const uuid = require('node-uuid')
-
 const FileController = {
 	uploadBaiduBCE: async function(ctx) {
 		const files = ctx.request.body.files.file
@@ -99,6 +93,11 @@ const FileController = {
 		 *}
 		 */
 	}
-}
+};
+module.exports = FileController;
 
-module.exports = FileController
+const BosClient = require('bce-sdk-js');
+const respond = require('../utils/respond');
+const CommonUtil = require('../utils/CommonUtil');
+const BAIDU = require('../config/baidu');
+const uuid = require('node-uuid');

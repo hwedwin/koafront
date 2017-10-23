@@ -1,7 +1,10 @@
-import './index.css'
-import React,{Component} from 'react'
-import {Link} from 'react-router-dom'
-import {List,InputItem,Toast,Button} from 'antd-mobile'
+import './index.css';
+import React,{Component} from 'react';
+import {Link} from 'react-router-dom';
+import {List,InputItem,Toast,Button} from 'antd-mobile';
+import Ajax from '../../utils/Ajax';
+import Util from '../../utils/Util';
+import Config from '../../config/Config';
 
 class Register extends Component {
 
@@ -17,8 +20,33 @@ class Register extends Component {
 			phone: '',
 			password: '',
 			repassword: '',
-			verifyCode: ''
+			verifyCode: '',
+			verifyButton: true,
+			verifyCount: 60,
 		}
+	}
+
+	componentWillUnmount() {
+		window.clearInterval(this.timer);
+	}
+
+	_startTimer() {
+		this.state.verifyButton = false;
+		var count = this.state.verifyCount;
+		this.timer = setInterval(() => {
+			if (count > 1) {
+				count--;
+				this.setState({
+					verifyCount: count
+				});
+			}else{
+				this.setState({
+					verifyCount: 60,
+					verifyButton: true
+				});
+				clearInterval(this.timer);
+			}
+		},1000);
 	}
 
 	handlePhoneChange(value) {
@@ -46,12 +74,58 @@ class Register extends Component {
 	}
 
 	handleVerifySend() {
-		Toast.success('已发送，请注意查收')
-		// Toast.fail('发送失败，请重试')
+		if (!this.state.verifyButton) {
+			return;
+		}
+		var mobile = this.state.phone.replace(/\s/g,'');
+		if (!Util.isMobile(mobile)) {
+			Toast.info('请输入正确的手机号');
+			return;
+		}
+		Ajax.post({url: Config.API.SMSCODE_REGISTER,data: {mobile: mobile}})
+			.then((res) => {
+				if (res.status === 200) {
+					this._startTimer();
+				}else{
+					Toast.info(res.message);
+				}
+			}).catch(function(error){
+				console.log(error);
+			});
 	}
 
 	handleRegister() {
-		Toast.loading('注册中...',0)
+		var mobile = this.state.phone.replace(/\s/g,'');
+		if (!Util.isMobile(mobile)) {
+			Toast.info('手机号码有误');
+			return;
+		}
+		if (this.state.verifyCode === '') {
+			Toast.info('验证码不能为空');
+			return;
+		}
+		if (this.state.password.lenght < 6 || (this.state.password !== this.state.repassword)) {
+			Toast.info('密码长度小于6或两次输入密码不一致');
+			return;
+		}
+		var requestData = {
+			mobile: mobile,
+			password: this.state.password,
+			verifyCode: this.state.verifyCode
+		}
+		Toast.loading('注册中...',0);
+		var self = this;
+		Ajax.post({url: Config.API.MEMBER_REG,data: requestData})
+			.then((res) => {
+				Toast.info(res.message);
+				if (res.status === 200) {
+					setTimeout(()=>{
+						this.props.history.replace('/');		
+					},1000);
+				}
+			}).catch(function(error){
+				console.log(error);
+			});
 	}
 
 	render() {
@@ -63,7 +137,7 @@ class Register extends Component {
 						placeholder="手机号码"
 						value={this.state.phone}
 						onChange={this.handlePhoneChange}
-						extra="发送验证码"
+						extra={this.state.verifyButton ? '发送验证码' : '('+this.state.verifyCount+')后重新发送'}
 						onExtraClick={this.handleVerifySend}
 					>
 						手机

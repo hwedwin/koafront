@@ -1,20 +1,3 @@
-const CommonUtil = require('../utils/CommonUtil');
-const respond = require('../utils/respond');
-const paramsVerify = require('../utils/paramsVerify');
-const Order = require('../models/Order');
-const Drink = require('../models/Drink');
-const ConsigneeForOrder = require('../models/ConsigneeForOrder');
-const IndexTopSpecialController = require('./IndexTopSpecialController');
-const MemberRelationController = require('./MemberRelationController');
-const MemberController = require('./MemberController');
-const DrinkForOrderController = require('./DrinkForOrderController');
-const ConsigneeForOrderController = require('./ConsigneeForOrderController');
-const ExpressForOrderController = require('./ExpressForOrderController');
-const MemberBalanceController = require('./MemberBalanceController');
-const MemberTransactionController = require('./MemberTransactionController');
-//微信支付相关
-const WeixinPay = require('../core/weixinPay');
-
 const OrderController = {
     // 用于创建注册为代理商的礼品订单
     createRegisterOrder: async function(memberId, agentId, consignee, t) {
@@ -54,6 +37,7 @@ const OrderController = {
     },
 
     create: async function(ctx) {
+
         var { totalPrice, agentId, remarks, goods, consignee } = ctx.request.body;
         agentId = agentId ? agentId : 'top';
         if (typeof consignee === 'string') {
@@ -71,17 +55,23 @@ const OrderController = {
         for (var i = 0; i < goods.length; i++) {
             drinkIds.push(goods[i].id);
         }
-
         try {
             var totalPriceRetail = 0,
                 totalPriceSupply = 0;
-
             // 获取店铺是否是否存在并且是代理商
             var isAgent = true;
             if (agentId != 'top') {
                 var agentData = await MemberController.obtainDataById(agentId);
+                console.log(2)
+                if (agentData instanceof Error) {
+                    throw new Error(agentData);
+                }
+                if (!agentData) {
+                    respond.json(ctx, false, '代理商不存在');
+                    return;
+                }
                 if (agentData) {
-                    isAgent = agentData.isAgent == '1';
+                    isAgent = agentData.isAgent == '1' && agentData.isPay == '1';
                 }else{
                     isAgent = false;
                 }
@@ -89,7 +79,6 @@ const OrderController = {
             if (!isAgent) {
                 agentId = 'top';
             }
-
             // 获取商品结果
             var drinkResult = await Drink.findAll({
                 attributes: ['id', 'retailPrice', 'supplyPrice'],
@@ -99,17 +88,6 @@ const OrderController = {
                     }
                 }
             });
-
-            // 处理特价商品，改为直接根据dirnk中的isHot判断为每日推荐
-            /*for (var i = 0; i < drinkResult.length; i++) {
-                await (async function(item) {
-                    var special = await IndexTopSpecialController.getOneById(item.id);
-                    if (special) {
-                        item.supplyPrice = special.specialPriceAgent;
-                        item.retailPrice = special.specialPrice;
-                    }
-                })(drinkResult[i]);
-            }*/
 
             //计算总价格,生成订单信息
             var payInfo = '';
@@ -130,7 +108,6 @@ const OrderController = {
                 respond.json(ctx, false, '价格计算有误', null, { memberLevel, totalPrice, totalPriceRetail, totalPriceSupply });
                 return;
             }
-
             //开启事务
             let orderData = await sequelize.transaction(async function(t) {
                 //创建订单
@@ -149,25 +126,33 @@ const OrderController = {
                     createdTimestamp: Date.now()
                 }, { transaction: t });
 
-                //创建订单包含的商品
                 for (var i = 0; i < drinkResult.length; i++) {
                     var drink = drinkResult[i];
                     for (var j = 0; j < goods.length; j++) {
                         var gItem = goods[j];
                         if (gItem.id === drink.id) {
-                            await DrinkForOrderController.create({
+                            //增加商品销量
+                            var _ds = await DrinkController.increaseSaleCountById(drink.id,gItem.nums,t);
+                            if (_ds instanceof Error) {
+                                throw new Error(_or);
+                            }
+                            //创建订单包含的商品
+                            var _or = await DrinkForOrderController.create({
                                 orderId: order.id,
                                 drinkId: drink.id,
                                 nums: gItem.nums,
                                 price: drink.retailPrice,
                                 discountTotal: 0
                             }, t);
+                            if (_or instanceof Error) {
+                                throw new Error(_or);
+                            }
                         }
                     }
                 }
 
                 //创建订单收货人
-                await ConsigneeForOrderController.create({
+                var _cr = await ConsigneeForOrderController.create({
                     orderId: order.id,
                     consigneeName: consignee.consigneeName,
                     consigneeMobile: consignee.consigneeMobile,
@@ -176,12 +161,15 @@ const OrderController = {
                     county: consignee.county,
                     address: consignee.address
                 }, t);
+                if (_cr instanceof Error) {
+                    throw new Error(_cr);
+                }
 
                 return order;
             });
             respond.json(ctx, true, '订单创建成功', { orderId: orderData.id });
         } catch (e) {
-            respond.json(ctx, false, '订单创建失败', null, e);
+            respond.json(ctx, false, '订单创建失败,服务器内部错误', null, e);
         }
     },
 
@@ -472,7 +460,11 @@ const OrderController = {
             respond.json(ctx, false, '用户未登录或登录已过期，请重新登录', { code: 203 });
             return false;
         }
-        var { state } = ctx.request.body;
+        var { state,pageIndex,pageSize } = ctx.request.body;
+        pageIndex = pageIndex ? pageIndex : 0;
+        pageSize = pageSize ? pageSize : 20;
+        pageIndex = parseInt(pageIndex, 10);
+        pageSize = parseInt(pageSize, 10);
         var query = { memberId, isDeleted: 0 };
         if (!state) {
             query.$or = {
@@ -496,15 +488,17 @@ const OrderController = {
             }
         }
         try {
-            var results = await Order.findAll({
+            var results = await Order.findAndCountAll({
                 where: query,
-                order: [['updatedAt','DESC']]
+                order: [['updatedAt','DESC']],
+                offset: pageIndex * pageSize,
+                limit: pageSize
             });
-            for (var i = 0; i < results.length; i++) {
+            for (var i = 0; i < results.rows.length; i++) {
                 await (async function(item) {
                     var drinks = await DrinkForOrderController.getByOrderId(item.id);
                     item.dataValues.drinks = drinks;
-                })(results[i]);
+                })(results.rows[i]);
             }
             respond.json(ctx, true, '获取订单成功', { code: 200, data: results });
         } catch (e) {
@@ -604,5 +598,22 @@ const OrderController = {
     }
 
 }
+module.exports = OrderController;
 
-module.exports = OrderController
+const CommonUtil = require('../utils/CommonUtil');
+const respond = require('../utils/respond');
+const paramsVerify = require('../utils/paramsVerify');
+const Order = require('../models/Order');
+const Drink = require('../models/Drink');
+const ConsigneeForOrder = require('../models/ConsigneeForOrder');
+const MemberController = require('./MemberController');
+const IndexTopSpecialController = require('./IndexTopSpecialController');
+const MemberRelationController = require('./MemberRelationController');
+const DrinkForOrderController = require('./DrinkForOrderController');
+const DrinkController = require('./DrinkController');
+const ConsigneeForOrderController = require('./ConsigneeForOrderController');
+const ExpressForOrderController = require('./ExpressForOrderController');
+const MemberBalanceController = require('./MemberBalanceController');
+const MemberTransactionController = require('./MemberTransactionController');
+//微信支付相关
+const WeixinPay = require('../core/weixinPay');

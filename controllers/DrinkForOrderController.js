@@ -1,13 +1,11 @@
-const DrinkForOrder = require('../models/DrinkForOrder');
-const Drink = require('../models/Drink');
-
 const DrinkForOrderController = {
 	create: async function(option,t) {
 		// orderId,drinkId,nums,price,discountTotal
 		try{
-			await DrinkForOrder.create(option, {transaction: t});
+			var result = await DrinkForOrder.create(option, {transaction: t});
+			return result;
 		} catch(e){
-			throw new Error(e);
+			return e;
 		}
 	},
 
@@ -52,5 +50,7 @@ const DrinkForOrderController = {
 		}
 	}
 }
-
 module.exports = DrinkForOrderController;
+
+const DrinkForOrder = require('../models/DrinkForOrder');
+const Drink = require('../models/Drink');

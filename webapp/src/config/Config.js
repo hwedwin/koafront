@@ -31,8 +31,8 @@ var Config = {
 		MEMBER_DATA: window.host+'api/member/data',
 		MEMBER_EDIT: window.host+'api/member/edit',
 		MEMBER_CUSTOMER: window.host+'api/member/customer',
+		MEMBER_REG: window.host+'api/member/register',
 		MEMBER_REG_AGENT: window.host+'api/member/regagent',
-		MEMBER_AGENT: window.host+'api/member/agent',
 		MEMBER_WXORDER: window.host+'api/member/wxorder',
 		MEMBER_DATA_BYID: window.host+'api/member/databyid',
 		MEMBER_WITHDRAW: window.host+'api/member/withdraw',
@@ -71,12 +71,16 @@ var Config = {
 		TRANS_SUM_ORDER: window.host + 'api/trans/sumorder',
 		TRANS_ITEMS: window.host + 'api/trans/items',
 		TRANS_ITEM: window.host + 'api/trans/item',
+		TRANS_PROFIT: window.host + 'api/trans/profit',
 
 		// 文件上传
 		FILE_PORTRAIT: window.host + 'api/file/portrait',
 
 		// 余额
 		BALANCE_GET: window.host + 'api/balance/get',
+
+		// 物流
+		EXPRESS_GET: window.host + 'api/express/get',
 
 		// 心跳借口
 		BEAT: window.host + 'api/beat',

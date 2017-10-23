@@ -1,8 +1,3 @@
-const Favorite = require('../models/Favorite');
-const Drink = require('../models/Drink');
-const respond = require('../utils/respond');
-const IndexTopSpecialController = require('./IndexTopSpecialController');
-
 const FavoriteController = {
 	create: async function(ctx) {
 		var {drinkId} = ctx.request.body;
@@ -118,12 +113,19 @@ const FavoriteController = {
 			respond.json(ctx,false,'用户未登录',{code: 203});
 			return;
 		}
+		var {pageIndex,pageSize} = ctx.request.body;
+ 		pageIndex = pageIndex ? pageIndex : 0;
+        pageSize = pageSize ? pageSize : 20;
+        pageIndex = parseInt(pageIndex, 10);
+        pageSize = parseInt(pageSize, 10);
 		try{
-			var results = await Favorite.findAll({
+			var results = await Favorite.findAndCountAll({
 				where: {
 					memberId
 				},
 				order: [['updatedAt','DESC']],
+				offset: pageIndex * pageSize,
+				limit: pageSize,
 				include: [
 					{
 						model: Drink,
@@ -131,11 +133,11 @@ const FavoriteController = {
 					}
 				]
 			});
-			for (var i = 0; i < results.length; i++) {
+			for (var i = 0; i < results.rows.length; i++) {
                 await (async function(item){
                     var special = await IndexTopSpecialController.getOneById(item.drink.id);
                     item.dataValues.special = special;
-                })(results[i]);
+                })(results.rows[i]);
             }
 			respond.json(ctx,true,'获取收藏商品成功',{code: 200,data: results});
 		}catch(e){
@@ -157,5 +159,9 @@ const FavoriteController = {
 		}
 	}
 }
-
 module.exports = FavoriteController;
+
+const Favorite = require('../models/Favorite');
+const Drink = require('../models/Drink');
+const respond = require('../utils/respond');
+const IndexTopSpecialController = require('./IndexTopSpecialController');

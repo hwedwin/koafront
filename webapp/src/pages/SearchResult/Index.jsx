@@ -2,9 +2,8 @@ import './index.css'
 import React,{Component} from 'react'
 import GoodsItem from '../../components/GoodsItem/Index.jsx'
 import CommonNavbar from '../../components/CommonNavbar/Index.jsx'
-
+import ButtonLoadMore from '../../components/ButtonLoadMore/Index.jsx';
 import {Toast} from 'antd-mobile';
-
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
@@ -21,20 +20,20 @@ class SearchResult extends Component {
 			sortPriceTag: 0, //0：不是价格，1: 降序，-1升序
 			pageIndex: 0,
 			pageSize: 20,
-			goods: []
+			goods: [],
+			displayLoadMore: false
 		}
 	}
 
 	componentWillMount() {
-		Toast.loading('加载中...',0);
 	}
 
 	componentDidMount() {
-		// '1'白,'2'红,'3'啤,'4'其他
 		this._request();
 	}
 
 	_request() {
+		Toast.loading('加载中...',0);
 		// 获取收藏商品
 		 Ajax.post({url: Config.API.DRINK_SEARCH,data: {
 		 	keyword: this.state.query,
@@ -47,7 +46,8 @@ class SearchResult extends Component {
 			Toast.hide();
 			if (res.status === 200) {
 				this.setState({
-					goods: res.data
+					goods: this.state.goods.concat(res.data.rows),
+					displayLoadMore: (this.state.pageSize * (this.state.pageIndex+1) < res.data.count)
 				});
 			}
 		}).catch(function(error){
@@ -68,9 +68,17 @@ class SearchResult extends Component {
 			sortBy,
 			sortPriceTag,
 			pageIndex: 0,
-			pageSize: 20
+			pageSize: 20,
+			goods: []
 		},() => {
-			Toast.loading('加载中...',0)
+			this._request();
+		});
+	}
+
+	handleLoadMore() {
+		this.setState({
+			pageIndex: ++this.state.pageIndex
+		},() => {
 			this._request();
 		});
 	}
@@ -129,6 +137,10 @@ class SearchResult extends Component {
 						))
 					}
 				</div>
+				<ButtonLoadMore 
+					display={this.state.displayLoadMore}
+					onClick={this.handleLoadMore.bind(this)}
+				/>
 			</div>
 		)
 	}

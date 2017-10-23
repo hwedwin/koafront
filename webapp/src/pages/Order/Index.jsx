@@ -4,6 +4,7 @@ import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
 import { Tabs ,Toast} from 'antd-mobile';
 import CommonNavbar from '../../components/CommonNavbar/Index.jsx';
+import ButtonLoadMore from '../../components/ButtonLoadMore/Index.jsx';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
@@ -78,7 +79,7 @@ class OrderItem extends Component {
 				<div className="m-order-num">
 					共{getCount(props)}{props.data.remarks=='用户注册订单'?'1':''}件商品 实付款：<span className="u-big">¥{props.data.orderTotalPrice}</span>
 				</div>
-				<div className="m-opt-box" style={{display: props.data.remarks=='用户注册订单'?'none':'block'}}>
+				<div className="m-opt-box" style={{display: (props.data.remarks=='用户注册订单'&&props.data.progressState=='9')?'none':'block'}}>
 					<button className="u-btn-opt red" onClick={this.handleButtonClick.bind(this)}>{this.getButtonText()}</button>
 				</div>
 			</div>
@@ -91,11 +92,14 @@ class Order extends Component {
 
 	constructor(props) {
 		super(props);
-		this.handleTabChange = this.handleTabChange.bind(this);
 		this.handleTabClick = this.handleTabClick.bind(this);
 		this.state = {
 			orderAll: [],
-			defaultActiveKey: "1"
+			state: null,
+			defaultActiveKey: "1",
+			pageIndex: 0,
+			pageSize: 20,
+			displayLoadMore: false
 		}
 	}
 
@@ -107,23 +111,26 @@ class Order extends Component {
 	}
 
 	_getOrderByTag(state) {
-		console.log(state)
 		Toast.loading('加载中...',0);
 		var self = this;
-		var requestData = {};
-		if (state) {
-			requestData.state = state;
+		var requestData = {
+			pageIndex: this.state.pageIndex,
+			pageSize: this.state.pageSize
+		};
+		if (this.state.state) {
+			requestData.state = this.state.state;
 		}
 		// 获取全部订单
 		Ajax.post({url: Config.API.ORDER_LIST,data: requestData})
-			.then(function(data) {
+			.then((res) => {
 				Toast.hide();
-				if (data.status === 200 && data.data.code === 200) {
-					self.setState({
-						orderAll: data.data.data
+				if (res.status === 200 && res.data.code === 200) {
+					this.setState({
+						orderAll: this.state.orderAll.concat(res.data.data.rows),
+						displayLoadMore: (this.state.pageSize * (this.state.pageIndex+1) < res.data.data.count)
 					});
 				}else{
-					Toast.info(data.message);
+					Toast.info(res.message);
 				}
 			}).catch(function(error){
 				console.log(error);
@@ -162,9 +169,6 @@ class Order extends Component {
 			});
 	}
 
-	handleTabChange(key) {
-	}
-
 	handleTabClick(key) {
 	  var state = null;
 	  if (key == 2) {
@@ -174,7 +178,12 @@ class Order extends Component {
 	  }else if(key == 4) {
 	  	state = 9;
 	  }
-	  this._getOrderByTag(state);
+	  this.setState({
+	  	state,
+	  	orderAll: []	
+	  },()=>{
+	  	this._getOrderByTag();
+	  });
 	}
 
 	handleOrderButtonClick(state,id) {
@@ -214,7 +223,7 @@ class Order extends Component {
 	}
 
 	handleOrderClick(id) {
-		this.props.history.push('/orderdetail/'+id)
+		this.props.history.push('/orderdetail/'+id);
 	}
 
 	handleOrderDelete(id) {
@@ -230,6 +239,14 @@ class Order extends Component {
 				console.log(error);
 			});
 		}
+	}
+
+	handleLoadMore() {
+		this.setState({
+			pageIndex: ++this.state.pageIndex
+		},() => {
+			this._getOrderByTag();
+		});
 	}
 
 	render() {
@@ -298,6 +315,10 @@ class Order extends Component {
 			        </div>
 			      </Tabs.TabPane>
 			    </Tabs>
+			    <ButtonLoadMore 
+					display={this.state.displayLoadMore}
+					onClick={this.handleLoadMore.bind(this)}
+				/>
 			</div>
 		)
 	}

@@ -1,18 +1,3 @@
-const Member = require('../models/Member');
-const Consignee = require('../models/Consignee');
-const MemberRelation = require('../models/MemberRelation');
-const MemberRelationController = require('./MemberRelationController');
-const MemberBalanceController = require('./MemberBalanceController');
-const MemberTransactionController = require('./MemberTransactionController');
-const ConsigneeController = require('./ConsigneeController');
-const OrderController = require('./OrderController');
-const crypto = require('../utils/crypto');
-const respond = require('../utils/respond');
-const smsVerify = require('../utils/smsVerify');
-
-const WeixinPay = require('../core/weixinPay');
-const CommonUtil = require('../utils/CommonUtil');
-
 const MemberController = {
     login: async function(ctx) {
         let { mobile, password } = ctx.request.body;
@@ -307,11 +292,11 @@ const MemberController = {
             respond.json(ctx, false, '密码不符合要求,请输入6～12位密码');
             return false;
         }
-        if (vMobile !== mobile) {
+        if (vMobile != mobile) {
             respond.json(ctx, false, '号码与已验证手机号码不匹配');
             return false;
         }
-        if (vCode !== verifyCode) {
+        if (vCode != verifyCode) {
             respond.json(ctx, false, '短信验证码错误，请重试');
             return false;
         }
@@ -323,7 +308,8 @@ const MemberController = {
                     password: password,
                     phone: mobile,
                     isAgent: '0',
-                    isPay: '0'
+                    isPay: '0',
+                    payCode: 'normalmember'
                 };
                 if (ctx.session.openid) {
                     agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'');
@@ -334,11 +320,10 @@ const MemberController = {
                 const member = await Member.create(agentData, { transaction: t });
 
                 //记录会员关系，三级为普通会员
-                let level = 3;
                 const memberRe = await MemberRelation.create({
-                    fxLevel: level,
+                    fxLevel: 9999,
                     pid: 'top',
-                    cid: member.id,
+                    cid: member.id
                 }, { transaction: t });
 
                 // 创建用户余额账户
@@ -346,7 +331,8 @@ const MemberController = {
 
                 return member;
             });
-            smsVerify.destory(ctx);
+            ctx.session.memberId = memberData.id;
+            // smsVerify.destory(ctx);
             respond.json(ctx, true, '注册成功', { id: memberData.id });
         } catch (e) {
             respond.json(ctx, false, '注册失败', null, e);
@@ -382,11 +368,6 @@ const MemberController = {
         }
     },
 
-    /**
-     * 通过mobile判断手机号是否已被注册
-     * @Author   KuangGuanghu
-     * @DateTime 2017-07-23
-     */
     mobileExist: async function(mobile) {
         const members = await Member.findAll({
             attributes: ['id'],
@@ -409,11 +390,6 @@ const MemberController = {
         return members.length > 0;
     },
 
-    /**
-     * 通过memberId判断用户是否存在
-     * @Author   KuangGuanghu
-     * @DateTime 2017-07-23
-     */
     memberExist: async function(memberId) {
         const members = await Member.findAll({
             attributes: ['id'],
@@ -474,8 +450,13 @@ const MemberController = {
             respond.json(ctx, false, '获取客户失败，用户尚未登录', { code: 203 });
             return false;
         }
+        var {pageIndex,pageSize} = ctx.request.body;
+        pageIndex = pageIndex ? pageIndex : 0;
+        pageSize = pageSize ? pageSize : 20;
+        pageIndex = parseInt(pageIndex, 10);
+        pageSize = parseInt(pageSize, 10);
         try {
-            var customers = await MemberRelationController.getCustomerByMemberId(memberId);
+            var customers = await MemberRelationController.getCustomersByMemberId(memberId,pageIndex,pageSize);
             respond.json(ctx, true, '获取客户成功', { code: 200, data: customers });
         } catch (e) {
             respond.json(ctx, false, '获取客户失败', null, e);
@@ -484,15 +465,11 @@ const MemberController = {
 
     obtainDataById: async function(id) {
         try {
-            var result = await Member.findOne({
+            return await Member.findOne({
                 where: {
                     id
                 }
             });
-            if (!result) {
-                return null;
-            }
-            return result;
         } catch (e) {
             return e;
         }
@@ -526,7 +503,6 @@ const MemberController = {
             respond.json(ctx, false, '提现金额有误，单笔提现需在1至20000元之间');   
             return;
         }
-
         try{
             //查询用户是否存在
             var member = Member.findOne({
@@ -579,6 +555,19 @@ const MemberController = {
             respond.json(ctx, false, '服务器内部错误',null,e);   
         }
     }
-}
-
+};
 module.exports = MemberController;
+
+const Member = require('../models/Member');
+const Consignee = require('../models/Consignee');
+const MemberRelation = require('../models/MemberRelation');
+const MemberRelationController = require('./MemberRelationController');
+const MemberBalanceController = require('./MemberBalanceController');
+const MemberTransactionController = require('./MemberTransactionController');
+const ConsigneeController = require('./ConsigneeController');
+const OrderController = require('./OrderController');
+const crypto = require('../utils/crypto');
+const respond = require('../utils/respond');
+const smsVerify = require('../utils/smsVerify');
+const WeixinPay = require('../core/weixinPay');
+const CommonUtil = require('../utils/CommonUtil');

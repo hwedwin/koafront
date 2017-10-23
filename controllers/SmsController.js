@@ -1,7 +1,3 @@
-const smsVerify = require('../utils/smsVerify')
-const MemberController = require('./MemberController')
-const respond = require('../utils/respond')
-
 const SmsController = {
 	register: async function(ctx) {
 		const {mobile} = ctx.request.body
@@ -11,7 +7,7 @@ const SmsController = {
 		}else{
 			try{
 				// let code = await smsVerify.register(ctx,mobile)
-				smsVerify.verifyCode = 2222;
+				smsVerify.verifyCode = '2222';
 				smsVerify.mobile = mobile;
 				smsVerify.set(ctx);
 				respond.json(ctx,true,'验证码发送成功');
@@ -34,6 +30,9 @@ const SmsController = {
 			}
 		}
 	}
-}
+};
+module.exports = SmsController;
 
-module.exports = SmsController
+const smsVerify = require('../utils/smsVerify');
+const MemberController = require('./MemberController');
+const respond = require('../utils/respond');

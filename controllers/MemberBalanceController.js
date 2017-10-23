@@ -1,6 +1,3 @@
-const respond = require('../utils/respond')
-const MemberBalance = require('../models/MemberBalance')
-
 const MemberBalanceController = {
     /**
      * 创建账户，并初始化余额为0
@@ -76,6 +73,8 @@ const MemberBalanceController = {
             respond.json(ctx,false,'获取余额失败',null,e);
         }
     }
-}
+};
+module.exports = MemberBalanceController;
 
-module.exports = MemberBalanceController
+const respond = require('../utils/respond');
+const MemberBalance = require('../models/MemberBalance');

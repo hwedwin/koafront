@@ -3,7 +3,7 @@ import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
 import {Toast} from 'antd-mobile';
 import CommonNavbar from '../../components/CommonNavbar/Index.jsx';
-
+import ButtonLoadMore from '../../components/ButtonLoadMore/Index.jsx';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
@@ -15,12 +15,12 @@ class BanlanceDetail extends Component {
 			pageIndex: 0,
 			pageSize: 20,
 			items: [],
-			title: '收支明细'
+			title: '收支明细',
+			displayLoadMore: false
 		}
 	}
 
 	componentWillMount() {
-		Toast.loading('加载中...',0);
 		this._request();
 	}
 
@@ -38,6 +38,7 @@ class BanlanceDetail extends Component {
 	}
 
 	_request() {
+		Toast.loading('加载中...',0);
 		var queryData = {};
 		var type = Util.getSearch(this.props.location.search,'type');
 		if (type) {
@@ -48,13 +49,16 @@ class BanlanceDetail extends Component {
 				});
 			}
 		}
+		queryData.pageIndex = this.state.pageIndex;
+		queryData.pageSize = this.state.pageSize;
 		return Ajax.post({url: Config.API.TRANS_ITEMS,data:queryData})
 		.then((res) => {
 			Toast.hide();
 			if (res.status === 200) {
 				if (res.data.code === 200) {
 					this.setState({
-						items: res.data.data
+						items: this.state.items.concat(res.data.data.rows),
+						displayLoadMore: (this.state.pageSize * (this.state.pageIndex+1) < res.data.data.count)
 					});
 				}
 			}else{
@@ -62,6 +66,14 @@ class BanlanceDetail extends Component {
 			}
 		}).catch(function(error){
 			console.log(error);
+		});
+	}
+
+	handleLoadMore() {
+		this.setState({
+			pageIndex: ++this.state.pageIndex
+		},() => {
+			this._request();
 		});
 	}
 
@@ -90,6 +102,10 @@ class BanlanceDetail extends Component {
 						)
 					}
 				</div>
+				<ButtonLoadMore 
+					display={this.state.displayLoadMore}
+					onClick={this.handleLoadMore.bind(this)}
+				/>
 			</div>
 		)
 	}

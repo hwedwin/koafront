@@ -1,12 +1,10 @@
-const ConsigneeForOrder = require('../models/ConsigneeForOrder')
-
 const ConsigneeForOrderController = {
 	create: async function(option,t) {
 		// orderId,consigneeName,consigneeMobile,expressTimeType,province,city,county,address
 		try{
-			await ConsigneeForOrder.create(option, {transaction: t});
+			return await ConsigneeForOrder.create(option, {transaction: t});
 		} catch(e){
-			throw new Error(e);
+			return e;
 		}
 	},
 
@@ -23,5 +21,6 @@ const ConsigneeForOrderController = {
 		}
 	}
 }
-
 module.exports = ConsigneeForOrderController;
+
+const ConsigneeForOrder = require('../models/ConsigneeForOrder');

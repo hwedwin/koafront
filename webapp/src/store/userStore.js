@@ -6,7 +6,6 @@ import {createStore} from 'redux';
 //行为类型
 const INIT_MEMBER = 'INIT_MEMBER';
 const LOGIN_OUT = 'LOGIN_OUT';
-const INIT_PARAM_AGENT = 'INIT_PARAM_AGENT';
 
 //reducer
 function reducer(state,action) {
@@ -32,11 +31,6 @@ function reducer(state,action) {
 				...state,
 				loginStatus: false
 			};
-		case INIT_PARAM_AGENT: 
-			return {
-				...state,
-				paramAgentId: action.paramAgentId
-			};
 		default: 
 			return state;
 	}
@@ -51,8 +45,4 @@ export const initMember = (member) => {
 
 export const loginOut = () => {
 	return {type: LOGIN_OUT};
-}
-
-export const initParamAgentId = (agentId) => {
-	return {type: INIT_PARAM_AGENT,agentId};
 }

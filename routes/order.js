@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-const OrderController = require('../controllers/OrderController')
+const OrderController = require('../controllers/OrderController');
 
 router.post('/api/order/create',OrderController.create)
 		.post('/api/order/list',OrderController.list)
@@ -11,6 +11,6 @@ router.post('/api/order/create',OrderController.create)
 		.post('/api/order/bpay',OrderController.payByBalance)
 		.post('/api/order/paynotify',OrderController.payNotify)
 
-module.exports = router
+module.exports = router;
 
 

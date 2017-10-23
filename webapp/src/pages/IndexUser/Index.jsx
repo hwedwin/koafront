@@ -1,19 +1,19 @@
-import './index.css'
-import React,{Component} from 'react'
-import {Link} from 'react-router-dom'
-import BlockTitle from '../../components/BlockTitle/Index.jsx'
-import {Badge,Grid,Icon,Toast} from 'antd-mobile'
-import IndexFillBottom from '../../components/IndexFillBottom/Index.jsx'
+import './index.css';
+import React,{Component} from 'react';
+import {Link} from 'react-router-dom';
+import BlockTitle from '../../components/BlockTitle/Index.jsx';
+import {Badge,Grid,Icon,Toast} from 'antd-mobile';
+import IndexFillBottom from '../../components/IndexFillBottom/Index.jsx';
 
-import svgWallet from '../../assets/svg/wallet.svg'
-import svgPackage from '../../assets/svg/package.svg'
-import svgChat from '../../assets/svg/chat3.svg'
-import svgClipboard from '../../assets/svg/clipboard2.svg'
-import svgHeart from '../../assets/svg/heart.svg'
-import svgMap from '../../assets/svg/map-marker.svg'
-import svgUsers from '../../assets/svg/users.svg'
-import svgCog from '../../assets/svg/cogWhite.svg'
-import svgCountRoom from '../../assets/svg/count-room.svg'
+import svgWallet from '../../assets/svg/wallet.svg';
+import svgPackage from '../../assets/svg/package.svg';
+import svgChat from '../../assets/svg/chat3.svg';
+import svgClipboard from '../../assets/svg/clipboard2.svg';
+import svgHeart from '../../assets/svg/heart.svg';
+import svgMap from '../../assets/svg/map-marker.svg';
+import svgUsers from '../../assets/svg/users.svg';
+import svgCog from '../../assets/svg/cogWhite.svg';
+import svgCountRoom from '../../assets/svg/count-room.svg';
 
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
@@ -43,7 +43,7 @@ const BanlanceBox = props => {
 		<div className="m-banlance-box">
 			<a onClick={()=>props.onBalanceClick()}>
 				<div className="u-banlance">{props.expenseAll}</div>
-				<div className="u-title">累计收益</div>
+				<div className="u-title">账户余额</div>
 			</a>
 		</div>
 	)
@@ -53,15 +53,15 @@ const EarningBox = props => {
 	return (
 		<div className="m-earning-box">
 			<div className="m-earning-item">
-				<div className="u-num">{props.expenseToday}</div>
-				<div className="u-title">今日收益</div>
+				<div className="u-num">{props.profit.sale}</div>
+				<div className="u-title">累计收益</div>
 			</div>
 			<div className="m-earning-item">
-				<div className="u-num">{props.orderToday}</div>
-				<div className="u-title">今日订单</div>
+				<div className="u-num">{props.profit.commission}</div>
+				<div className="u-title">累计佣金</div>
 			</div>
 			<div className="m-earning-item">
-				<div className="u-num">{props.orderAll}</div>
+				<div className="u-num">{props.profit.order}</div>
 				<div className="u-title">累计订单</div>
 			</div>
 		</div>
@@ -136,7 +136,10 @@ const MineBox = props => {
 			text: '账房',
 			tagId: 'myCountRoom'
 		},
-	]
+	];
+	if (!props.isPaidAgent) {
+		data.splice(2,1);
+	}
 	return (
 		<div className="mine-box">
 			<ListFour data={data} {...props}/>
@@ -157,7 +160,8 @@ class IndexUser extends Component {
 			expenseToday: 0,
 			orderAll: 0,
 			orderToday: 0,
-			isPaidAgent: false
+			isPaidAgent: false,
+			profit: {}
 		}
 	}
 
@@ -170,10 +174,28 @@ class IndexUser extends Component {
 		var p2 = this._getMemberData();
 		var p3 = this._getExpense();
 		var p4 = this._getOrder();
-		Promise.all([p1,p2,p3,p4]).then(function() {
+		var p5 = this._getTransProfit();
+		Promise.all([p1,p2,p3,p4,p5]).then(function() {
 			Toast.hide();
 		}).catch(function() {
 
+		});
+	}
+
+	_getTransProfit() {
+		return Ajax.post({url: Config.API.TRANS_PROFIT})
+		.then((res) => {
+			if (res.status === 200) {
+				if (res.data.code === 200) {
+					this.setState({
+						profit: res.data.data
+					});
+				}
+			}else{
+				Toast.info(res.message);
+			}
+		}).catch(function(error){
+			console.log(error);
 		});
 	}
 
@@ -183,7 +205,7 @@ class IndexUser extends Component {
 			if (res.status === 200) {
 				if (res.data.code === 200) {
 					this.setState({
-						countWaitPay: res.data.data.count
+						profit: res.data.data
 					});
 				}
 			}else{
@@ -279,11 +301,15 @@ class IndexUser extends Component {
 	}
 
 	handlePortraitClick() {
-		// this.props.history.push('/login')
+		if (Object.keys(this.state.member).length > 0) {
+			this.props.history.push('/uedit');
+		}else{
+			this.props.history.push('/login');
+		}
 	}
 
 	handleOrderItemClick(item) {
-		this.props.history.push('/order/'+item.tagId)
+		this.props.history.push('/order/'+item.tagId);
 	}
 
 	handleMineItemClick(item) {
@@ -314,9 +340,7 @@ class IndexUser extends Component {
 					this.state.isPaidAgent 
 					&& 
 					(<EarningBox 
-						expenseToday={this.state.expenseToday}
-						orderAll={this.state.orderAll}
-						orderToday={this.state.orderToday}
+						profit={this.state.profit}
 					/>)
 				}
 				<BlockTitle title="订单管理"/>
@@ -325,7 +349,10 @@ class IndexUser extends Component {
 					onItemClick={this.handleOrderItemClick}
 				/>
 				<BlockTitle title="我的"/>
-				<MineBox onItemClick={this.handleMineItemClick}/>
+				<MineBox 
+					onItemClick={this.handleMineItemClick}
+					isPaidAgent={this.state.isPaidAgent}
+				/>
 				<IndexFillBottom />
 			</div>
 		)

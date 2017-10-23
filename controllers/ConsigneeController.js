@@ -1,9 +1,6 @@
 /**
  * consigneeName,consigneeMobile,province,city,county,address
  */
-const Consignee = require('../models/Consignee');
-const respond = require('../utils/respond');
-
 const ConsigneeController = {
 	create: async function(option,t) {
 		var transaction0 = {};
@@ -24,8 +21,9 @@ const ConsigneeController = {
 			return false;
 		}
 		var {consigneeName,consigneeMobile,province,city,county,address,isDefault} = ctx.request.body;
+		county = county ? county : ' ';
 		if (!consigneeName||!consigneeMobile||!province||!city||!county||!address) {
-            respond.json(ctx, false, '注册失败，请详细填写收货人信息');
+            respond.json(ctx, false, '新增收获地址失败，请详细填写收货人信息');
             return false;
         }
 		if (!isDefault) {
@@ -130,5 +128,7 @@ const ConsigneeController = {
 		}
 	},
 }
-
 module.exports = ConsigneeController;
+
+const Consignee = require('../models/Consignee');
+const respond = require('../utils/respond');

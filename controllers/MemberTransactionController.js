@@ -12,9 +12,6 @@
  * @Author   KuangGuanghu
  * @DateTime 2017-08-17
  */
-const respond = require('../utils/respond')
-const MemberTransaction = require('../models/MemberTransaction')
-
 const MemberTransactionController = {
     create: async function(memberId,money,type,orderId,cId,t) {
         var transactionO = {};
@@ -139,16 +136,13 @@ const MemberTransactionController = {
         pageIndex = parseInt(pageIndex, 10);
         pageSize = parseInt(pageSize, 10);
         var query = {
-            memberId,
-            // type: {
-            //     $notIn: ['4','6']
-            // }
+            memberId
         };
         if (type && ['1','2','3','4','5','6','7'].indexOf(type) > -1) {
             query.type = type;
         }
         try{
-            var result = await MemberTransaction.findAll({
+            var result = await MemberTransaction.findAndCountAll({
                 offset: pageIndex * pageSize,
                 limit: pageSize,
                 where: query,
@@ -182,7 +176,45 @@ const MemberTransactionController = {
         }catch(e){
             respond.json(ctx,false,'服务器内部错误',null,e);  
         }
-    }
-}
+    },
 
-module.exports = MemberTransactionController
+    getProfit: async function(ctx) {
+        var memberId = ctx.session.memberId;
+        if (!memberId) {
+            respond.json(ctx,false,'获取用户余额明细失败，用户尚未登录',{code: 203});
+            return false;
+        }
+        try{
+            var countOrder = await MemberTransaction.count({
+               where: {
+                    memberId,
+                    type: '2'
+                } 
+            });
+            // 销售所得
+            var saleProfit = await MemberTransaction.sum('money',{
+                where: {
+                    memberId,
+                    type: '2'
+                }
+            });
+            var commissionProfit = await MemberTransaction.sum('money',{
+                where: {
+                    memberId,
+                    type: '3'
+                }
+            });
+            respond.json(ctx,true,'获取用户收益成功',{code: 200,data: {
+                order: countOrder || 0,
+                sale: saleProfit || 0,
+                commission: commissionProfit || 0
+            }});  
+        }catch(e){
+            respond.json(ctx,false,'服务器内部错误',null,e);  
+        }
+    },
+};
+module.exports = MemberTransactionController;
+
+const respond = require('../utils/respond');
+const MemberTransaction = require('../models/MemberTransaction');

@@ -1,11 +1,3 @@
-const Sequelize = require('sequelize');
-const ShopCart = require('../models/ShopCart');
-const Drink = require('../models/Drink');
-const DrinkController = require('../controllers/DrinkController');
-const MemberController = require('../controllers/MemberController');
-const respond = require('../utils/respond');
-const IndexTopSpecialController = require('./IndexTopSpecialController');
-
 const ShopCartController = {
     /**
      * 通过用户memberId获取其购物车中的商品
@@ -21,7 +13,7 @@ const ShopCartController = {
         try {
             var queryStr = "select shopCart.id as `cartId`,shopCart.nums as `cartNum`,drink.* from "
             queryStr += "`shopCarts` AS shopCart,`drinks` AS drink "
-            queryStr += "where shopCart.drinkId=drink.id and shopCart.memberId='" + memberId + "'";
+            queryStr += "where shopCart.drinkId=drink.id and shopCart.memberId='" + memberId + "' ORDER BY shopCart.createdAt DESC";
             var result = await sequelize.query(queryStr, { type: sequelize.QueryTypes.SELECT });
             for (var i = 0; i < result.length; i++) {
                 await (async function(item){
@@ -172,5 +164,12 @@ const ShopCartController = {
         return carts.length > 0;
     }
 }
-
 module.exports = ShopCartController;
+
+const Sequelize = require('sequelize');
+const ShopCart = require('../models/ShopCart');
+const Drink = require('../models/Drink');
+const DrinkController = require('../controllers/DrinkController');
+const MemberController = require('../controllers/MemberController');
+const respond = require('../utils/respond');
+const IndexTopSpecialController = require('./IndexTopSpecialController');

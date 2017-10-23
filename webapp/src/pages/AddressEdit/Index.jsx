@@ -60,6 +60,14 @@ class AddressEdit extends Component {
 	_saveAddress() {
 		Toast.loading('保存中...',0);
 		var areas = window.document.getElementById('area').value.split(',');
+		if (!Util.isMobile(this.state.mobile)) {
+			Toast.info('电话号码有误');
+			return;
+		}
+		if (this.state.name === '' || this.state.address === '' || areas.length ===0) {
+			Toast.info('请填写详细收货信息');
+			return;
+		}
 		var requestData = {
 			consigneeName: this.state.name,
 			consigneeMobile: this.state.mobile,
@@ -175,7 +183,7 @@ class AddressEdit extends Component {
 					        	checked={this.state.isDefault}
 					        	/>}
 					      >
-					      	设为默认默认地址
+					      	设为默认地址
 					     </List.Item>
 					</List>
 				</div>

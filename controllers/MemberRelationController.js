@@ -1,7 +1,3 @@
-const respond = require('../utils/respond')
-const MemberRelation = require('../models/MemberRelation')
-const Member = require('../models/Member')
-
 const MemberRelationController = {
     create: async function(level,agentId,memberId,t) {
     	var transactionO = {};
@@ -53,12 +49,14 @@ const MemberRelationController = {
         }
     },
 
-    getCustomerByMemberId: async function(memberId) {
+    getCustomersByMemberId: async function(memberId,pageIndex,pageSize) {
         try{
-            var result = await MemberRelation.findAll({
+            var result = await MemberRelation.findAndCountAll({
                 where: {
                     pid: memberId
                 },
+                offset: pageIndex * pageSize,
+                limit: pageSize,
                 include: [
                     {
                         model: Member,
@@ -71,6 +69,9 @@ const MemberRelationController = {
             return e;
         }   
     }
-}
+};
+module.exports = MemberRelationController;
 
-module.exports = MemberRelationController
+const respond = require('../utils/respond');
+const MemberRelation = require('../models/MemberRelation');
+const Member = require('../models/Member');

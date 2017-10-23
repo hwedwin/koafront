@@ -1,8 +1,3 @@
-const Drink = require('../models/Drink');
-const DrinkImage = require('../models/DrinkImage');
-const DrinkBrand = require('../models/DrinkBrand');
-const IndexTopSpecialController = require('./IndexTopSpecialController');
-const respond = require('../utils/respond');
 const DrinkController = {
     /**
      * 生成排序组合
@@ -46,6 +41,28 @@ const DrinkController = {
             return result;
         } catch (e) {
             throw new Error(e);
+        }
+    },
+
+    increaseSaleCountById: async function(id,count,t) {
+        var transactionO = {};
+        if (t) {
+            transactionO.transaction = t;
+        }
+        count = parseInt(count, 10);
+        if (isNaN(count)) {
+            count = 0;
+        }
+        try{
+            var result = await Drink.increment(['saleCount'],{
+                by: count,
+                where: {
+                    id
+                }
+            },transactionO);
+            return result;
+        } catch(e) {
+            return e;
         }
     },
 
@@ -155,7 +172,7 @@ const DrinkController = {
         pageSize = parseInt(pageSize, 10);
         try {
             let orderQuery = DrinkController.createOrderQuery(orderTag, orderRule);
-            var result = await Drink.findAll({
+            var result = await Drink.findAndCountAll({
                 // attributes: [],
                 offset: pageIndex * pageSize,
                 limit: pageSize,
@@ -193,7 +210,7 @@ const DrinkController = {
         pageSize = parseInt(pageSize, 10);
         try {
             let orderQuery = DrinkController.createOrderQuery(orderTag, orderRule);
-            var result = await Drink.findAll({
+            var result = await Drink.findAndCountAll({
                 // attributes: [],
                 offset: pageIndex * pageSize,
                 limit: pageSize,
@@ -230,7 +247,7 @@ const DrinkController = {
 
         try {
             let orderQuery = DrinkController.createOrderQuery(orderTag, orderRule);
-            var result = await Drink.findAll({
+            var result = await Drink.findAndCountAll({
                 // attributes: [],
                 offset: pageIndex * pageSize,
                 limit: pageSize,
@@ -279,5 +296,9 @@ const DrinkController = {
         return drinks.length > 0;
     }
 }
-
 module.exports = DrinkController;
+const Drink = require('../models/Drink');
+const DrinkImage = require('../models/DrinkImage');
+const DrinkBrand = require('../models/DrinkBrand');
+const IndexTopSpecialController = require('./IndexTopSpecialController');
+const respond = require('../utils/respond');

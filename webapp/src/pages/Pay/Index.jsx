@@ -167,7 +167,7 @@ class Pay extends Component {
 		        <PayTip
 					display={this.state.paySuccess}
 					text="支付成功"
-					money={this.state.balance}
+					money={this.state.balance+''}
 					displayButton={true}
 					onCloseClick={this.handlePayTipClose.bind(this)}
 					onDetailClick={this.handlePayTipDetail.bind(this)}

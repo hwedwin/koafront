@@ -1,5 +1,3 @@
-const IndexTopAdv = require('../models/IndexTopAdv')
-const respond = require('../utils/respond')
 const IndexTopAdvController = {
     list: async function(ctx) {
         try {
@@ -15,6 +13,8 @@ const IndexTopAdvController = {
             respond.json(ctx, false, '获取成功', null, e);
         }
     }
-}
-
+};
 module.exports = IndexTopAdvController;
+
+const IndexTopAdv = require('../models/IndexTopAdv');
+const respond = require('../utils/respond');

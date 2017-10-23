@@ -43,7 +43,12 @@ class RegisterAgent extends Component {
 		KGArea.init('#area');
 	}
 
+	componentWillUnmount() {
+		window.clearInterval(this.timer);
+	}
+
 	_handleShareUrl() {
+		var self = this;
 		Ajax.post({url: Config.API.MEMBER_DATA})
 			.then((res) => {
 				if (res.status === 200) {
@@ -56,7 +61,7 @@ class RegisterAgent extends Component {
 					this._requestWXJsConfig({nickname: '我'});
 				}
 			}).catch(function(error){
-				this._requestWXJsConfig({nickname: '我'});
+				self._requestWXJsConfig({nickname: '我'});
 			});
 	}
 

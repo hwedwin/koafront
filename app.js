@@ -80,6 +80,7 @@ app.use(require('./routes/favorite').routes());
 app.use(require('./routes/consignee').routes());
 app.use(require('./routes/trans').routes());
 app.use(require('./routes/balance').routes());
+app.use(require('./routes/express').routes());
 
 //设置静态文件目录
 app.use(koaStatic(path.join(__dirname,'/webapp/build')));

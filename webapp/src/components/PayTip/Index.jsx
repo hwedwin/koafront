@@ -8,7 +8,7 @@ class PayTip extends Component {
 	static propTypes = {
 		display: PropTypes.bool,
 		text: PropTypes.string,
-		money: PropTypes.number,
+		money: PropTypes.string,
 		displayButton: PropTypes.bool,
 		onCloseClick: PropTypes.func,
 		onDetailClick: PropTypes.func,

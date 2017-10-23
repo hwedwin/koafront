@@ -71,3 +71,7 @@
 	overflow: scroll;
 	color: #909090;
 }
+
+.u-order-list .u-item:last-child{
+	border-bottom: none;
+}

@@ -27,6 +27,15 @@ const AccountBar = (props) => {
 	)
 }
 
+const DeleteBar = (props) => {
+	return (
+		<div className="m-account-bar">
+			<span className="u-all"></span>
+			<button className="u-btn-account" onClick={()=>{props.onDeleteClick()}}>删除</button>
+		</div>
+	)
+}
+
 class GoodsItem extends Component {
 
 	constructor(props) {
@@ -125,7 +134,8 @@ class IndexCart extends Component {
 			isNotLogin: true,
 			cart: {
 
-			}
+			},
+			isEdit: false
 		}
 	}
 
@@ -246,12 +256,60 @@ class IndexCart extends Component {
 		this.props.history.push('/ordercreate/?goods='+goods);
 	}
 
+	handleEditButtonClick() {
+		this.setState({
+			isEdit: !this.state.isEdit
+		},() => {
+			if (this.state.isEdit) {
+				this.setState({
+					selectAll: false
+				});
+			}else{
+				this.setState({
+					selectAll: true
+				});
+			}
+		});
+	}
+
+	handleRemoveCartClick() {
+		const cart = this.state.cart;
+		const goods = this.state.goods;
+		for(let name in cart){
+			if (cart[name].num !== 0) {
+				Ajax.post({url: Config.API.CART_DEL,data: {id: name}})
+				.then((res) => {
+					if (res.status == 200) {
+						delete cart[name];
+						for (var i = 0; i < goods.length; i++) {
+							if(goods[i].cartId == name){
+								goods.splice(i,1);
+							}
+						}
+						this.setState({
+							cart,
+							goods
+						});
+					}
+				}).catch(function(error){
+					console.log(error);
+				});
+			}
+		}
+	}
+
 	render() {
+		var rightText = '编辑';
+		if (this.state.isEdit) {
+			rightText = '取消';
+		}
+		var rightContent = [<span key="1" onClick={this.handleEditButtonClick.bind(this)}>{rightText}</span>];
 		return (
 			<div>
 				<CommonNavbar 
 					showLeftIcon={false}
 					centerText="购物车"
+					rightContent={rightContent}
 				/>
 				<div className="m-cart-container">
 					<SelectAllBar onSelectIconClick={this.handleSelectAllClick} selectAll={this.state.selectAll}/>
@@ -274,11 +332,18 @@ class IndexCart extends Component {
 												<Link to="/login">用户尚未登录</Link>
 											</div>) : null
 				}
-				<AccountBar 
-					totalMoney={this.state.totalMoney}
-					totalGoods={this.state.totalGoods}
-					onAccountClick={this.handleAccountButtonClick.bind(this)}
-				/>
+				{
+					this.state.isEdit?
+					<DeleteBar
+						onDeleteClick={this.handleRemoveCartClick.bind(this)}
+					/>:
+					<AccountBar 
+						totalMoney={this.state.totalMoney}
+						totalGoods={this.state.totalGoods}
+						onAccountClick={this.handleAccountButtonClick.bind(this)}
+					/>
+				}
+				
 				<IndexFillBottom height={2}/>
 			</div>
 		)

@@ -1,6 +1,5 @@
 const router = require('koa-router')();
-const MemberController = require('../controllers/MemberController')
-
+const MemberController = require('../controllers/MemberController');
 router.post('/api/member/regagent',MemberController.registerAgent)
 		.post('/api/member/login',MemberController.login)
 		.post('/api/member/logout',MemberController.logout)
@@ -13,6 +12,6 @@ router.post('/api/member/regagent',MemberController.registerAgent)
 		.post('/api/member/databyid',MemberController.getDataById)
 		.post('/api/member/withdraw',MemberController.withdraw)
 
-module.exports = router
+module.exports = router;
 
 

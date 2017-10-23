@@ -3,8 +3,8 @@ import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
 import {Icon,Toast} from 'antd-mobile';
 import CommonNavbar from '../../components/CommonNavbar/Index.jsx';
+import ButtonLoadMore from '../../components/ButtonLoadMore/Index.jsx';
 import svgEdit from '../../assets/svg/edit.svg';
-
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
@@ -31,12 +31,11 @@ class Customer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			customers: []
+			customers: [],
+			pageIndex: 0,
+			pageSize: 20,
+			displayLoadMore: false
 		}
-	}
-
-	componentWillMount() {
-		Toast.loading('加载中...',0);
 	}
 
 	componentDidMount() {
@@ -44,18 +43,31 @@ class Customer extends Component {
 	}
 
 	requestCustomer() {
-		Ajax.post({url: Config.API.MEMBER_CUSTOMER})
+		Toast.loading('加载中...',0);
+		Ajax.post({url: Config.API.MEMBER_CUSTOMER,data:{
+			pageSize: this.state.pageSize,
+			pageIndex: this.state.pageIndex
+		}})
 		.then((res) => {
 			Toast.hide();
 			if (res.status === 200 && res.data.code === 200) {
 				this.setState({
-					customers: res.data.data
+					customers: this.state.customers.concat(res.data.data.rows),
+					displayLoadMore: (this.state.pageSize * (this.state.pageIndex+1) < res.data.data.count)
 				});
 			}else{
 				Toast.info(res.message);
 			}
 		}).catch(function(error){
 			console.log(error);
+		});
+	}
+
+	handleLoadMore() {
+		this.setState({
+			pageIndex: ++this.state.pageIndex
+		},() => {
+			this._request();
 		});
 	}
 
@@ -74,6 +86,10 @@ class Customer extends Component {
 						)
 					}
 				</div>
+				<ButtonLoadMore 
+					display={this.state.displayLoadMore}
+					onClick={this.handleLoadMore.bind(this)}
+				/>
 			</div>
 		)
 	}
