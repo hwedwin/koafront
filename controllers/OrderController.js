@@ -310,18 +310,18 @@ const OrderController = {
             // 创建一笔消费者购买交易
             var t1;
             if (paidCode == 'balance') {//余额购买支出
-                t1 = await MemberTransactionController.expenseByPurchaseBanlance(memberId, -totalPrice, orderId,agentId,t);
+                t1 = await MemberTransactionController.expenseByPurchaseBanlance(memberId, -totalPrice, orderId,agentId);
             }else{
                 console.log(1)
-                t1 = await MemberTransactionController.expenseByPurchase(memberId, -totalPrice, orderId,agentId,t);
+                t1 = await MemberTransactionController.expenseByPurchase(memberId, -totalPrice, orderId,agentId);
                 console.log(2)
             }
             console.log(3)
             // 商城创建一笔收入记录
-            var t2 = await MemberTransactionController.incomeBySale('top', totalPrice, orderId,memberId,t);
+            var t2 = await MemberTransactionController.incomeBySale('top', totalPrice, orderId,memberId);
             console.log(4)
             // 将消费者付的钱记录到商城账户
-            var t3 = await MemberBalanceController.changeBanlance('top', totalPrice, t);
+            var t3 = await MemberBalanceController.changeBanlance('top', totalPrice);
             console.log(5)
 
             var commission = 0; //佣金,给一级经销商的返利（在二级经销商购买，一级获得返利。在一级经销商购买，无佣金）
@@ -347,14 +347,14 @@ const OrderController = {
             console.log(9)
             // 二级经销商交易记录与余额更新
             console.log(10)
-            await MemberTransactionController.incomeBySale(agentId, agentProfit, orderId,memberId,t);
+            await MemberTransactionController.incomeBySale(agentId, agentProfit, orderId,memberId);
             console.log(11)
-            await MemberBalanceController.changeBanlance(agentId, agentProfit, t);
+            await MemberBalanceController.changeBanlance(agentId, agentProfit);
             console.log(12)
             // 一级经销商获取佣金
             if (agentIdTop && agentIdTop != 'top' && !agentId instanceof Error) {
-                await MemberTransactionController.incomeByCommission(agentId, agentProfit, orderId,memberId,t);
-                await MemberBalanceController.changeBanlance(agentId, commission, t);
+                await MemberTransactionController.incomeByCommission(agentId, agentProfit, orderId,memberId);
+                await MemberBalanceController.changeBanlance(agentId, commission);
             }
         } catch (e) {
 
