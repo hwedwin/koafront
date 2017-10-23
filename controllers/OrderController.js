@@ -200,8 +200,17 @@ const OrderController = {
             var wxpay = new WeixinPay();
             var wxOrder = await wxpay.createWCPayOrder({
                 openid: ctx.session.openid,
-                body: '购买商品',
-                detail: '购买商品',
+                body: orderDetail.payInfo || '购买商品',
+                detail: orderDetail.payInfo || '购买商品',
+                out_trade_no: orderDetail.code, //内部订单号
+                total_fee: 1,
+                spbill_create_ip: ctx.ip,
+                notify_url: 'http://baebae.cn/api/order/paynotify'
+            });
+            console.log({
+                openid: ctx.session.openid,
+                body: orderDetail.payInfo || '购买商品',
+                detail: orderDetail.payInfo || '购买商品',
                 out_trade_no: orderDetail.code, //内部订单号
                 total_fee: 1,
                 spbill_create_ip: ctx.ip,
