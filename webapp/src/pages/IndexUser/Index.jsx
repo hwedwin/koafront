@@ -96,6 +96,7 @@ const MyOrderBox = props => {
 		{
 			icon: svgPackage,
 			text: '待收货',
+			badge: props.countWaitSign,
 			tagId: 'waitReceive'
 		},
 		{
@@ -155,6 +156,7 @@ class IndexUser extends Component {
 		this.handleMineItemClick = this.handleMineItemClick.bind(this);
 		this.state = {
 			countWaitPay: 0,
+			countWaitSign: 0,
 			member: {},
 			expenseAll: 0,
 			expenseToday: 0,
@@ -175,7 +177,7 @@ class IndexUser extends Component {
 		var p3 = this._getExpense();
 		var p4 = this._getOrder();
 		var p5 = this._getTransProfit();
-		Promise.all([p1,p2,p3,p4,p5]).then(function() {
+		Promise.all([p2,p3,p4,p5].concat(p1)).then(function() {
 			Toast.hide();
 		}).catch(function() {
 
@@ -200,12 +202,12 @@ class IndexUser extends Component {
 	}
 
 	_getOrderCount() {
-		return Ajax.post({url: Config.API.ORDER_COUNT,data: {state: 1}})
+		var t1 =  Ajax.post({url: Config.API.ORDER_COUNT,data: {state: 1}})
 		.then((res) => {
 			if (res.status === 200) {
 				if (res.data.code === 200) {
 					this.setState({
-						profit: res.data.data
+						countWaitPay: res.data.data.count
 					});
 				}
 			}else{
@@ -214,6 +216,22 @@ class IndexUser extends Component {
 		}).catch(function(error){
 			console.log(error);
 		});
+
+		var t2 = Ajax.post({url: Config.API.ORDER_COUNT,data: {state: 3}})
+		.then((res) => {
+			if (res.status === 200) {
+				if (res.data.code === 200) {
+					this.setState({
+						countWaitSign: res.data.data.count
+					});
+				}
+			}else{
+				Toast.info(res.message);
+			}
+		}).catch(function(error){
+			console.log(error);
+		});
+		return [t1,t2];
 	}
 
 	_getMemberData() {
@@ -346,6 +364,7 @@ class IndexUser extends Component {
 				<BlockTitle title="订单管理"/>
 				<MyOrderBox 
 					countWaitPay={this.state.countWaitPay}
+					countWaitSign={this.state.countWaitSign}
 					onItemClick={this.handleOrderItemClick}
 				/>
 				<BlockTitle title="我的"/>

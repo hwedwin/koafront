@@ -303,9 +303,7 @@ const OrderController = {
                     code: code    
                 }
             });
-            console.log(order);
             if (!order) {
-                console.log('return')
                 return;
             }
 
@@ -313,54 +311,35 @@ const OrderController = {
             var agentId = order.agentId;//代理人ID
             var memberId = order.memberId;//用户ID
             var orderId = order.id;//订单ID
-            console.log('totalPrice:'+totalPrice)
-            console.log('agentId:'+agentId)
-            console.log('memberId:'+memberId)
-            console.log('orderId:'+orderId)
             // 创建一笔消费者购买交易
             var t1;
             if (paidCode == 'balance') {//余额购买支出
                 t1 = await MemberTransactionController.expenseByPurchaseBanlance(memberId, -totalPrice, orderId,agentId);
             }else{
-                console.log(1)
                 t1 = await MemberTransactionController.expenseByPurchase(memberId, -totalPrice, orderId,agentId);
-                console.log(2)
             }
-            console.log(3)
             // 商城创建一笔收入记录
             var t2 = await MemberTransactionController.incomeBySale('top', totalPrice, orderId,memberId);
-            console.log(4)
             // 将消费者付的钱记录到商城账户
             var t3 = await MemberBalanceController.changeBanlance('top', totalPrice);
-            console.log(5)
 
             var commission = 0; //佣金,给一级经销商的返利（在二级经销商购买，一级获得返利。在一级经销商购买，无佣金）
             var agentProfit = 0; //代理商获取的利润，
-            console.log(6)
             var drinkOrders = await DrinkForOrderController.getByOrderId(orderId,true);
-            console.log(7)
-            console.log(drinkOrders)
             for (var i = 0; i < drinkOrders.length; i++) {
                 var drinkOrder = drinkOrders[i];
                 var drink = drinkOrder.drink;
                 commission = drink.commission * drinkOrder.nums;
                 agentProfit = (drink.retailPrice - drink.supplyPrice)  * drinkOrder.nums;
             }
-            console.log('commission:'+commission);
-            console.log('agentProfit:'+agentProfit);
             if (agentId == 'top') {
                 return;
             }
-            console.log(8)
             // 获取agentId的上一级获取佣金
             var agentIdTop = await MemberRelationController.getPidByCid(agentId);
-            console.log(9)
             // 二级经销商交易记录与余额更新
-            console.log(10)
             await MemberTransactionController.incomeBySale(agentId, agentProfit, orderId,memberId);
-            console.log(11)
             await MemberBalanceController.changeBanlance(agentId, agentProfit);
-            console.log(12)
             // 一级经销商获取佣金
             if (agentIdTop && agentIdTop != 'top' && !agentId instanceof Error) {
                 await MemberTransactionController.incomeByCommission(agentId, agentProfit, orderId,memberId);
