@@ -37,14 +37,14 @@ const MemberTransactionController = {
     },
 
     // 通过销售获得收入
-    incomeBySale: async function(memberId,income,orderId,memberId,t) {
-        var result = await MemberTransactionController.create(memberId,income,2,orderId,memberId,t);
+    incomeBySale: async function(memberId,income,orderId,agentId,t) {
+        var result = await MemberTransactionController.create(memberId,income,2,orderId,agentId,t);
         return result;
     },
 
     // 通过佣金获得收入
-    incomeByCommission: async function(memberId,income,orderId,memberId,t) {
-        var result = await MemberTransactionController.create(memberId,income,3,orderId,memberId,t);
+    incomeByCommission: async function(memberId,income,orderId,agentId,t) {
+        var result = await MemberTransactionController.create(memberId,income,3,orderId,agentId,t);
         return result;
     },
 
