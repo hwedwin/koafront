@@ -27,8 +27,8 @@ global.sequelize = sequelize;
 app.use(logger());
 
 //log file
-const accessLogStream = fs.createWriteStream(__dirname + '/log/access.log',{ flags: 'a' });
-app.use(morgan('combined', { stream: accessLogStream }));
+// const accessLogStream = fs.createWriteStream(__dirname + '/log/access.log',{ flags: 'a' });
+// app.use(morgan('combined', { stream: accessLogStream }));
 
 // 跨域
 app.use(cors({
