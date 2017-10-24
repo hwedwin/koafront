@@ -276,7 +276,6 @@ class RegisterAgent extends Component {
 				Toast.hide();
 				if (res.status === 200) {
 					Util.wxPay(res.data,function(state){
-						Toast.hide();
 						if (state) {
 							self.handleSuccess();
 						}else{
@@ -286,8 +285,10 @@ class RegisterAgent extends Component {
 				}else{
 					Toast.info(res.message);
 				}
-			}).catch(function(error){
+			},function(error){
+				Toast.hide();
 				console.log(error);
+			}).catch(function(error){
 			});
 	}
 

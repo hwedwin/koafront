@@ -62,13 +62,14 @@ class Pay extends Component {
 			if (res.status === 200) {
 				if (res.data.code === 200) {
 					this.setState({
-						banlance: res.data.data.balance
+						balance: res.data.data.balance
 					});
 				}
 			}else{
 				Toast.info(res.message);
 			}
 		}).catch(function(error){
+			Toast.hide();
 			console.log(error);
 		});
 	}

@@ -196,6 +196,9 @@ class IndexUser extends Component {
 			}else{
 				Toast.info(res.message);
 			}
+		},function(error){
+				Toast.hide();
+				console.log(error);
 		}).catch(function(error){
 			console.log(error);
 		});
@@ -213,6 +216,9 @@ class IndexUser extends Component {
 			}else{
 				Toast.info(res.message);
 			}
+		},function(error){
+				Toast.hide();
+				console.log(error);
 		}).catch(function(error){
 			console.log(error);
 		});
@@ -228,6 +234,9 @@ class IndexUser extends Component {
 			}else{
 				Toast.info(res.message);
 			}
+		},function(error){
+				Toast.hide();
+				console.log(error);
 		}).catch(function(error){
 			console.log(error);
 		});
@@ -248,6 +257,9 @@ class IndexUser extends Component {
 			}else{
 				Toast.info(res.message);
 			}
+		},function(error){
+			Toast.hide();
+			console.log(error);
 		}).catch(function(error){
 			console.log(error);
 		});
@@ -265,6 +277,9 @@ class IndexUser extends Component {
 			}else{
 				Toast.info(res.message);
 			}
+		},function(error){
+				Toast.hide();
+				console.log(error);
 		}).catch(function(error){
 			console.log(error);
 		});
@@ -279,7 +294,10 @@ class IndexUser extends Component {
 			}else{
 				Toast.info(res.message);
 			}
-		}).catch(function(error){
+		},function(error){
+				Toast.hide();
+				console.log(error);
+			}).catch(function(error){
 			console.log(error);
 		});
 
@@ -298,7 +316,10 @@ class IndexUser extends Component {
 			}else{
 				Toast.info(res.message);
 			}
-		}).catch(function(error){
+		},function(error){
+				Toast.hide();
+				console.log(error);
+			}).catch(function(error){
 			console.log(error);
 		});
 		var p2 = Ajax.post({url: Config.API.TRANS_SUM_ORDER,data: {date: Util.formatDate('yyyy-MM-dd')}})
@@ -312,7 +333,10 @@ class IndexUser extends Component {
 			}else{
 				Toast.info(res.message);
 			}
-		}).catch(function(error){
+		},function(error){
+				Toast.hide();
+				console.log(error);
+			}).catch(function(error){
 			console.log(error);
 		});
 		return [p1,p2];
