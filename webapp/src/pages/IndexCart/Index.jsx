@@ -257,6 +257,9 @@ class IndexCart extends Component {
 	}
 
 	handleEditButtonClick() {
+		if (this.state.goods.length === 0) {
+			return;
+		}
 		this.setState({
 			isEdit: !this.state.isEdit
 		},() => {

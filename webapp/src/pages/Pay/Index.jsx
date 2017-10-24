@@ -50,6 +50,8 @@ class Pay extends Component {
 			}else{
 				Toast.info(res.message);
 			}
+		},function(){
+			Toast.info('请求超时，请重试');
 		}).catch(function(error){
 			console.log(error);
 		});
@@ -82,8 +84,8 @@ class Pay extends Component {
 
 	handlePay() {
 		Toast.loading('支付中...',0);
+		var self = this;
 		if (this.state.type == 0) {//微信支付
-			var self = this;
 			Ajax.post({url: Config.API.ORDER_WEIXIN_PAY,data: {id: this.state.id}})
 			.then((res) => {
 				Toast.hide();
@@ -99,6 +101,8 @@ class Pay extends Component {
 				}else{
 					Toast.info(res.message);
 				}
+			},function(){
+				Toast.info('请求超时，请重试');
 			}).catch(function(error){
 				console.log(error);
 			});
@@ -115,6 +119,8 @@ class Pay extends Component {
 				}else{
 					Toast.info('支付失败，请重试');
 				}
+			},function(){
+				Toast.info('请求超时，请重试');
 			}).catch(function(error){
 				console.log(error);
 			});

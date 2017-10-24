@@ -71,6 +71,8 @@ class IndexHome extends Component {
 
 		Promise.all([a1,a2,a3]).then(function(){
 			Toast.hide();
+		},function(){
+			Toast.info('请求超时');
 		}).catch(function(){});
 	}
 

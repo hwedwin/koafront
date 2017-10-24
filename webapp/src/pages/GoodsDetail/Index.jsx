@@ -155,6 +155,8 @@ class GoodsDetail extends Component {
 		var a3 = this._getShopcarCount();
 		Promise.all([a1,a2,a3]).then(function(){
 			Toast.hide();
+		},function(){
+			Toast.info('请求超时，请重试');
 		}).catch(function(){
 
 		});
@@ -171,7 +173,9 @@ class GoodsDetail extends Component {
 			}else{
 				// Toast.info(data.message);
 			}
-		}).catch(function(error){
+		},function(){
+				Toast.info('请求超时，请重试');
+			}).catch(function(error){
 			console.log(error);
 		});
 	}
@@ -202,6 +206,8 @@ class GoodsDetail extends Component {
 						},1000);
 					}
 				}
+			},function(){
+				Toast.info('请求超时，请重试');
 			}).catch(function(error){
 				console.log(error);
 			});
@@ -234,6 +240,8 @@ class GoodsDetail extends Component {
 			.then((data) => {
 				Toast.info(data.message);
 				this._getShopcarCount();
+			},function(){
+				Toast.info('请求超时，请重试');
 			}).catch(function(error){
 				console.log(error);
 			});

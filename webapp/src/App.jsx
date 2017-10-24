@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import userStore from './store/userStore';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import Bundle from './pages/Bundle.jsx';
 
 import Index from './pages/Index.jsx';
 import Register from './pages/Register/Index.jsx';
@@ -27,6 +28,7 @@ import Withdraw from './pages/Withdraw/Index.jsx';
 
 import Ajax from './utils/Ajax';
 import Util from './utils/Util';
+import wxUtil from './utils/wxUtil';
 import Config from './config/Config';
 import { connect } from 'react-redux';
 import { initMember } from './store/userStore';
@@ -45,6 +47,7 @@ class AppWrapper extends Component {
         var aid = Util.getSearch(window.location.search, 'aid');
         this._initParamAgentId(aid); //检查地址带的agentId参数
         this._initSelfAgentIdTimer(aid);
+        this._initWxShare();
     }
 
     _initParamAgentId(aid) {
@@ -102,6 +105,21 @@ class AppWrapper extends Component {
             });
     }
 
+    _initWxShare() {
+        Ajax.post({url: Config.API.WXJS_SIGN,data:{url: window.escape(window.location.href)}})
+                .then((res) => {
+                    if (res.status === 200) {
+                        var title = '麦智商城';
+                        var link = window.location.origin;
+                        var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
+                        var desc = '来麦智商城，享受高性价比糖酒食品';
+                        wxUtil.share(res.data,title,link,logo,desc);
+                    }
+                }).catch(function(error){
+                    console.log(error);
+                });
+    }
+
     render() {
         return ( <div className = "App" > { this.props.children } </div>);
     }
@@ -120,6 +138,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 var AppWrapper2 = connect(mapStateToProps, mapDispatchToProps)(AppWrapper);
+
 
 class App extends Component {
     render() {

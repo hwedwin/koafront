@@ -132,6 +132,8 @@ class Order extends Component {
 				}else{
 					Toast.info(res.message);
 				}
+			},function(){
+				Toast.info('请求超时，请重试');
 			}).catch(function(error){
 				console.log(error);
 			});
@@ -154,7 +156,6 @@ class Order extends Component {
 
 	requestReceiveOrder(id) {
 		Toast.loading('签收中...',0);
-		// 获取全部订单
 		Ajax.post({url: Config.API.ORDER_SIGN,data: {id: id}})
 			.then((data) => {
 				Toast.info(data.message);
@@ -164,6 +165,8 @@ class Order extends Component {
 					});
 				}else{
 				}
+			},function(){
+				Toast.info('请求超时，请重试');
 			}).catch(function(error){
 				console.log(error);
 			});
@@ -217,6 +220,8 @@ class Order extends Component {
 			}else{
 				Toast.info(res.message);
 			}
+		},function(){
+				Toast.info('请求超时，请重试');
 		}).catch(function(error){
 			console.log(error);
 		});	
@@ -235,6 +240,8 @@ class Order extends Component {
 					this.handleTabClick(this.state.defaultActiveKey);
 				}else{
 				}
+			},function(){
+				Toast.info('请求超时，请重试');
 			}).catch(function(error){
 				console.log(error);
 			});
