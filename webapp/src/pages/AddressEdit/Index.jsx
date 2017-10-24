@@ -5,10 +5,10 @@ import {Icon,List,InputItem,Switch,Toast,Button,WingBlank} from 'antd-mobile';
 import CommonNavbar from '../../components/CommonNavbar/Index.jsx';
 import svgEdit from '../../assets/svg/edit.svg';
 import KGArea from '../../components/KGArea/Index.jsx';
-
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
+import Wrapper from '../Wrapper.jsx';
 
 class AddressEdit extends Component {
 	constructor(props) {
@@ -195,4 +195,4 @@ class AddressEdit extends Component {
 	}
 }
 
-export default AddressEdit;
+export default Wrapper(AddressEdit);

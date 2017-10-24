@@ -14,6 +14,7 @@ import svgCart from '../../assets/svg/cart.svg'
 import svgHeart from '../../assets/svg/heart.svg'
 import svgHeartRed from '../../assets/svg/heartRed.svg'
 import {connect} from 'react-redux';
+import Wrapper from '../Wrapper.jsx';
 
 const BottomBar = props => (
 	<div className="m-bottom-bar">
@@ -338,4 +339,4 @@ const mapStateToProps = (state) => {
     member: state.member
   }
 };
-export default connect(mapStateToProps)(GoodsDetail);
+export default connect(mapStateToProps)(Wrapper(GoodsDetail));

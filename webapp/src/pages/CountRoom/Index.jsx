@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import svgTransRecord from '../../assets/svg/trans-record.svg'
 import svgWithdraw from '../../assets/svg/withdraw.svg'
 import svgWithdrawRecord from '../../assets/svg/withdraw-record.svg'
+import Wrapper from '../Wrapper.jsx';
 
 const MineBox = props => {
 	const data = [
@@ -114,4 +115,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(CountRoom);
+export default connect(mapStateToProps)(Wrapper(CountRoom));

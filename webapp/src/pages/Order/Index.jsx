@@ -8,6 +8,7 @@ import ButtonLoadMore from '../../components/ButtonLoadMore/Index.jsx';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
+import Wrapper from '../Wrapper.jsx';
 
 
 function getCount(props) {
@@ -331,4 +332,4 @@ class Order extends Component {
 	}
 }
 
-export default Order
+export default Wrapper(Order);

@@ -5,6 +5,7 @@ import {List,InputItem,Toast,Button} from 'antd-mobile';
 import Ajax from '../../utils/Ajax';
 import Util from '../../utils/Util';
 import Config from '../../config/Config';
+import Wrapper from '../Wrapper.jsx';
 
 class Register extends Component {
 
@@ -184,4 +185,4 @@ class Register extends Component {
 	}
 }
 
-export default Register
+export default Wrapper(Register);

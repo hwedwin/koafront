@@ -7,6 +7,7 @@ import PayTip from '../../components/PayTip/Index.jsx';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
+import Wrapper from '../Wrapper.jsx';
 
 const RadioItem = Radio.RadioItem;
 
@@ -185,4 +186,4 @@ class Pay extends Component {
 	}
 }
 
-export default Pay;
+export default Wrapper(Pay);

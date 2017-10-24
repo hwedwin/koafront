@@ -5,6 +5,7 @@ import {Toast,Grid,Icon} from 'antd-mobile';
 import Ajax from '../../utils/Ajax';
 import Util from '../../utils/Util';
 import Config from '../../config/Config';
+import Wrapper from '../Wrapper.jsx';
 
 class TransDetail extends Component{
 
@@ -84,4 +85,4 @@ class TransDetail extends Component{
 	}
 }
 
-export default TransDetail;
+export default Wrapper(TransDetail);

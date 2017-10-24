@@ -9,6 +9,7 @@ import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
 import defaultPortrait from '../../assets/images/portrait.png';
+import Wrapper from '../Wrapper.jsx';
 
 var CustomerItem = (props) => {
 	return (
@@ -95,4 +96,4 @@ class Customer extends Component {
 	}
 }
 
-export default Customer;
+export default Wrapper(Customer);

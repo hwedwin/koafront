@@ -7,8 +7,8 @@ import {Toast} from 'antd-mobile';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
-
 import {connect} from 'react-redux';
+import Wrapper from '../Wrapper.jsx';
 
 class SearchResult extends Component {
 
@@ -169,4 +169,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(SearchResult);
+export default connect(mapStateToProps)(Wrapper(SearchResult));

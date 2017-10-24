@@ -4,6 +4,7 @@ import {Grid,Toast} from 'antd-mobile'
 import './index.css'
 import Ajax from '../../utils/Ajax'
 import Config from '../../config/Config'
+import Wrapper from '../Wrapper.jsx';
 
 class IndexList extends Component {
 
@@ -148,4 +149,4 @@ class IndexList extends Component {
 	}
 }
 
-export default IndexList
+export default Wrapper(IndexList);

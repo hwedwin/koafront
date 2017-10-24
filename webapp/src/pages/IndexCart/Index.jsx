@@ -8,6 +8,7 @@ import PMOperatorButton from '../../components/PMOperatorButton/Index.jsx'
 import Ajax from '../../utils/Ajax'
 import Config from '../../config/Config'
 import {connect} from 'react-redux';
+import Wrapper from '../Wrapper.jsx';
 
 const SelectAllBar = (props) => {
 	const type = props.selectAll ? "check-circle" : "check-circle-o";
@@ -361,4 +362,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(IndexCart);
+export default connect(mapStateToProps)(Wrapper(IndexCart));

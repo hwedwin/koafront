@@ -7,6 +7,7 @@ import ButtonLoadMore from '../../components/ButtonLoadMore/Index.jsx';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
+import Wrapper from '../Wrapper.jsx';
 
 class BanlanceDetail extends Component {
 	constructor(props) {
@@ -111,4 +112,4 @@ class BanlanceDetail extends Component {
 	}
 }
 
-export default BanlanceDetail;
+export default Wrapper(BanlanceDetail);

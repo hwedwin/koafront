@@ -9,6 +9,7 @@ import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
 import {connect} from 'react-redux';
+import Wrapper from '../Wrapper.jsx';
 
 const GoodsItemB = (props) => (
 	<div className="m-goods-item-b">
@@ -264,4 +265,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(OrderCreate);
+export default connect(mapStateToProps)(Wrapper(OrderCreate));

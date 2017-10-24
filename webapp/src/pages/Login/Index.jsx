@@ -8,6 +8,7 @@ import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 
 import {initMember} from '../../store/userStore';
+import Wrapper from '../Wrapper.jsx';
 
 class Login extends Component {
 
@@ -112,4 +113,4 @@ const mapDispatchToProps = (dispatch) => {
 	}
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Login);
+export default connect(mapStateToProps,mapDispatchToProps)(Wrapper(Login));

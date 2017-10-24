@@ -7,6 +7,7 @@ import {Toast} from 'antd-mobile';
 import Ajax from '../../utils/Ajax'
 import Config from '../../config/Config'
 import {connect} from 'react-redux';
+import Wrapper from '../Wrapper.jsx';
 
 class Favorite extends Component {
 
@@ -90,4 +91,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Favorite);
+export default connect(mapStateToProps)(Wrapper(Favorite));

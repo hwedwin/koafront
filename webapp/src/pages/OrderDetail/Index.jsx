@@ -8,6 +8,7 @@ import svgMapMarker from '../../assets/svg/map-marker.svg';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
+import Wrapper from '../Wrapper.jsx';
 
 
 class OrderDetail extends Component {
@@ -163,4 +164,4 @@ class OrderDetail extends Component {
 	}
 }
 
-export default OrderDetail;
+export default Wrapper(OrderDetail);

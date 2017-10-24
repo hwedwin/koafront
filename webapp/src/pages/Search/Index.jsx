@@ -3,6 +3,7 @@ import React,{Component} from 'react'
 import {Link} from 'react-router-dom'
 import {Toast,SearchBar,Tag} from 'antd-mobile'
 import BlockTitle from '../../components/BlockTitle/Index.jsx'
+import Wrapper from '../Wrapper.jsx';
 
 class Search extends Component {
 
@@ -105,4 +106,4 @@ class Search extends Component {
 	}
 }
 
-export default Search
+export default Wrapper(Search);

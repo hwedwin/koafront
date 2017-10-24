@@ -4,10 +4,10 @@ import {Link} from 'react-router-dom';
 import {Icon,Toast} from 'antd-mobile';
 import CommonNavbar from '../../components/CommonNavbar/Index.jsx';
 import svgEdit from '../../assets/svg/edit.svg';
-
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
+import Wrapper from '../Wrapper.jsx';
 
 class Address extends Component {
 	constructor(props) {
@@ -91,4 +91,4 @@ class Address extends Component {
 	}
 }
 
-export default Address;
+export default Wrapper(Address);

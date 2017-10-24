@@ -8,6 +8,7 @@ import CommonNavbar from '../../components/CommonNavbar/Index.jsx';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import Util from '../../utils/Util';
+import Wrapper from '../Wrapper.jsx';
 
 const Item = List.Item;
 
@@ -162,4 +163,4 @@ class UserEdit extends Component {
 	}
 }
 
-export default UserEdit;
+export default Wrapper(UserEdit);

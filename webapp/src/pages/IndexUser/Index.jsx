@@ -20,6 +20,7 @@ import Config from '../../config/Config';
 import Util from '../../utils/Util';
 
 import defaultPortrait from '../../assets/images/portrait.png';
+import Wrapper from '../Wrapper.jsx';
 
 
 const PortraitBox = (props) => {
@@ -402,4 +403,4 @@ class IndexUser extends Component {
 	}
 }
 
-export default IndexUser
+export default Wrapper(IndexUser);

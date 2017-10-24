@@ -10,6 +10,7 @@ import IndexEverydayTab from '../../components/IndexEverydayTab/Index.jsx';
 import IndexGridGoods from '../../components/IndexGridGoods/Index.jsx';
 import IndexFillBottom from '../../components/IndexFillBottom/Index.jsx';
 import {connect} from 'react-redux';
+import Wrapper from '../Wrapper.jsx';
 
 class IndexHome extends Component {
 
@@ -120,4 +121,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(IndexHome);
+export default connect(mapStateToProps)(Wrapper(IndexHome));

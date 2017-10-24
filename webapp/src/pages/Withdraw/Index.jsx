@@ -5,6 +5,7 @@ import {Toast} from 'antd-mobile';
 import Ajax from '../../utils/Ajax';
 import Config from '../../config/Config';
 import PayTip from '../../components/PayTip/Index.jsx';
+import Wrapper from '../Wrapper.jsx';
 
 class Withdraw extends Component {
 
@@ -124,4 +125,4 @@ class Withdraw extends Component {
 	}
 }
 
-export default Withdraw;
+export default Wrapper(Withdraw);
