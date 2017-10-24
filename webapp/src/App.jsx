@@ -66,7 +66,7 @@ class AppWrapper extends Component {
 
     _initSelfAgentIdTimer(aid) {
         this.beatTimer = setInterval(() => {
-            // this._initSelfAgentId(aid);
+            this._initSelfAgentId(aid);
         }, 3000);
         this._initSelfAgentId(aid);
     }
