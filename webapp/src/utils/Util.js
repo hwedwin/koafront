@@ -80,6 +80,10 @@ const Util = {
                 }
             }
         );
+    },
+
+    wxShare: function() {
+        
     }
 }
 

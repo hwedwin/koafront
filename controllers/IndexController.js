@@ -11,6 +11,7 @@ const IndexController = {
         var member = await MemberController.loginByOpenid(ctx.session.openid);
         if (member) {
             ctx.session.memberId = member.id;
+            console.log('memberid:'+member.id);
         }
         console.log('opneid:'+ctx.session.openid);
         console.log('ticket:'+ctx.session.wxticket);
