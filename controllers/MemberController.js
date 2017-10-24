@@ -40,7 +40,7 @@ const MemberController = {
                 }
             });
             if (member) {
-                ctx.member.memberId = member.id;
+                ctx.session.memberId = member.id;
             }
             return member;
         } catch (e) {
