@@ -31,7 +31,7 @@ const MemberController = {
         }
     },
 
-    loginByOpenid: async function(openid) {
+    loginByOpenid: async function(ctx,openid) {
         //查询
         try {
             let member = await Member.findOne({
@@ -44,7 +44,7 @@ const MemberController = {
             }
             return member;
         } catch (e) {
-            return null;
+            return e;
         }
     },
 

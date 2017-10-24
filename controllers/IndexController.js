@@ -8,7 +8,7 @@ const IndexController = {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index'+aid+'#wechat_redirect');
             return;
         }
-        var member = await MemberController.loginByOpenid(ctx.session.openid);
+        var member = await MemberController.loginByOpenid(ctx,ctx.session.openid);
         console.log('memberId:'+ctx.session.memberId);
         console.log('opneid:'+ctx.session.openid);
         console.log('ticket:'+ctx.session.wxticket);
@@ -23,7 +23,7 @@ const IndexController = {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent'+aid+'#wechat_redirect');
             return;
         }
-        var member = await MemberController.loginByOpenid(ctx.session.openid);
+        var member = await MemberController.loginByOpenid(ctx,ctx.session.openid);
         console.log('memberId:'+ctx.session.memberId);
         console.log('opneid:'+ctx.session.openid);
         console.log('ticket:'+ctx.session.wxticket);
