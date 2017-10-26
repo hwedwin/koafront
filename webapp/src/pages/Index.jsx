@@ -7,12 +7,22 @@ import IndexHome from './IndexHome/Index.jsx';
 import IndexList from './IndexList/Index.jsx';
 import IndexUser from './IndexUser/Index.jsx';
 import IndexCart from './IndexCart/Index.jsx';
+import wxUtil from '../utils/wxUtil';
+import Ajax from '../utils/Ajax';
+import Util from '../utils/Util';
+import Config from '../config/Config';
 
 class Index extends Component{
 
 	constructor(props) {
 		super(props)
 		this.onTabBarClick = this.onTabBarClick.bind(this)
+	}
+
+	componentDidMount() {
+        if (!Util.isAndroid()) {
+            this._initWxShare();
+        }
 	}
 
 	onTabBarClick(page) {
@@ -28,6 +38,21 @@ class Index extends Component{
 		}
 		this.props.history.replace(this.props.match.url+line+page)
 	}
+
+	_initWxShare() {
+        Ajax.post({url: Config.API.WXJS_SIGN,data:{url: window.escape(window.location.href)}})
+                .then((res) => {
+                    if (res.status === 200) {
+                        var title = '麦智商城';
+                        var link = window.location.origin;
+                        var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
+                        var desc = '来麦智商城，享受高性价比糖酒食品';
+                        wxUtil.share(res.data,title,link,logo,desc);
+                    }
+                }).catch(function(error){
+                    console.log(error);
+                });
+    }
 
 	render() {
 		const {match} = this.props;
