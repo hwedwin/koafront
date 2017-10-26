@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import userStore from './store/userStore';
-import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
-// import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+// import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import Bundle from './pages/Bundle.jsx';
 import {Toast} from 'antd-mobile';
 
@@ -51,7 +51,7 @@ class AppWrapper extends Component {
         window.localStorage.setItem('agentId','top');
         var aid = Util.getSearch(window.location.search, 'aid');
         this._initParamAgentId(aid); //检查地址带的agentId参数
-        this._initWxShare();
+        // this._initWxShare();
     }
 
     _initParamAgentId(aid) {
