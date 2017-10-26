@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import userStore from './store/userStore';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
+// import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import Bundle from './pages/Bundle.jsx';
+import {Toast} from 'antd-mobile';
 
 import Index from './pages/Index.jsx';
 import Register from './pages/Register/Index.jsx';
@@ -28,6 +30,7 @@ import Withdraw from './pages/Withdraw/Index.jsx';
 
 import Ajax from './utils/Ajax';
 import Util from './utils/Util';
+import wxUtil from './utils/wxUtil';
 import Config from './config/Config';
 import { connect } from 'react-redux';
 import { initMember } from './store/userStore';
@@ -36,6 +39,9 @@ class AppWrapper extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            isChecked: false
+        };
     }
 
     componentWillMount() {
@@ -45,7 +51,7 @@ class AppWrapper extends Component {
         window.localStorage.setItem('agentId','top');
         var aid = Util.getSearch(window.location.search, 'aid');
         this._initParamAgentId(aid); //检查地址带的agentId参数
-        this._initSelfAgentIdTimer(aid);
+        this._initWxShare();
     }
 
     _initParamAgentId(aid) {
@@ -55,20 +61,24 @@ class AppWrapper extends Component {
                 .then((res) => {
                     if (res.status === 200 && res.data.code === 200) {
                         var mData = res.data.data;
-                        if (mData.isAgent == '1' && mData.isPay == '1') {
+                        if (mData && mData.isAgent == '1' && mData.isPay == '1') {
                             window.localStorage.setItem('agentId',mData.id);
                             window.document.title = (mData.nickname||'')+'的麦智商城';
-                            return;
+                        }else{
+                             window.localStorage.setItem('agentId','top');
                         }
                     }
+                    this._initSelfAgentIdTimer(aid);
                 }).catch(function(error) {});
+        }else{
+            this._initSelfAgentIdTimer(aid);
         }
     }
 
     _initSelfAgentIdTimer(aid) {
         this.beatTimer = setInterval(() => {
             this._initSelfAgentId(aid);
-        }, 3000);
+        }, 5000);
         this._initSelfAgentId(aid);
     }
 
@@ -79,14 +89,16 @@ class AppWrapper extends Component {
                 if (res.status === 200 && res.data.code === 200) {
                     var mData = res.data.data;
                     self.props.onInitMember(mData);
-
                     if (mData.isAgent == '1' && mData.isPay == '1') {
-                        if (aid != null && mData.id != aid) { //地址带了agentId
+                        if (aid != null && mData.id != aid && !this.state.isChecked) { //地址带了agentId
+                            this.setState({
+                                isChecked: true
+                            });
                             if (window.confirm('尊敬的经销商，您目前为止处于他人店铺中，无法享受到返利，是否为您切换至您的店铺中?')) {
                                 // 切换店铺
                                 window.localStorage.setItem('agentId',mData.id);
                                 window.document.title = (mData.nickname||'')+'的麦智商城';
-                                window.alert('已切换');
+                                Toast.info('已切换至您的店铺');
                                 return;
                             }
                         }else {
@@ -101,6 +113,21 @@ class AppWrapper extends Component {
             }).catch(function(error) {
                 console.log(error);
             });
+    }
+
+    _initWxShare() {
+        Ajax.post({url: Config.API.WXJS_SIGN,data:{url: window.escape(window.location.href)}})
+                .then((res) => {
+                    if (res.status === 200) {
+                        var title = '麦智商城';
+                        var link = window.location.origin;
+                        var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
+                        var desc = '来麦智商城，享受高性价比糖酒食品';
+                        wxUtil.share(res.data,title,link,logo,desc);
+                    }
+                }).catch(function(error){
+                    console.log(error);
+                });
     }
 
     render() {

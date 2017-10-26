@@ -12,7 +12,7 @@ export default (WrappedComponent) => {
     }
 
     componentWillMount () {
-    	this._initWxShare();
+    	// this._initWxShare();
     }
 
     _initWxShare() {
