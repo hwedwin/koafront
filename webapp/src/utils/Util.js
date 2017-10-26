@@ -80,6 +80,11 @@ const Util = {
                 }
             }
         );
+    },
+
+    isAndroid: function() {
+        var u = window.navigator.userAgent;
+        return u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
     }
 }
 
