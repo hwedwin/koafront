@@ -48,6 +48,7 @@ class AppWrapper extends Component {
         if (window.location.pathname === '/regagent') {
             return;
         }
+        alert('index:::::');
         window.localStorage.setItem('agentId','top');
         var aid = Util.getSearch(window.location.search, 'aid');
         this._initParamAgentId(aid); //检查地址带的agentId参数
@@ -67,6 +68,8 @@ class AppWrapper extends Component {
                              window.localStorage.setItem('agentId','top');
                         }
                     }
+                    this._initSelfAgentIdTimer(aid);
+                },()=>{
                     this._initSelfAgentIdTimer(aid);
                 }).catch(function(error) {});
         }else{
@@ -93,7 +96,7 @@ class AppWrapper extends Component {
                             this.setState({
                                 isChecked: true
                             });
-                            if (window.confirm('尊敬的经销商，您目前为止处于他人店铺中，无法享受到返利，是否为您切换至您的店铺中?')) {
+                            if (window.confirm('尊敬的经销商，您目前处于其他经销商店铺中，无法享受到返利，是否切换至您的店铺?')) {
                                 // 切换店铺
                                 window.localStorage.setItem('agentId',mData.id);
                                 window.document.title = (mData.nickname||'')+'的麦智商城';
@@ -101,6 +104,7 @@ class AppWrapper extends Component {
                                 return;
                             }
                         }else {
+                            window.document.title = (mData.nickname||'')+'的麦智商城';
                             window.localStorage.setItem('agentId',mData.id);
                         }
                     } else if (mData.isAgent == '1' && mData.isPay == '0') {

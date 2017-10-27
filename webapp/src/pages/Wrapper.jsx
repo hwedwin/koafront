@@ -21,12 +21,12 @@ export default (WrappedComponent) => {
     }
 
     _initWxShare() {
-      // window.escape(window.location.href)'http://www.baebae.cn/'
+      // window.escape(window.location.href)'http://www.baebae.cn/'window.location.origin
         Ajax.post({url: Config.API.WXJS_SIGN,data:{url: escape(window.localStorage.getItem('firstUrl'))}})
                 .then((res) => {
                     if (res.status === 200) {
                         var title = '麦智商城';
-                        var link = window.location.origin;
+                        var link = 'http://www.baebae.cn/?aid='+window.localStorage.getItem('agentId');
                         var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
                         var desc = '来麦智商城，享受高性价比糖酒食品';
                         wxUtil.share(res.data,title,link,logo,desc);
