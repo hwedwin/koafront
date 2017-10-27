@@ -44,7 +44,7 @@ class Index extends Component{
                 .then((res) => {
                     if (res.status === 200) {
                         var title = window.localStorage.getItem('nickname')+'麦智商城';
-                        var link = window.location.origin;
+                        var link = 'http://www.baebae.cn/?aid='+window.localStorage.getItem('agentId');
                         var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
                         var desc = '来麦智商城，享受高性价比糖酒食品';
                         wxUtil.share(res.data,title,link,logo,desc);
