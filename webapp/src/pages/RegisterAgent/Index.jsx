@@ -350,6 +350,12 @@ class RegisterAgent extends Component {
 				>
 					注册
 				</Button>
+				<Button 
+					onClick={()=>this.props.history.replace('/')}
+					style={{borderRadius: 0,marginTop: '.6rem'}}
+				>
+					GO
+				</Button>
 				<div className="u-share-tip">点击右上角菜单分享此页面来发展你的客户</div>
 				<ProtoRegister 
 					display={this.state.displayProto}

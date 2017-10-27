@@ -88,6 +88,7 @@ class AppWrapper extends Component {
         var self = this;
         Ajax.post({ url: Config.API.BEAT })
             .then((res) => {
+                console.log(res);
                 if (res.status === 200 && res.data.code === 200) {
                     var mData = res.data.data;
                     self.props.onInitMember(mData);
