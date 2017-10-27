@@ -16,7 +16,7 @@ export default (WrappedComponent) => {
 
     componentDidMount() {
       if (Util.isAndroid()) {
-          
+          this._initWxShare();
       }
     }
 

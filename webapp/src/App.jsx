@@ -48,7 +48,6 @@ class AppWrapper extends Component {
         if (window.location.pathname === '/regagent') {
             return;
         }
-        alert('index:::::');
         window.localStorage.setItem('agentId','top');
         var aid = Util.getSearch(window.location.search, 'aid');
         this._initParamAgentId(aid); //检查地址带的agentId参数
