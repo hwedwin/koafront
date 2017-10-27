@@ -11,9 +11,6 @@ export default (WrappedComponent) => {
       this.state = { data: null }
     }
 
-    componentWillMount () {
-    }
-
     componentDidMount() {
       if (Util.isAndroid()) {
           this._initWxShare();
@@ -31,7 +28,7 @@ export default (WrappedComponent) => {
         Ajax.post({url: Config.API.WXJS_SIGN,data:{url: _url}})
                 .then((res) => {
                     if (res.status === 200) {
-                        var title = '麦智商城';
+                        var title = window.localStorage.getItem('nickname')+'的麦智商城';
                         var link = 'http://www.baebae.cn/?aid='+window.localStorage.getItem('agentId');
                         var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
                         var desc = '来麦智商城，享受高性价比糖酒食品';

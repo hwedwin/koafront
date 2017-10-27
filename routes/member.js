@@ -11,6 +11,7 @@ router.post('/api/member/regagent',MemberController.registerAgent)
 		.post('/api/member/paynotify',MemberController.payNotify)
 		.post('/api/member/databyid',MemberController.getDataById)
 		.post('/api/member/withdraw',MemberController.withdraw)
+		.post('/api/member/resumepay',MemberController.resumeAgentPay)
 
 module.exports = router;
 

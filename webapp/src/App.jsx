@@ -62,7 +62,8 @@ class AppWrapper extends Component {
                         var mData = res.data.data;
                         if (mData && mData.isAgent == '1' && mData.isPay == '1') {
                             window.localStorage.setItem('agentId',mData.id);
-                            window.document.title = (mData.nickname||'')+'的麦智商城';
+                            window.localStorage.setItem('nickname',mData.nickname||'我');
+                            window.document.title = (mData.nickname||'我')+'的麦智商城';
                         }else{
                              window.localStorage.setItem('agentId','top');
                         }
@@ -98,16 +99,37 @@ class AppWrapper extends Component {
                             if (window.confirm('尊敬的经销商，您目前处于其他经销商店铺中，无法享受到返利，是否切换至您的店铺?')) {
                                 // 切换店铺
                                 window.localStorage.setItem('agentId',mData.id);
-                                window.document.title = (mData.nickname||'')+'的麦智商城';
+                                window.localStorage.setItem('nickname',mData.nickname||'我');
+                                window.document.title = (mData.nickname||'我')+'的麦智商城';
                                 Toast.info('已切换至您的店铺');
                                 return;
                             }
                         }else {
                             window.document.title = (mData.nickname||'我')+'的麦智商城';
+                            window.localStorage.setItem('nickname',mData.nickname||'我');
                             window.localStorage.setItem('agentId',mData.id);
                         }
                     } else if (mData.isAgent == '1' && mData.isPay == '0') {
-                        if (window.confirm('您在注册为经销商时尚未支付，无法享受返利行为，是否前往支付？')) {
+                        if (window.confirm('您在注册为经销商时尚未支付，无法享受返利行为，是否进行支付？')) {
+                            Toast.loading('支付中',0);
+                            // 重新为经销商支付
+                            Ajax.post({url: Config.API.MEMBER_RESUME_PAY})
+                                .then((res) => {
+                                    if (res.status === 200) {
+                                        Util.wxPay(res.data,function(state){
+                                            if (state) {
+                                                Toast.info('支付成功，即将跳转...');
+                                                setTimeout(()=>{
+                                                    window.location.href = 'http://www.baebae.cn';
+                                                },1500);
+                                            }else{
+                                                Toast.info('支付失败，请重试');
+                                            }
+                                        });
+                                    }
+                                },()=>{
+                                    Toast.info('支付超时，请重试');
+                                });
                             return;
                         }
                     }
@@ -161,7 +183,6 @@ class App extends Component {
                             <Route path="/" exact render={
                                 (p) => {
                                     window.localStorage.setItem('firstUrl',window.location.href);
-                                    alert(window.location.href);
                                     var search = p.location.search;
                                     search = search ? search : '';
                                     return <Redirect to={ "/home"+search }/>

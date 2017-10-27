@@ -153,6 +153,35 @@ const MemberController = {
         }
     },
 
+    // 二次支付
+    resumeAgentPay: async function(ctx) {
+        try{
+            var openid = ctx.session.openid;
+            let member = await Member.findOne({
+                where: {
+                    wxtoken: openid
+                }
+            });
+            if (!member) {
+                respond.json(ctx, false, '经销商不存在');
+                return;
+            }
+            var wxpay = new WeixinPay();
+            var wxOrder = await wxpay.createWCPayOrder({
+                openid: openid,
+                body: '用户注册代理商订单',
+                detail: '用户注册代理商订单',
+                out_trade_no: member.payCode, //内部订单号
+                total_fee: 1,
+                spbill_create_ip: ctx.ip,
+                notify_url: 'http://baebae.cn/api/member/paynotify'
+            });
+            respond.json(ctx, true, '创建支付订单成功', wxOrder);
+        } catch (e) {
+            respond.json(ctx, false, '创建支付订单失败', null, e);
+        }
+    },
+
     // 未支付或支付失败清除注册的经销商
     clearRegistedAgent: async function(wxCode) {
         try {

@@ -36,6 +36,7 @@ var Config = {
 		MEMBER_WXORDER: window.host+'api/member/wxorder',
 		MEMBER_DATA_BYID: window.host+'api/member/databyid',
 		MEMBER_WITHDRAW: window.host+'api/member/withdraw',
+		MEMBER_RESUME_PAY: window.host+'api/member/resumepay',//经销商重新支付
 
 		// 购物车
 		CART_ADD: window.host+'api/cart/add',
