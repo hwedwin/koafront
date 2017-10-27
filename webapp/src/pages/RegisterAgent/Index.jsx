@@ -85,6 +85,7 @@ class RegisterAgent extends Component {
 		}
 		var link = window.location.origin+window.location.pathname;
 		if (member && member.id && member.isAgent == '1' && member.isPay == '1') {
+			Toast.info('尊敬的经销商，分享链接来发展您的客户吧');
 			link += ('?aid='+member.id);
 		}
 		var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
@@ -350,12 +351,6 @@ class RegisterAgent extends Component {
 					style={{borderRadius: 0,marginTop: '.6rem'}}
 				>
 					注册
-				</Button>
-				<Button 
-					onClick={()=>window.location.href = 'http://www.baebae.cn'}
-					style={{borderRadius: 0,marginTop: '.6rem'}}
-				>
-					GO
 				</Button>
 				<div className="u-share-tip">点击右上角菜单分享此页面来发展你的客户</div>
 				<ProtoRegister 

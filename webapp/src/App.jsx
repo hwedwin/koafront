@@ -88,7 +88,6 @@ class AppWrapper extends Component {
         var self = this;
         Ajax.post({ url: Config.API.BEAT })
             .then((res) => {
-                console.log(res);
                 if (res.status === 200 && res.data.code === 200) {
                     var mData = res.data.data;
                     self.props.onInitMember(mData);
@@ -105,7 +104,7 @@ class AppWrapper extends Component {
                                 return;
                             }
                         }else {
-                            window.document.title = (mData.nickname||'')+'的麦智商城';
+                            window.document.title = (mData.nickname||'我')+'的麦智商城';
                             window.localStorage.setItem('agentId',mData.id);
                         }
                     } else if (mData.isAgent == '1' && mData.isPay == '0') {

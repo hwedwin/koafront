@@ -16,13 +16,19 @@ export default (WrappedComponent) => {
 
     componentDidMount() {
       if (Util.isAndroid()) {
-    	   this._initWxShare();
+          
       }
     }
 
     _initWxShare() {
+      var _url = '';
+      if (Util.weixinVersion()) {
+            _url = window.escape(window.location.href);
+        }else{
+           _url = escape(window.localStorage.getItem('firstUrl'));
+        }
       // window.escape(window.location.href)'http://www.baebae.cn/'window.location.origin
-        Ajax.post({url: Config.API.WXJS_SIGN,data:{url: escape(window.localStorage.getItem('firstUrl'))}})
+        Ajax.post({url: Config.API.WXJS_SIGN,data:{url: _url}})
                 .then((res) => {
                     if (res.status === 200) {
                         var title = '麦智商城';
