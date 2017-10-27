@@ -22,7 +22,7 @@ export default (WrappedComponent) => {
 
     _initWxShare() {
       // window.escape(window.location.href)'http://www.baebae.cn/'
-        Ajax.post({url: Config.API.WXJS_SIGN,data:{url: window.localStorage.getItem('firstUrl')}})
+        Ajax.post({url: Config.API.WXJS_SIGN,data:{url: escape(window.localStorage.getItem('firstUrl'))}})
                 .then((res) => {
                     if (res.status === 200) {
                         var title = '麦智商城';
