@@ -88,22 +88,29 @@ class AppWrapper extends Component {
         var self = this;
         Ajax.post({ url: Config.API.BEAT })
             .then((res) => {
+                //已经检测过
+                if (this.state.isChecked) {
+                    return;
+                }
+                this.setState({
+                    isChecked: true
+                });
+
+
                 if (res.status === 200 && res.data.code === 200) {
                     var mData = res.data.data;
                     self.props.onInitMember(mData);
+                    //已支付经销商处理
                     if (mData.isAgent == '1' && mData.isPay == '1') {
-                        if (aid != null && mData.id != aid && !this.state.isChecked) { //地址带了agentId
-                            this.setState({
-                                isChecked: true
-                            });
-                            if (window.confirm('尊敬的经销商，您目前处于其他经销商店铺中，无法享受到返利，是否切换至您的店铺?')) {
-                                // 切换店铺
+                        if (aid != null && mData.id != aid) { //地址带了agentId并且不是自己
+                            // 切换店铺
+                            if (window.confirm('尊敬的经销商,您目前处于其他经销商店铺,返利将进入其他经销商账户,是否切换至您的店铺?')) {
                                 window.localStorage.setItem('agentId',mData.id);
                                 window.localStorage.setItem('nickname',mData.nickname||'我');
                                 window.document.title = (mData.nickname||'我')+'的麦智商城';
                                 Toast.info('已切换至您的店铺');
-                                return;
                             }
+                            return;
                         }else {
                             window.document.title = (mData.nickname||'我')+'的麦智商城';
                             window.localStorage.setItem('nickname',mData.nickname||'我');
