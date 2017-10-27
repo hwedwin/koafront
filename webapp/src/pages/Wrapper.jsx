@@ -12,13 +12,17 @@ export default (WrappedComponent) => {
     }
 
     componentWillMount () {
+    }
+
+    componentDidMount() {
       if (Util.isAndroid()) {
     	   this._initWxShare();
       }
     }
 
     _initWxShare() {
-        Ajax.post({url: Config.API.WXJS_SIGN,data:{url: window.escape(window.location.href)}})
+      // window.escape(window.location.href)
+        Ajax.post({url: Config.API.WXJS_SIGN,data:{url: 'http://www.baebae.cn'}})
                 .then((res) => {
                     if (res.status === 200) {
                         var title = '麦智商城';
