@@ -43,7 +43,7 @@ class Index extends Component{
         Ajax.post({url: Config.API.WXJS_SIGN,data:{url: window.escape(window.location.href)}})
                 .then((res) => {
                     if (res.status === 200) {
-                        var title = '麦智商城';
+                        var title = window.localStorage.getItem('nickname')+'麦智商城';
                         var link = window.location.origin;
                         var logo = 'http://jiuji-test.gz.bcebos.com/logo_100.png';
                         var desc = '来麦智商城，享受高性价比糖酒食品';
