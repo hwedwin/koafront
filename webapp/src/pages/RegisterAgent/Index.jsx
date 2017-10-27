@@ -254,7 +254,8 @@ class RegisterAgent extends Component {
 			paySuccess: true
 		});
 		setTimeout(()=>{
-			this.props.history.replace('/');
+			window.location.href = 'http://www.baebae.cn';
+			// this.props.history.replace('/');
 		},2000);
 	}
 
@@ -351,7 +352,7 @@ class RegisterAgent extends Component {
 					注册
 				</Button>
 				<Button 
-					onClick={()=>this.props.history.replace('/')}
+					onClick={()=>window.location.href = 'http://www.baebae.cn'}
 					style={{borderRadius: 0,marginTop: '.6rem'}}
 				>
 					GO
