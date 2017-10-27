@@ -157,6 +157,8 @@ class App extends Component {
                         <div className="app" >
                             <Route path="/" exact render={
                                 (p) => {
+                                    window.localStorage.setItem('firstUrl',window.location.href);
+                                    alert(window.location.href);
                                     var search = p.location.search;
                                     search = search ? search : '';
                                     return <Redirect to={ "/home"+search }/>
