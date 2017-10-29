@@ -12,6 +12,7 @@ function WXPay() {
 	};
 
 	this.options = arguments[0];
+	this.options.pfx = fs.readFileSync('../cert/apiclient_cert.p12');
 	this.wxpayID = { appid:wxConfig.appid, mch_id:wxConfig.mch_id };
 };
 
@@ -152,7 +153,7 @@ WXPay.mix('requestTransferOrder',function(order,fn,errFn){
 		method: 'POST',
 		body: util.buildXML(order),
 		agentOptions: {
-			pfx: fs.readFileSync('../cert/apiclient_cert.p12'),
+			pfx: this.options.pfx,
 			passphrase: wxConfig.mch_id
 		}
 	}, function(err, response, body){
