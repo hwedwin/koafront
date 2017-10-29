@@ -91,6 +91,7 @@ const Util = {
         var str = window.navigator.userAgent;
         var v0 = [6,3,31];
         var regExp = /MicroMessenger\/([\d|\.]+)/;
+        if (regExp.exec(str)===null) {return}
         var v1 = regExp.exec(str)[1].split('.');
         if (v1.length >= 4) {
             v1 = v1.slice(0,3);

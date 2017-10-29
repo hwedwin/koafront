@@ -32,8 +32,8 @@ class Withdraw extends Component {
 			}else{
 				Toast.info(res.message);
 			}
-		}).catch(function(error){
-			Toast.info('服务器内部错误');
+		},()=>{
+			Toast.info('请求超时');
 		});
 	}
 
@@ -46,7 +46,6 @@ class Withdraw extends Component {
 	handleAmountChange(e) {
 		var value = e.target.value;
 		value = this._prehandleAmount(value);
-		value = value > this.state.avalidAmount?this.state.avalidAmount:value;
 		if (isNaN(value)) {
 			value = 0;
 		}
@@ -69,8 +68,12 @@ class Withdraw extends Component {
 			Toast.info('金额有误，请重新输入');
 			return;
 		}
+		if(this.state.amount > this.state.avalidAmount){
+			Toast.info('账户余额不足，请重新输入提现金额');
+			return;
+		}
 		Toast.loading('操作中....');
-		Ajax.post({url: Config.API.MEMBER_WITHDRAW})
+		Ajax.post({url: Config.API.MEMBER_WITHDRAW,data:{amount: this.state.amount}})
 		.then((res) => {
 			Toast.hide();
 			if (res.status === 200) {
@@ -84,8 +87,8 @@ class Withdraw extends Component {
 			}else{
 				Toast.info(res.message);
 			}
-		}).catch(function(error){
-			Toast.info('服务器内部错误');
+		},() => {
+			Toast.info('请求超时，请重试');
 		});
 	}
 
@@ -117,7 +120,7 @@ class Withdraw extends Component {
 				<PayTip
 					display={this.state.withSuccess}
 					text="提现成功即将跳转"
-					money={this.state.amount}
+					money={this.state.amount+""}
 					displayButton={false}
 				/>
 			</div>

@@ -194,7 +194,6 @@ const IndexController = {
     },
 
     getWeixinJSConfig: async function(ctx){
-        console.log('url:'+ctx.url);
         var {url} = ctx.request.body;
         url = unescape(url);
         var sign = weixinSign(ctx.session.wxticket,url);
