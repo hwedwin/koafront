@@ -565,7 +565,6 @@ const MemberController = {
             var wxOrder = await wxpay.createTransferOrder({
                  openid: openid,
                  partner_trade_no: orderNo,
-                 re_user_name: member.name || '--',
                  amount: parseInt(amount*100),
                  spbill_create_ip: ctx.ip
             });
