@@ -148,6 +148,7 @@ WXPay.mix('createTransferOrder', function(order){
 });
 
 WXPay.mix('requestTransferOrder',function(order,fn,errFn){
+	console.log(this.options.pfx);
 	request({
 		url: "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers",
 		method: 'POST',
