@@ -42,7 +42,8 @@ const MemberController = {
             console.log(member)
             if (member) {
                 ctx.session.memberId = member.id;
-                console.log('memberdid:'+ctx.session.id);
+                console.log('memberdid:'+member.id);
+                console.log('memberdid:'+ctx.session.memberId);
             }
             return member;
         } catch (e) {
