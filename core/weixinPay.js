@@ -127,7 +127,9 @@ WXPay.mix('createTransferOrder', function(order){
 	// order.partner_trade_no = 
 	order.check_name = 'NO_CHECK';//不强制检验真是姓名
 	order.desc = '用户提现';
+	console.log(order);
 	order.sign = this.sign(order);
+	console.log(order);
 	var self = this;
 	return new Promise(function(resolve,reject) {
 		self.requestTransferOrder(order,function(err,data) {
