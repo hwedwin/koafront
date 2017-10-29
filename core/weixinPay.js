@@ -12,6 +12,9 @@ function WXPay() {
 	};
 
 	this.options = arguments[0];
+	console.log(1)
+	console.log(fs.readFileSync('../cert/apiclient_cert.p12'))
+	console.log(2)
 	this.options.pfx = fs.readFileSync('../cert/apiclient_cert.p12');
 	this.wxpayID = { appid:wxConfig.appid, mch_id:wxConfig.mch_id };
 };
