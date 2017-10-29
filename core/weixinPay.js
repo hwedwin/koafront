@@ -1,4 +1,5 @@
 //微信支付相关
+var fs = require('fs');
 var wxConfig = require('../config/weixin');
 var util = require('./weixinUtil');
 var request = require('request');
@@ -149,7 +150,11 @@ WXPay.mix('requestTransferOrder',function(order,fn,errFn){
 	request({
 		url: "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers",
 		method: 'POST',
-		body: util.buildXML(order)
+		body: util.buildXML(order),
+		agentOptions: {
+			pfx: fs.readFileSync('../cert/apiclient_cert.p12'),
+			passphrase: wxConfig.mch_id
+		}
 	}, function(err, response, body){
 		if (err) {
 			errFn();
