@@ -13,9 +13,6 @@ function WXPay() {
 	};
 
 	this.options = arguments[0];
-	console.log(1)
-	console.log(fs.readFileSync(path.resolve(__dirname,'../cert/apiclient_cert.p12')));
-	console.log(2)
 	this.options.pfx = fs.readFileSync(path.resolve(__dirname,'../cert/apiclient_cert.p12'));
 	this.wxpayID = { appid:wxConfig.appid, mch_id:wxConfig.mch_id };
 };
@@ -123,6 +120,8 @@ WXPay.mix('requestUnifiedOrder',function(order,fn,errFn){
  * spbill_create_ip
  */
 WXPay.mix('createTransferOrder', function(order){
+	console.log(1);
+	console.log(order);
 	order.spbill_create_ip = order.spbill_create_ip.match(/\d+.\d+.\d+.\d+/)[0];
 	order.trade_type = "JSAPI";
 	order.nonce_str = order.nonce_str || util.generateNonceString();
@@ -133,16 +132,13 @@ WXPay.mix('createTransferOrder', function(order){
 	order.desc = '用户提现';
 	order.sign = this.sign(order);
 	var self = this;
+	console.log(2);
+	console.log(order);
 	return new Promise(function(resolve,reject) {
 		self.requestTransferOrder(order,function(err,data) {
 			if (err) {
 				reject(err);
 			}else{
-				// if (data.return_code == 'SUCCESS' && data.result_code == 'SUCCESS') {
-				// 	resolve(data);
-				// }else{
-				// 	reject(data);
-				// }
 				resolve(data);
 			}
 		},function(err){
