@@ -562,14 +562,14 @@ const MemberController = {
             }
             var orderNo = CommonUtil.createOrderCode();
             var wxpay = new WeixinPay();
-            var wxOrder = await wxpay.createWCPayOrder({
+            var wxOrder = await wxpay.createTransferOrder({
                  openid: openid,
                  partner_trade_no: orderNo,
                  re_user_name: member.name || '--',
                  amount: parseInt(amount*100),
                  spbill_create_ip: ctx.ip
             });
-            if (wxOrder.return_code == 'SUCCESS' && wxOrder.result_code == 'SUCCESS') {
+            if (wxOrder.return_code == 'SUCCESS' && wxOrder.return_msg == 'SUCCESS') {
                 // 交易成功,扣除用户余额，增加交易记录
                 // 扣除总账户余额
                 await MemberBalanceController.changeBanlance('top',-amount);
