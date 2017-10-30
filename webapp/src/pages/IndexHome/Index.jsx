@@ -87,7 +87,7 @@ class IndexHome extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="page-index-home">
 				<Searchbar
 					onSearchFocus={this.handleSearchFocus.bind(this)}
 				 />

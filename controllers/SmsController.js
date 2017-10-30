@@ -6,10 +6,10 @@ const SmsController = {
 			respond.json(ctx,false,'手机号已被注册')
 		}else{
 			try{
-				// let code = await smsVerify.register(ctx,mobile)
-				smsVerify.verifyCode = '2222';
-				smsVerify.mobile = mobile;
-				smsVerify.set(ctx);
+				let code = await smsVerify.register(ctx,mobile);
+				// smsVerify.verifyCode = '2222';
+				// smsVerify.mobile = mobile;
+				// smsVerify.set(ctx);
 				respond.json(ctx,true,'验证码发送成功');
 			}catch(e){
 				respond.json(ctx,false,'验证码发送失败',null,e);
