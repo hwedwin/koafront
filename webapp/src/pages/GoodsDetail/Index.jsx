@@ -263,6 +263,10 @@ class GoodsDetail extends Component {
 
 	render() {
 		var goodsInfo = this.state.goodsInfo;
+		var imgPaths = goodsInfo.imgPaths;
+		if (imgPaths && imgPaths.length === 1) {
+			imgPaths[1] = imgPaths[0];
+		}
 		// var isAgent = this.props.member.isPaidAgent;
 		// var backProfit = 0;
 		// if (goodsInfo.special) {
@@ -279,7 +283,7 @@ class GoodsDetail extends Component {
 				/>
 				<Carousel 
 					height={7}
-					data={goodsInfo.imgPaths}
+					data={imgPaths}
 					adjustImageSize={false}
 					pureImage={true}
 				/>
