@@ -9,6 +9,7 @@ const IndexController = {
             return;
         }
         var member = await MemberController.loginByOpenid(ctx,ctx.session.openid);
+        if (member) {ctx.session.memberId = member.id}
         console.log('memberId:'+ctx.session.memberId);
         console.log('opneid:'+ctx.session.openid);
         console.log('ticket:'+ctx.session.wxticket);
@@ -24,6 +25,7 @@ const IndexController = {
             return;
         }
         var member = await MemberController.loginByOpenid(ctx,ctx.session.openid);
+        if (member) {ctx.session.memberId = member.id}
         console.log('memberId:'+ctx.session.memberId);
         console.log('opneid:'+ctx.session.openid);
         console.log('ticket:'+ctx.session.wxticket);
