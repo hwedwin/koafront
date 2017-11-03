@@ -1,7 +1,6 @@
 import React,{Component} from 'react';
 import {Route} from 'react-router-dom';
-import {connect} from 'react-redux';
-
+import { Provider,connect } from 'react-redux';
 import TabBar from '../components/TabBar/Index.jsx';
 import IndexHome from './IndexHome/Index.jsx';
 import IndexList from './IndexList/Index.jsx';
@@ -11,6 +10,7 @@ import wxUtil from '../utils/wxUtil';
 import Ajax from '../utils/Ajax';
 import Util from '../utils/Util';
 import Config from '../config/Config';
+import indexStore from '../store/indexStore';
 
 class Index extends Component{
 

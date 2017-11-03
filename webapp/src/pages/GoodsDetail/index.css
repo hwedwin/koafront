@@ -14,7 +14,8 @@
 }
 
 .page-goods-detail .my-carousel .m-carousel-itema img{
-	height: 90%;
+	height: 90%; 	
+	width: auto;
 }
 
 /**/
@@ -114,11 +115,13 @@
 /*品牌盒子*/
 .m-brand-box{
 	margin-top: .1rem;
+	padding: .1rem 0;
+	background-color: #fff;
 }
 
 .m-brand-box .am-list-item img{
-	width: 1rem;
-	height: 1rem;
+	width: .85rem;
+	height: .85rem;
 }
 
 .m-brand-box .am-list-item .am-list-line .am-list-brief{

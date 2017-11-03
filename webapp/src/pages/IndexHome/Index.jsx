@@ -11,20 +11,17 @@ import IndexGridGoods from '../../components/IndexGridGoods/Index.jsx';
 import IndexFillBottom from '../../components/IndexFillBottom/Index.jsx';
 import {connect} from 'react-redux';
 import Wrapper from '../Wrapper.jsx';
+import {initSwipers,initSpecials,initRecs} from '../../store/userStore.js';
 
 class IndexHome extends Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			swipers: [],
-			specials: [],
-			recs: []
+			swipers: props.swipers,
+			specials: props.specials,
+			recs: props.recs
 		}
-	}
-
-	componentWillMount() {
-		Toast.loading('加载中...',0);
 	}
 
 	componentDidMount() {
@@ -32,6 +29,11 @@ class IndexHome extends Component {
 	}
 
 	_request() {
+		if (this.state.swipers.length > 0 && this.state.specials.length > 0 && this.state.recs.length > 0) {
+			return;
+		}
+		console.log(this.props)
+		Toast.loading('加载中...',0);
 		var self = this;
 		var isAgent = this.props.member.isPaidAgent;
 		//获取轮播
@@ -40,6 +42,8 @@ class IndexHome extends Component {
 				if (data.status === 200) {
 					self.setState({
 						swipers: data.data
+					},function(){
+						self.props.initSwipers(data.data);
 					});
 				}
 			}).catch(function(error){
@@ -52,6 +56,8 @@ class IndexHome extends Component {
 				if (data.status === 200) {
 					self.setState({
 						specials: data.data
+					},function(){
+						self.props.initSpecials(data.data);
 					});
 				}
 			}).catch(function(error){
@@ -64,6 +70,8 @@ class IndexHome extends Component {
 				if (data.status === 200) {
 					self.setState({
 						recs: data.data
+					},function(){
+						self.props.initRecs(data.data);
 					});
 				}
 			}).catch(function(error){
@@ -117,8 +125,19 @@ class IndexHome extends Component {
 const mapStateToProps = (state) => {
   return {
   	agentId: state.agentId,
-    member: state.member
-  }
+    member: state.member,
+    swipers: state.swipers,
+    specials: state.specials,
+    recs: state.recs
+  };
 }
 
-export default connect(mapStateToProps)(Wrapper(IndexHome));
+const mapDispatchToProps = (dispatch) => {
+	return {
+		initSwipers: (swipers) => dispatch(initSwipers(swipers)),
+		initSpecials: (specials) => dispatch(initSpecials(specials)),
+		initRecs: (recs) => dispatch(initRecs(recs))
+	};
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Wrapper(IndexHome));

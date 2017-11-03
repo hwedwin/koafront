@@ -5,6 +5,8 @@ import './index.css'
 import Ajax from '../../utils/Ajax'
 import Config from '../../config/Config'
 import Wrapper from '../Wrapper.jsx';
+import {connect} from 'react-redux';
+import {initDataBrand} from '../../store/userStore.js';
 
 class IndexList extends Component {
 
@@ -20,20 +22,23 @@ class IndexList extends Component {
 		}
 	}
 
-	componentWillMount() {
-		Toast.loading('加载中...',0);
-	}
-
 	componentDidMount() {
-		var self = this;
 		this._toggleCateRight(0);
-		
+		if (this.props.dataBrand.length>0) {
+			this._filterBrands(this.props.dataBrand);
+			return;
+		}
+		Toast.loading('加载中...',0);
 		var a1 = Ajax.post({url: Config.API.BRAND_LIST})
-			a1.then(function(data) {
+			a1.then((data)=> {
 				if (data.status === 200) {
-					self._filterBrands(data.data);
+					this._filterBrands(data.data);
+					this.props.initDataBrand(data.data);
 				}
 				Toast.hide();
+			},()=>{
+				Toast.hide();
+				Toast.info('连接超时');
 			}).catch(function(error){
 				console.log(error);
 			});
@@ -149,4 +154,16 @@ class IndexList extends Component {
 	}
 }
 
-export default Wrapper(IndexList);
+const mapStateToProps = (state) => {
+  return {
+  	dataBrand: state.dataBrand
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		initDataBrand: (brands) => dispatch(initDataBrand(brands))
+	};
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Wrapper(IndexList));

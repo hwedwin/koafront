@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Provider } from 'react-redux';
+import { Provider,connect } from 'react-redux';
 import userStore from './store/userStore';
 // import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
@@ -32,7 +32,6 @@ import Ajax from './utils/Ajax';
 import Util from './utils/Util';
 import wxUtil from './utils/wxUtil';
 import Config from './config/Config';
-import { connect } from 'react-redux';
 import { initMember } from './store/userStore';
 
 class AppWrapper extends Component {

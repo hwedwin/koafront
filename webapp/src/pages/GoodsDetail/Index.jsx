@@ -306,7 +306,7 @@ class GoodsDetail extends Component {
 							value={this.state.purchaseNum}
 							onNumChange={this.handlePurchaseNumChange}
 							onOperateClick={this.handleOperateClick}
-						/>
+						/><span style={{marginLeft: '.1rem',fontSize: '.3rem'}}>件</span>
 					</div>
 					<div className="m-item-box">
 						<span className="u-tip">{goodsInfo.isTodaySpecial=='1'&&'此商品正在特卖中'}</span>
