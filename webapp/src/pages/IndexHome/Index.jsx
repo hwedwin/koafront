@@ -17,6 +17,7 @@ class IndexHome extends Component {
 
 	constructor(props) {
 		super(props);
+		console.log(props)
 		this.state = {
 			swipers: props.swipers,
 			specials: props.specials,
@@ -25,14 +26,19 @@ class IndexHome extends Component {
 	}
 
 	componentDidMount() {
-		this._request();
+		this._request(false);
 	}
 
-	_request() {
-		if (this.state.swipers.length > 0 && this.state.specials.length > 0 && this.state.recs.length > 0) {
+	componentDidUpdate(prevProps, prevState) {
+		if (this.props.member.isPaidAgent !== prevProps.member.isPaidAgent) {
+			this._request(true);
+		}
+	}
+
+	_request(isAsk) {
+		if (!isAsk && this.state.swipers.length > 0 && this.state.specials.length > 0 && this.state.recs.length > 0) {
 			return;
 		}
-		console.log(this.props)
 		Toast.loading('加载中...',0);
 		var self = this;
 		var isAgent = this.props.member.isPaidAgent;

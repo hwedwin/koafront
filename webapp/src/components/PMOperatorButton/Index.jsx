@@ -13,7 +13,7 @@ class PMOperatorButton extends Component {
 
 	static defaultProps = {
 		onOperateClick: function() {},
-		value: 1,
+		value: 6,
 		onNumChange: function() {}
 	}
 
@@ -27,7 +27,7 @@ class PMOperatorButton extends Component {
 		return (
 			<div className="m-num-operator" onClick={this.handleClick}>
 				<button onClick={()=>this.props.onOperateClick(-1)}>-</button>
-				<input value={this.props.value} onChange={this.props.onNumChange}/>
+				<input disabled value={this.props.value} onChange={this.props.onNumChange}/>
 				<button onClick={()=>this.props.onOperateClick(1)}>+</button>
 			</div>
 		)

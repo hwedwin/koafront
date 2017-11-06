@@ -31,7 +31,7 @@
 .m-goods-itema .m-detail-wrapper .u-title{
 	font-size: .29rem;
 	line-height: .43rem;
-	height: .86rem;
+	max-height: .86rem;
 	overflow: hidden;
 	-webkit-line-clamp: 2;
 	color: #000;

@@ -73,12 +73,12 @@ class GoodsItem extends Component {
 	}
 
 	handleOperateClick(op) {
-		if (this.state.num <= 1 && op === -1) {
+		if (this.state.num <= 6 && op === -1) {
 			return false
 		}
 
 		this.setState({
-			num: this.state.num+op
+			num: this.state.num+op*6
 		},() => {
 			this.props.onNumChange(this.state.id,this.state.num);
 		})

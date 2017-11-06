@@ -107,7 +107,7 @@ class GoodsDetail extends Component {
 		this.handlePurchaseNumChange = this.handlePurchaseNumChange.bind(this)
 		this.handleOperateClick = this.handleOperateClick.bind(this)
 		this.state = {
-			purchaseNum: 1,
+			purchaseNum: 6,
 			isCollection: false,
 			cartLen: 0,
 			goodsInfo: {
@@ -223,12 +223,12 @@ class GoodsDetail extends Component {
 	}
 
 	handleOperateClick(op) {
-		if (this.state.purchaseNum <= 1 && op === -1) {
+		if (this.state.purchaseNum <= 6 && op === -1) {
 			return false
 		}
 
 		this.setState({
-			purchaseNum: this.state.purchaseNum+op
+			purchaseNum: this.state.purchaseNum+op*6
 		})
 	}
 
@@ -306,7 +306,7 @@ class GoodsDetail extends Component {
 							value={this.state.purchaseNum}
 							onNumChange={this.handlePurchaseNumChange}
 							onOperateClick={this.handleOperateClick}
-						/><span style={{marginLeft: '.1rem',fontSize: '.3rem'}}>件</span>
+						/><span style={{marginLeft: '.1rem',fontSize: '.3rem'}}>瓶,{this.state.purchaseNum/6}件</span>
 					</div>
 					<div className="m-item-box">
 						<span className="u-tip">{goodsInfo.isTodaySpecial=='1'&&'此商品正在特卖中'}</span>
