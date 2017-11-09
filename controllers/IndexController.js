@@ -35,6 +35,10 @@ const IndexController = {
         var memberId = ctx.session.memberId;
         //查询
         try {
+            if (!memberId && ctx.session.openid) {
+                var memberR = await MemberController.loginByOpenid(ctx,ctx.session.openid);
+                memberId = memberR.id;
+            }
             if (memberId) {
                 let member = await MemberController.obtainDataById(memberId);
                 if (!member) {
