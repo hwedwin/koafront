@@ -87,6 +87,8 @@ class AppWrapper extends Component {
         var self = this;
         Ajax.post({ url: Config.API.BEAT })
             .then((res) => {
+                var mData = res.data.data;
+                self.props.onInitMember(mData);
                 //已经检测过
                 if (this.state.isChecked) {
                     return;
@@ -94,11 +96,7 @@ class AppWrapper extends Component {
                 this.setState({
                     isChecked: true
                 });
-
-
                 if (res.status === 200 && res.data.code === 200) {
-                    var mData = res.data.data;
-                    self.props.onInitMember(mData);
                     //已支付经销商处理
                     if (mData.isAgent == '1' && mData.isPay == '1') {
                         if (aid != null && mData.id != aid) { //地址带了agentId并且不是自己

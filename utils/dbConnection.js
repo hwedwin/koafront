@@ -7,7 +7,8 @@ var sequelize = new Sequelize(config.database,config.username,config.password,{
 	pool: {
 		max: 5,
 		min: 0,
-		idle: 10000
+		acquire: 30000,
+    	idle: 10000
 	},
 	timezone: '+08:00' //东八时区
 });
