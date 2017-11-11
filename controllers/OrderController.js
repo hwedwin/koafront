@@ -203,7 +203,7 @@ const OrderController = {
                 body: orderDetail.payInfo? orderDetail.payInfo:'购买商品',
                 detail: orderDetail.payInfo? orderDetail.payInfo:'购买商品',
                 out_trade_no: orderDetail.code, //内部订单号
-                total_fee: 1,
+                total_fee: parseInt(orderDetail.totalPrice*100,10),
                 spbill_create_ip: ctx.ip,
                 notify_url: 'http://baebae.cn/api/order/paynotify'
             });
