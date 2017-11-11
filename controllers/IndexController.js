@@ -1,5 +1,6 @@
 const IndexController = {
     index: async function(ctx) {
+        console.log(ctx.session.headerimgurl);
         var {aid} = ctx.request.query;
         aid = aid ? aid : '';
         // 进行微信授权
@@ -62,13 +63,13 @@ const IndexController = {
         ctx.cookies.set('openid',resUserInfo.openid);
         ctx.session.openid = resUserInfo.openid;
         // headerimgurl
-        ctx.session.headerimgurl = resUserInfo.headerimgurl;
+        ctx.session.headerimgurl = unescape(resUserInfo.headerimgurl);
         // nickname
         ctx.session.nickname = resUserInfo.nickname;
         // 获取jsAPI
         var baseToken = await IndexController.getBaseToken();
         baseToken = JSON.parse(baseToken);
-        
+
         var ticketBody = await IndexController.getJsTicket(baseToken.access_token);
         ticketBody = JSON.parse(ticketBody);
         if (ticketBody && ticketBody.errmsg == 'ok') {
