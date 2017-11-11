@@ -64,6 +64,7 @@ const IndexController = {
         ctx.cookies.set('openid',resUserInfo.openid);
         ctx.session.openid = resUserInfo.openid;
         // headerimgurl
+        console.log(resUserInfo)
         ctx.session.headerimgurl = unescape(resUserInfo.headerimgurl);
         console.log('sessionUrl:'+ctx.session.headerimgurl)
         // nickname
