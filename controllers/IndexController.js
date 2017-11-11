@@ -117,6 +117,8 @@ const IndexController = {
             grant_type: 'authorization_code'
         };
 
+        console.log(params);
+
         let options = {
             method: 'get',
             url: reqUrl + CommonUtil.json2RequestParam(params)

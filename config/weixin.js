@@ -12,6 +12,6 @@
 module.exports = {
 	appid: 'wx401d956d445ec5aa',//微信支付分配的公众账号ID
 	mch_id: '1491984782',//微信支付分配的商户号
-	appSecret: '95c946ce97e2f21db1ab6780eea403e5',
+	appSecret: '0a65a4724cbebeafd45a4806f5a08e28',
 	mch_key: 'ahgy123fvbbc089dfvalo08hnnbg5fha'
 };
