@@ -5,7 +5,7 @@ const IndexController = {
         // 进行微信授权
         console.log('opneid:'+ctx.session.openid)
         if (!ctx.session.openid || !ctx.session.wxticket) {
-            ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index'+aid+'#wechat_redirect');
+            ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid='+wxConfig.appid+'&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index'+aid+'#wechat_redirect');
             return;
         }
         var member = await MemberController.loginByOpenid(ctx,ctx.session.openid);
@@ -21,7 +21,7 @@ const IndexController = {
         console.log('opneid:'+ctx.session.openid)
         // 进行微信授权
         if (!ctx.session.openid || !ctx.session.wxticket) {
-            ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd49fa3df1b475fa7&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent'+aid+'#wechat_redirect');
+            ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid='+wxConfig.appid+'&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent'+aid+'#wechat_redirect');
             return;
         }
         var member = await MemberController.loginByOpenid(ctx,ctx.session.openid);
