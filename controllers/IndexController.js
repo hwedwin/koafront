@@ -1,7 +1,7 @@
 const IndexController = {
     index: async function(ctx) {
         console.log(ctx.session.headerimgurl);
-        ctx.session.headerimgurl = null;
+        ctx.session.openid = null;
         var {aid} = ctx.request.query;
         aid = aid ? aid : '';
         // 进行微信授权
