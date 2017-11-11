@@ -89,6 +89,7 @@ const MemberController = {
                     isPay: '0',
                     isAgent: '1'
                 };
+                console.log('image:'+ctx.session.headimgurl);
                 if (ctx.session.openid) {
                     agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'');//
                     agentData.headerImage = ctx.session.headimgurl;
@@ -112,7 +113,6 @@ const MemberController = {
                 }
 
                 var memberRe = await MemberRelationController.create(level, agentId, member.id, t);
-                console.log(memberRe);
                 if (memberRe instanceof Error) {
                     throw new Error(memberRe);
                 }
