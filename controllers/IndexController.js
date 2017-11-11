@@ -1,10 +1,9 @@
 const IndexController = {
     index: async function(ctx) {
-        console.log(ctx.session.headimgurl);
         var {aid} = ctx.request.query;
         aid = aid ? aid : '';
         // 进行微信授权
-        if (!ctx.session.openid || !ctx.session.wxticket) {
+        if (!ctx.session.openid || !ctx.session.wxticket || !ctx.session.headimgurl) {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid='+wxConfig.appid+'&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index'+aid+'#wechat_redirect');
             return;
         }
@@ -64,6 +63,7 @@ const IndexController = {
         ctx.session.openid = resUserInfo.openid;
         // headerimgurl
         ctx.session.headimgurl = unescape(resUserInfo.headimgurl);
+        console.log('url:'+ctx.session.headimgurl)
         // nickname
         ctx.session.nickname = resUserInfo.nickname;
         // 获取jsAPI
