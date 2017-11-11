@@ -196,18 +196,9 @@ const OrderController = {
                 respond.json(ctx, false, '无此订单货订单或订单状态错误');
                 return;
             }
-            console.log('psesssion:'+ctx.session.openid);
             var wxpay = new WeixinPay();
+            // parseInt(orderDetail.totalPrice*100,10)
             var wxOrder = await wxpay.createWCPayOrder({
-                openid: ctx.session.openid,
-                body: orderDetail.payInfo? orderDetail.payInfo:'购买商品',
-                detail: orderDetail.payInfo? orderDetail.payInfo:'购买商品',
-                out_trade_no: orderDetail.code, //内部订单号
-                total_fee: 1,
-                spbill_create_ip: ctx.ip,
-                notify_url: 'http://baebae.cn/api/order/paynotify'
-            });
-            console.log({
                 openid: ctx.session.openid,
                 body: orderDetail.payInfo? orderDetail.payInfo:'购买商品',
                 detail: orderDetail.payInfo? orderDetail.payInfo:'购买商品',

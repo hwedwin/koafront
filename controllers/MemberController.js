@@ -89,7 +89,6 @@ const MemberController = {
                     isPay: '0',
                     isAgent: '1'
                 };
-                console.log('image:'+ctx.session.headimgurl);
                 if (ctx.session.openid) {
                     agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'');//
                     agentData.headerImage = ctx.session.headimgurl;
@@ -128,7 +127,6 @@ const MemberController = {
                     county,
                     address
                 }, t);
-                console.log(consigneeResult);
                 if (consigneeResult instanceof Error) {
                     throw new Error(consigneeResult);
                 }
@@ -143,7 +141,7 @@ const MemberController = {
                 body: '用户注册代理商订单',
                 detail: '用户注册代理商订单',
                 out_trade_no: wxCode, //内部订单号
-                total_fee: 1,
+                total_fee: 39800,
                 spbill_create_ip: ctx.ip,
                 notify_url: 'http://baebae.cn/api/member/paynotify'
             });
@@ -208,7 +206,6 @@ const MemberController = {
                 }
             });
         } catch (e) {
-            console.log(e);
             throw new Error(e);
         }
     },
@@ -290,7 +287,6 @@ const MemberController = {
                 }
             });
         } catch (e) {
-            console.log(e);
             throw new Error(e);
         }
     },
@@ -298,7 +294,6 @@ const MemberController = {
     // 支付成功回调
     payNotify: async function(ctx) {
         var body = ctx.request.body;
-        console.log(body)
         try{
             if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
                 await MemberController.createRegisterTransaction(body.out_trade_no);
