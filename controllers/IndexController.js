@@ -3,22 +3,17 @@ const IndexController = {
         var {aid} = ctx.request.query;
         aid = aid ? aid : '';
         // 进行微信授权
-        console.log('opneid:'+ctx.session.openid)
         if (!ctx.session.openid || !ctx.session.wxticket) {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid='+wxConfig.appid+'&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=index'+aid+'#wechat_redirect');
             return;
         }
         var member = await MemberController.loginByOpenid(ctx,ctx.session.openid);
         if (member) {ctx.session.memberId = member.id}
-        console.log('memberId:'+ctx.session.memberId);
-        console.log('opneid:'+ctx.session.openid);
-        console.log('ticket:'+ctx.session.wxticket);
         await ctx.render('index');
     },
     regagent: async function(ctx) {
         var {aid} = ctx.request.query;
         aid = aid ? aid : '';
-        console.log('opneid:'+ctx.session.openid)
         // 进行微信授权
         if (!ctx.session.openid || !ctx.session.wxticket) {
             ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid='+wxConfig.appid+'&redirect_uri=http://www.baebae.cn/wxoauth&response_type=code&scope=snsapi_userinfo&state=regagent'+aid+'#wechat_redirect');
@@ -26,9 +21,6 @@ const IndexController = {
         }
         var member = await MemberController.loginByOpenid(ctx,ctx.session.openid);
         if (member) {ctx.session.memberId = member.id}
-        console.log('memberId:'+ctx.session.memberId);
-        console.log('opneid:'+ctx.session.openid);
-        console.log('ticket:'+ctx.session.wxticket);
         await ctx.render('index');
     },
     beat: async function(ctx) {
@@ -64,9 +56,7 @@ const IndexController = {
         var { code,state } = ctx.request.query;
         var resBody = await IndexController.getWXToken(code);
         resBody = JSON.parse(resBody);
-        console.log(resBody);
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
-        console.log(resUserInfo);
         resUserInfo = JSON.parse(resUserInfo);
         // openid
         ctx.cookies.set('openid',resUserInfo.openid);
@@ -77,10 +67,9 @@ const IndexController = {
         ctx.session.nickname = resUserInfo.nickname;
         // 获取jsAPI
         var baseToken = await IndexController.getBaseToken();
-        console.log(baseToken);
         baseToken = JSON.parse(baseToken);
+        
         var ticketBody = await IndexController.getJsTicket(baseToken.access_token);
-        console.log(ticketBody);
         ticketBody = JSON.parse(ticketBody);
         if (ticketBody && ticketBody.errmsg == 'ok') {
             ctx.session.wxticket = ticketBody.ticket;

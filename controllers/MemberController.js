@@ -91,7 +91,7 @@ const MemberController = {
                 };
                 if (ctx.session.openid) {
                     agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'');//
-                    agentData.headerImage = ctx.session.headerimgurl;
+                    agentData.headerImage = unescape(ctx.session.headerimgurl);
                     agentData.wxtoken = ctx.session.openid;
                 }
                 var member;
@@ -342,7 +342,7 @@ const MemberController = {
                 };
                 if (ctx.session.openid) {
                     agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'');
-                    agentData.headerImage = ctx.session.headerimgurl;
+                    agentData.headerImage = unescape(ctx.session.headerimgurl);
                     agentData.wxtoken = ctx.session.openid;
                 }
                 //写入
