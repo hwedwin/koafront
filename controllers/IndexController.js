@@ -66,17 +66,15 @@ const IndexController = {
         resBody = JSON.parse(resBody);
 
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
+        console.log(resUserInfo);
         resUserInfo = JSON.parse(resUserInfo);
         // openid
         ctx.cookies.set('openid',resUserInfo.openid);
         ctx.session.openid = resUserInfo.openid;
         // headerimgurl
-        // ctx.cookies.set('headerimgurl',resUserInfo.headerimgurl);
         ctx.session.headerimgurl = resUserInfo.headerimgurl;
         // nickname
-        // ctx.cookies.set('nickname',resUserInfo.nickname);
         ctx.session.nickname = resUserInfo.nickname;
-
         // 获取jsAPI
         var baseToken = await IndexController.getBaseToken();
         console.log(baseToken);
