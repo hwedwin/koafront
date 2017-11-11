@@ -17,7 +17,6 @@ class IndexHome extends Component {
 
 	constructor(props) {
 		super(props);
-		console.log(props)
 		this.state = {
 			swipers: props.swipers,
 			specials: props.specials,
@@ -60,6 +59,7 @@ class IndexHome extends Component {
 		var a2 = Ajax.post({url: Config.API.DRINK_LISTSPECIAL},isAgent)
 			a2.then(function(data) {
 				if (data.status === 200) {
+					console.log(data.data);
 					self.setState({
 						specials: data.data
 					},function(){
