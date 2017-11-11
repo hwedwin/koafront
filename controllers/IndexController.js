@@ -64,7 +64,7 @@ const IndexController = {
         var { code,state } = ctx.request.query;
         var resBody = await IndexController.getWXToken(code);
         resBody = JSON.parse(resBody);
-
+        console.log(resBody);
         var resUserInfo = await IndexController.getWXUserInfo(resBody.access_token,resBody.openid);
         console.log(resUserInfo);
         resUserInfo = JSON.parse(resUserInfo);
@@ -116,9 +116,6 @@ const IndexController = {
             code: code,
             grant_type: 'authorization_code'
         };
-
-        console.log(params);
-
         let options = {
             method: 'get',
             url: reqUrl + CommonUtil.json2RequestParam(params)
