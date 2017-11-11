@@ -198,6 +198,7 @@ const OrderController = {
             }
             var wxpay = new WeixinPay();
             // parseInt(orderDetail.totalPrice*100,10)
+            console.log(parseInt(orderDetail.totalPrice*100,10))
             var wxOrder = await wxpay.createWCPayOrder({
                 openid: ctx.session.openid,
                 body: orderDetail.payInfo? orderDetail.payInfo:'购买商品',
