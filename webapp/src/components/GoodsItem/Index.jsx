@@ -41,7 +41,7 @@ class GoodsItem extends Component {
 							{this.props.speText}{data.price}<span className="u-origin-price">¥{data.originPrice}</span>
 						</div>
 						<div className="u-price">
-							{data.backProfit?'返利:¥'+data.backProfit:''}
+							{data.backProfit?'赚:¥'+data.backProfit:''}
 						</div>
 						<div className="m-tag-box">
 							<span className="u-tag">自营</span>

@@ -106,7 +106,7 @@ class GoodsItem extends Component {
 				<img className="u-logo" src={data.imgPath}/>
 				<div className="m-right">
 					<div className="u-name">{data.name}</div>
-					<div className="u-backprofit">{data.backProfit?'返利:¥'+data.backProfit:''}</div>
+					<div className="u-backprofit">{data.backProfit?'赚:¥'+data.backProfit:''}</div>
 					<div className="u-bottom">
 						<span className="u-price">¥{data.price}</span>
 						<PMOperatorButton

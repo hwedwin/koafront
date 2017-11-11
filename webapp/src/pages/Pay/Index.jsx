@@ -22,6 +22,7 @@ class Pay extends Component {
 			drinks: [],
 			details: {},
 			balance: 0,
+			totalPrice: 0,
 			paySuccess: false
 		}
 	}
@@ -43,6 +44,7 @@ class Pay extends Component {
 				if (res.data.code === 200) {
 					var o = res.data.data;
 					this.setState({
+						totalPrice: o.totalPrice,
 						consignee: o.consignee, 
 						drinks: o.drinks,
 						details: o
@@ -176,7 +178,7 @@ class Pay extends Component {
 		        <PayTip
 					display={this.state.paySuccess}
 					text="支付成功"
-					money={this.state.balance+''}
+					money={this.state.totalPrice+''}
 					displayButton={true}
 					onCloseClick={this.handlePayTipClose.bind(this)}
 					onDetailClick={this.handlePayTipDetail.bind(this)}

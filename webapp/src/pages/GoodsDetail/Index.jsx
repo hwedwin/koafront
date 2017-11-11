@@ -296,7 +296,7 @@ class GoodsDetail extends Component {
 						<span className="u-origin-price">¥{goodsInfo.originPrice}</span>
 					</div>
 					<div className="m-price-box">
-						<span className="u-web-price">{goodsInfo.backProfit?'返利：¥'+goodsInfo.backProfit:''}</span>
+						<span className="u-web-price">{goodsInfo.backProfit?'赚：¥'+goodsInfo.backProfit:''}</span>
 					</div>
 				</div>
 				<div className="m-purchase-box">

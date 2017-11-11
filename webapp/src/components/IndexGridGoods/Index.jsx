@@ -36,7 +36,7 @@ class IndexGridGoods extends Component {
 			var item = this.props.data[i];
 			goods.push({
 				icon: item.imgPath,
-				text: <div><div className="u-title">{item.name}</div><div className="u-price">¥{item.price}{item.backProfit?',返利:¥'+item.backProfit:''}</div></div>,
+				text: <div><div className="u-title">{item.name}</div><div className="u-price">¥{item.price}{item.backProfit?',赚:¥'+item.backProfit:''}</div></div>,
 				key: item.id
 			})
 		}
