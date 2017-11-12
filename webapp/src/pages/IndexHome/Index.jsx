@@ -30,7 +30,7 @@ class IndexHome extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (this.props.member.isPaidAgent !== prevProps.member.isPaidAgent) {
-			setTimeout(()=>this._request(true),0);
+			setTimeout(()=>this._request(true),500);
 		}
 	}
 
