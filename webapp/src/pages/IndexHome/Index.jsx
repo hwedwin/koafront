@@ -35,12 +35,13 @@ class IndexHome extends Component {
 	}
 
 	_request(isAsk) {
-		if (!isAsk && this.state.swipers.length > 0 && this.state.specials.length > 0 && this.state.recs.length > 0) {
+		if (!isAsk && this.state.swipers.length > 0) {
 			return;
 		}
 		Toast.loading('加载中...',0);
 		var self = this;
 		var isAgent = this.props.member.isPaidAgent;
+		alert(isAgent);
 		//获取轮播
 		var a1 = Ajax.post({url: Config.API.TOPADV_LIST},isAgent)
 			a1.then(function(data) {
