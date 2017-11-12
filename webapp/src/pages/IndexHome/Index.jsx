@@ -30,7 +30,7 @@ class IndexHome extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (this.props.member.isPaidAgent !== prevProps.member.isPaidAgent) {
-			this._request(true);
+			setTimeout(()=>this._request(true),0);
 		}
 	}
 
@@ -41,7 +41,6 @@ class IndexHome extends Component {
 		Toast.loading('加载中...',0);
 		var self = this;
 		var isAgent = this.props.member.isPaidAgent;
-		alert(isAgent);
 		//获取轮播
 		var a1 = Ajax.post({url: Config.API.TOPADV_LIST},isAgent)
 			a1.then(function(data) {
@@ -60,7 +59,6 @@ class IndexHome extends Component {
 		var a2 = Ajax.post({url: Config.API.DRINK_LISTSPECIAL},isAgent)
 			a2.then(function(data) {
 				if (data.status === 200) {
-					console.log(data.data);
 					self.setState({
 						specials: data.data
 					},function(){
