@@ -3,7 +3,7 @@ const SmsController = {
 		const {mobile} = ctx.request.body
 		let mobileEx = await MemberController.mobileExist(mobile);
 		if (mobileEx) {
-			respond.json(ctx,false,'手机号已被注册')
+			respond.json(ctx,false,'手机号已被注册,请前往商城')
 		}else{
 			try{
 				let code = await smsVerify.register(ctx,mobile);

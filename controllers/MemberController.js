@@ -135,19 +135,10 @@ const MemberController = {
             });
             ctx.session.memberId = memberData.id;
             // smsVerify.destory(ctx);
-            var wxpay = new WeixinPay();
-            var wxOrder = await wxpay.createWCPayOrder({
-                openid: ctx.session.openid,
-                body: '用户注册代理商订单',
-                detail: '用户注册代理商订单',
-                out_trade_no: wxCode, //内部订单号
-                total_fee: 1, //39800
-                spbill_create_ip: ctx.ip,
-                notify_url: 'http://baebae.cn/api/member/paynotify'
-            });
+            var wxOrder = await MemberController.createWxOrder(ctx.session.openid, wxCode, ctx.ip);
             respond.json(ctx, true, '预注册成功', wxOrder);
         } catch (e) {
-            respond.json(ctx, false, '预注册失败', null, e);
+            respond.json(ctx, false, '预注册失败,如因上次未支付而导致,请前往商城支付', null, e);
         }
     },
 
@@ -186,7 +177,7 @@ const MemberController = {
             body: '用户注册代理商订单',
             detail: '用户注册代理商订单',
             out_trade_no: out_trade_no, //内部订单号
-            total_fee: 39800,
+            total_fee: 1,
             spbill_create_ip: ip,
             notify_url: 'http://baebae.cn/api/member/paynotify'
         });
