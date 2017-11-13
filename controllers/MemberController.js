@@ -141,7 +141,7 @@ const MemberController = {
                 body: '用户注册代理商订单',
                 detail: '用户注册代理商订单',
                 out_trade_no: wxCode, //内部订单号
-                total_fee: 39800,
+                total_fee: 1,//39800
                 spbill_create_ip: ctx.ip,
                 notify_url: 'http://baebae.cn/api/member/paynotify'
             });
