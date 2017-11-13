@@ -166,7 +166,7 @@ const MemberController = {
             }
             var wxCode = CommonUtil.createOrderCode();
             await Member.update({
-                out_trade_no: wxCode
+                payCode: wxCode
             }, {
                 where: {
                     wxtoken: openid
@@ -241,6 +241,9 @@ const MemberController = {
                     },
                     transaction: t
                 });
+                if (!member) {
+                    throw new Error('用户不存在');
+                }
                 var memberId = member.id;
                 // 找到agentid
                 var pid = await MemberRelationController.getPidByCid(memberId);
