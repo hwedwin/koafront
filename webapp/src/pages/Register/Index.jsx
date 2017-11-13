@@ -180,6 +180,9 @@ class Register extends Component {
 				<div className="u-other-op">
 					<Link to="/login" replace={true}>已有账号？去登录</Link>
 				</div>
+				<div className="u-other-op">
+					<a href="http://www.baebae.cn/regagent">注册为经销商</a>
+				</div>
 			</div>
 		)
 	}

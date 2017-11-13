@@ -353,6 +353,7 @@ class RegisterAgent extends Component {
 					注册
 				</Button>
 				<div className="u-share-tip">点击右上角菜单分享此页面来发展你的客户</div>
+				<div className="u-share-tip"><a href="http://www.baebae.cn">前往商城</a></div>
 				<ProtoRegister 
 					display={this.state.displayProto}
 					onClose={()=>this.setState({displayProto: false})}
