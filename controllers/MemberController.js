@@ -172,7 +172,7 @@ const MemberController = {
                     wxtoken: openid
                 }
             });
-            var wxOrder = MemberController.createWxOrder(openid, wxCode, ctx.ip);
+            var wxOrder = await MemberController.createWxOrder(openid, wxCode, ctx.ip);
             if (wxOrder.return_code === 'SUCCESS' && wxOrder.result_code === 'SUCCESS') {
                 respond.json(ctx, true, '创建支付订单成功', wxOrder);
             }else{
