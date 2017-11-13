@@ -174,6 +174,7 @@ const MemberController = {
             });
             var wxOrder = await MemberController.createWxOrder(openid, wxCode, ctx.ip);
             if (wxOrder.return_code === 'SUCCESS' && wxOrder.result_code === 'SUCCESS') {
+                console.log(wxOrder);
                 respond.json(ctx, true, '创建支付订单成功', wxOrder);
             }else{
                 respond.json(ctx, false, '创建支付订单失败,错误描述:'+wxOrder.err_code_des);
