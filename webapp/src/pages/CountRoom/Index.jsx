@@ -68,8 +68,9 @@ class CountRoom extends Component {
 			}else{
 				Toast.info(res.message);
 			}
+		},()=>{
+			Toast.info('请求超时');
 		}).catch(function(error){
-			Toast.info('服务器内部错误');
 		});
 	}
 

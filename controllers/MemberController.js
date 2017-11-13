@@ -31,7 +31,7 @@ const MemberController = {
         }
     },
 
-    loginByOpenid: async function(ctx,openid) {
+    loginByOpenid: async function(ctx, openid) {
         //查询
         try {
             let member = await Member.findOne({
@@ -57,7 +57,7 @@ const MemberController = {
     registerAgent: async function(ctx) {
         if (await MemberController.openidExist(ctx.session.openid)) {
             respond.json(ctx, false, '您的微信账号已被注册');
-            return false;  
+            return false;
         }
         let { mobile, verifyCode, password, agentId, consigneeName, consigneeMobile, province, city, county, address } = ctx.request.body;
         let { vCode, vMobile } = smsVerify.get(ctx);
@@ -90,7 +90,7 @@ const MemberController = {
                     isAgent: '1'
                 };
                 if (ctx.session.openid) {
-                    agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'');//
+                    agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g, ''); //
                     agentData.headerImage = ctx.session.headimgurl;
                     agentData.wxtoken = ctx.session.openid;
                 }
@@ -141,7 +141,7 @@ const MemberController = {
                 body: '用户注册代理商订单',
                 detail: '用户注册代理商订单',
                 out_trade_no: wxCode, //内部订单号
-                total_fee: 1,//39800
+                total_fee: 1, //39800
                 spbill_create_ip: ctx.ip,
                 notify_url: 'http://baebae.cn/api/member/paynotify'
             });
@@ -153,7 +153,7 @@ const MemberController = {
 
     // 二次支付
     resumeAgentPay: async function(ctx) {
-        try{
+        try {
             var openid = ctx.session.openid;
             let member = await Member.findOne({
                 where: {
@@ -164,20 +164,37 @@ const MemberController = {
                 respond.json(ctx, false, '经销商不存在');
                 return;
             }
-            var wxpay = new WeixinPay();
-            var wxOrder = await wxpay.createWCPayOrder({
-                openid: openid,
-                body: '用户注册代理商订单',
-                detail: '用户注册代理商订单',
-                out_trade_no: member.payCode, //内部订单号
-                total_fee: 1,
-                spbill_create_ip: ctx.ip,
-                notify_url: 'http://baebae.cn/api/member/paynotify'
+            var wxCode = CommonUtil.createOrderCode();
+            await Member.update({
+                out_trade_no: wxCode
+            }, {
+                where: {
+                    wxtoken: openid
+                }
             });
-            respond.json(ctx, true, '创建支付订单成功', wxOrder);
+            var wxOrder = MemberController.createWxOrder(openid, wxCode, ctx.ip);
+            if (wxOrder.return_code === 'SUCCESS' && wxOrder.result_code === 'SUCCESS') {
+                respond.json(ctx, true, '创建支付订单成功', wxOrder);
+            }else{
+                respond.json(ctx, false, '创建支付订单失败,错误描述:'+wxOrder.err_code_des);
+            }
         } catch (e) {
             respond.json(ctx, false, '创建支付订单失败', null, e);
         }
+    },
+
+    createWxOrder: async function(openid, out_trade_no, ip) {
+        var wxpay = new WeixinPay();
+        var wxOrder = await wxpay.createWCPayOrder({
+            openid: openid,
+            body: '用户注册代理商订单',
+            detail: '用户注册代理商订单',
+            out_trade_no: out_trade_no, //内部订单号
+            total_fee: 1,
+            spbill_create_ip: ip,
+            notify_url: 'http://baebae.cn/api/member/paynotify'
+        });
+        return wxOrder;
     },
 
     // 未支付或支付失败清除注册的经销商
@@ -216,7 +233,7 @@ const MemberController = {
             await sequelize.transaction(async function(t) {
                 await Member.update({
                     isPay: '1'
-                },{
+                }, {
                     where: {
                         payCode: wxCode
                     },
@@ -233,7 +250,7 @@ const MemberController = {
                 var pid = await MemberRelationController.getPidByCid(memberId);
                 if (pid === null) {
                     throw new Error('获取pid为null');
-                }else if (pid instanceof Error) {
+                } else if (pid instanceof Error) {
                     throw new Error('获取上级代理ID时发生错误');
                 }
                 if (pid !== 'top') {
@@ -259,30 +276,30 @@ const MemberController = {
                     county: consignee.county,
                     address: consignee.address,
                     payCode: wxCode
-                },t);
+                }, t);
                 if (order instanceof Error) {
                     throw new Error('创建用户注册订单失败');
                 }
                 // 创建用户余额账户
-                if(await MemberBalanceController.create(member.id,t) instanceof Error){
+                if (await MemberBalanceController.create(member.id, t) instanceof Error) {
                     throw new Error('创建用户余额账户失败');
                 }
 
                 // 创建一条注册为经销商的支出交易
-                var t1 = await MemberTransactionController.expenseByRegister(memberId, -398,wxCode, 'top',t);
+                var t1 = await MemberTransactionController.expenseByRegister(memberId, -398, wxCode, 'top', t);
                 // 上级获取注册返利金额
                 // 交易记录,余额增量
-                var t2 = await MemberTransactionController.incomeByRegister('top', 398,wxCode, memberId,t);
+                var t2 = await MemberTransactionController.incomeByRegister('top', 398, wxCode, memberId, t);
                 var t3 = await MemberBalanceController.changeBanlance('top', 398, t);
                 if (pid !== 'top') {
-                    var t4 = await MemberTransactionController.incomeByRegister(pid, 98,wxCode, memberId,t);
+                    var t4 = await MemberTransactionController.incomeByRegister(pid, 98, wxCode, memberId, t);
                     var t5 = await MemberBalanceController.changeBanlance(pid, 98, t);
                 }
                 if (gPid !== 'top' && gPid != null) {
-                    var t6 = await MemberTransactionController.incomeByRegister(gPid, 30,wxCode, memberId,t);
+                    var t6 = await MemberTransactionController.incomeByRegister(gPid, 30, wxCode, memberId, t);
                     var t7 = await MemberBalanceController.changeBanlance(gPid, 30, t);
                 }
-                if (t1 instanceof Error || t2 instanceof Error || t3 instanceof Error || t4 instanceof Error || t5 instanceof Error || t6 instanceof Error || t7 instanceof Error ) {
+                if (t1 instanceof Error || t2 instanceof Error || t3 instanceof Error || t4 instanceof Error || t5 instanceof Error || t6 instanceof Error || t7 instanceof Error) {
                     throw new Error('创建用户注册交易相关记录失败');
                 }
             });
@@ -294,13 +311,13 @@ const MemberController = {
     // 支付成功回调
     payNotify: async function(ctx) {
         var body = ctx.request.body;
-        try{
+        try {
             if (body.return_code == 'SUCCESS' && body.result_code == 'SUCCESS') {
                 await MemberController.createRegisterTransaction(body.out_trade_no);
             } else {
                 await MemberController.clearRegistedAgent(body.out_trade_no);
             }
-        }catch(e){
+        } catch (e) {
 
         }
         // await OrderController.changeOrderState(memberId,2,id);
@@ -336,7 +353,7 @@ const MemberController = {
                     payCode: 'normalmember'
                 };
                 if (ctx.session.openid) {
-                    agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g,'');
+                    agentData.nickname = ctx.session.nickname.replace(/[^\u4E00-\u9FA5A-Za-z0-9_]/g, '');
                     agentData.headerImage = ctx.session.headimgurl;
                     agentData.wxtoken = ctx.session.openid;
                 }
@@ -474,13 +491,13 @@ const MemberController = {
             respond.json(ctx, false, '获取客户失败，用户尚未登录', { code: 203 });
             return false;
         }
-        var {pageIndex,pageSize} = ctx.request.body;
+        var { pageIndex, pageSize } = ctx.request.body;
         pageIndex = pageIndex ? pageIndex : 0;
         pageSize = pageSize ? pageSize : 20;
         pageIndex = parseInt(pageIndex, 10);
         pageSize = parseInt(pageSize, 10);
         try {
-            var customers = await MemberRelationController.getCustomersByMemberId(memberId,pageIndex,pageSize);
+            var customers = await MemberRelationController.getCustomersByMemberId(memberId, pageIndex, pageSize);
             respond.json(ctx, true, '获取客户成功', { code: 200, data: customers });
         } catch (e) {
             respond.json(ctx, false, '获取客户失败', null, e);
@@ -505,7 +522,7 @@ const MemberController = {
             var result = await MemberController.obtainDataById(id);
             if (!result) {
                 respond.json(ctx, true, '用户不存在', { code: 203 });
-            }else if(result instanceof Error){
+            } else if (result instanceof Error) {
                 throw new Error(e);
             }
             respond.json(ctx, true, '获取用户资料成功', { code: 200, data: result });
@@ -518,16 +535,16 @@ const MemberController = {
         var openid = ctx.session.openid;
         var memberId = ctx.session.memberId;
         if (!openid || !memberId) {
-            respond.json(ctx, false, '用户未登录或未获取到用户openid');   
-            return; 
-        }
-        var {amount} = ctx.request.body;
-        amount = parseFloat(amount);
-        if (isNaN(amount) || amount < 1 || amount > 20000) {
-            respond.json(ctx, false, '提现金额有误，单笔提现需在1至20000元之间');   
+            respond.json(ctx, false, '用户未登录或未获取到用户openid');
             return;
         }
-        try{
+        var { amount } = ctx.request.body;
+        amount = parseFloat(amount);
+        if (isNaN(amount) || amount < 1 || amount > 20000) {
+            respond.json(ctx, false, '提现金额有误，单笔提现需在1至20000元之间');
+            return;
+        }
+        try {
             //查询用户是否存在
             var member = Member.findOne({
                 where: {
@@ -544,38 +561,38 @@ const MemberController = {
             if (!memberBalance) {
                 respond.json(ctx, false, '用户余额账户不存在，未获取到用户余额');
                 return;
-            }else if(memberBalance instanceof Error){
+            } else if (memberBalance instanceof Error) {
                 throw new Error(memberBalance);
             }
             // 检验余额
             if (memberBalance.balance < amount) {
-                respond.json(ctx, false, '用户余额不足');   
+                respond.json(ctx, false, '用户余额不足');
                 return;
             }
             var orderNo = CommonUtil.createOrderCode();
             var wxpay = new WeixinPay();
             var wxOrder = await wxpay.createTransferOrder({
-                 openid: openid,
-                 partner_trade_no: orderNo,
-                 amount: parseInt(amount*100),
-                 spbill_create_ip: ctx.ip
+                openid: openid,
+                partner_trade_no: orderNo,
+                amount: parseInt(amount * 100),
+                spbill_create_ip: ctx.ip
             });
             if (wxOrder.return_code == 'SUCCESS' && wxOrder.return_msg == 'SUCCESS') {
                 // 交易成功,扣除用户余额，增加交易记录
                 // 扣除总账户余额
-                await MemberBalanceController.changeBanlance('top',-amount);
+                await MemberBalanceController.changeBanlance('top', -amount);
                 // 添加提现记录
-                await MemberTransactionController.expenseByWithdraw('top',-amount,orderNo,memberId);
+                await MemberTransactionController.expenseByWithdraw('top', -amount, orderNo, memberId);
                 // 扣用户余额 
-                await MemberBalanceController.changeBanlance(memberId,-amount);
+                await MemberBalanceController.changeBanlance(memberId, -amount);
                 // 添加用户提现记录
-                await MemberTransactionController.expenseByWithdraw(memberId,-amount,orderNo,'top');
-                respond.json(ctx, true, '提现成功，请注意查收');     
-            }else{
-                respond.json(ctx, false, '提现失败,请联系管理员,err_code:'+wxOrder.err_code+',系统描述'+wxOrder.err_code_des);
+                await MemberTransactionController.expenseByWithdraw(memberId, -amount, orderNo, 'top');
+                respond.json(ctx, true, '提现成功，请注意查收');
+            } else {
+                respond.json(ctx, false, '提现失败,请联系管理员,err_code:' + wxOrder.err_code + ',系统描述' + wxOrder.err_code_des);
             }
-        }catch(e){
-            respond.json(ctx, false, '服务器内部错误',null,e);   
+        } catch (e) {
+            respond.json(ctx, false, '服务器内部错误', null, e);
         }
     }
 };
