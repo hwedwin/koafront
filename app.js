@@ -83,7 +83,7 @@ app.use(require('./routes/balance').routes());
 app.use(require('./routes/express').routes());
 
 //设置静态文件目录
-app.use(koaStatic(path.join(__dirname,'/webapp/build')));
+app.use(koaStatic(path.join(__dirname,'/webapp/build'),{maxage: 30*24*60*60*1000}));
 
 app.listen(port);
 
