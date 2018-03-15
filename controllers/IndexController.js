@@ -1,4 +1,7 @@
 const IndexController = {
+    resume: async function(ctx) {
+        await ctx.render('resume');
+    },
     index: async function(ctx) {
         var {aid} = ctx.request.query;
         aid = aid ? aid : '';
